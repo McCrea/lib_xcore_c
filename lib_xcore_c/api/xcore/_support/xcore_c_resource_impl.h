@@ -9,8 +9,8 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
+#include <xcore/_support/xcore_c_macros.h>
 #include "xassert.h"
-#include "xcore_c_macros.h"
 
 /** generic resource handle
  *

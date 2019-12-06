@@ -1,12 +1,6 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
-#include "xcore_c_resource_impl.h"
-extern void _resource_enable_trigger(resource_t r);
-extern void _resource_disable_trigger(resource_t r);
-extern void _resource_setup_interrupt_callback(resource_t r, void *data, interrupt_callback_t intrpt);
-extern void _resource_setup_select_callback(resource_t r, void *data, select_callback_t callback);
-extern void _resource_setup_select(resource_t r, uint32_t value);
-extern void _resource_free(resource_t r);
+#include "xcore/_support/xcore_c_resource_impl.h"
 
 void _resource_setup_callback(resource_t r, void *data, callback_function func, uint32_t type)
 {

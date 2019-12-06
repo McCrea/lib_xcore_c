@@ -3,10 +3,10 @@
 #ifndef __xcore_c_interrupt_h__
 #define __xcore_c_interrupt_h__
 
-#include "xcore_c_interrupt_impl.h"
-#include "xcore_c_resource_impl.h"
-#include "xcore_c_error_codes.h"
-#include "xcore_c_macros.h"
+#include <xcore/_support/xcore_c_interrupt_impl.h>
+#include <xcore/_support/xcore_c_resource_impl.h>
+#include <xcore/_support/xcore_c_macros.h>
+#include <xcore/error_codes.h>
 #include <xs1.h>
 
 #ifndef XCORE_C_KSTACK_WORDS

@@ -7,9 +7,9 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "xcore_c_channel_streaming.h"
-#include "xcore_c_chan_impl.h"
-#include "xcore_c_exception_impl.h"
+#include <xcore/_support/xcore_c_channel_streaming.h>
+#include <xcore/_support/xcore_c_chan_impl.h>
+#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** Start a transaction (master).
  *

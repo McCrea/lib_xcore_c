@@ -6,9 +6,9 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
-#include "xcore_c_select_impl.h"
-#include "xcore_c_resource_impl.h"
-#include "xcore_c_error_codes.h"
+#include <xcore/_support/xcore_c_select_impl.h>
+#include <xcore/_support/xcore_c_resource_impl.h>
+#include <xcore/error_codes.h>
 
 /** Starting value to use for the enum_id
  *

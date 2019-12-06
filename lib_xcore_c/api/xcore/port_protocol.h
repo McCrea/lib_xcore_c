@@ -6,9 +6,9 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
-#include "xcore_c_port_impl.h"
-#include "xcore_c_clock_impl.h"
-#include "xcore_c_exception_impl.h"
+#include <xcore/_support/xcore_c_port_impl.h>
+#include <xcore/_support/xcore_c_clock_impl.h>
+#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** Configure a port to be a clocked input port in handshake mode.
  *

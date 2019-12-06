@@ -8,8 +8,8 @@
 
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
-#include "xcore_c_macros.h"
-#include "xcore_c_resource_impl.h"
+#include <xcore/_support/xcore_c_macros.h>
+#include <xcore/_support/xcore_c_resource_impl.h>
 
 // _SELECT_CALLBACK_STACK_SIZE also defined in xcore_c_select.S
 #ifdef __XS2A__

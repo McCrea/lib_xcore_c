@@ -6,9 +6,9 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
-#include "xcore_c_clock_impl.h"
-#include "xcore_c_exception_impl.h"
-#include "xcore_c_resource_impl.h"
+#include <xcore/_support/xcore_c_clock_impl.h>
+#include <xcore/_support/xcore_c_exception_impl.h>
+#include <xcore/_support/xcore_c_resource_impl.h>
 #include <xs1.h>
 
 /** A clock block identifier

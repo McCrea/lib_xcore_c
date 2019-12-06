@@ -7,8 +7,8 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "xcore_c_chan_impl.h"
-#include "xcore_c_exception_impl.h"
+#include <xcore/_support/xcore_c_chan_impl.h>
+#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** Helper type for passing around both ends of a streaming channel.
 */

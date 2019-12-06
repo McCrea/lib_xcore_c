@@ -7,9 +7,9 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "xcore_c_port_impl.h"
-#include "xcore_c_resource_impl.h"
-#include "xcore_c_exception_impl.h"
+#include <xcore/_support/xcore_c_port_impl.h>
+#include <xcore/_support/xcore_c_resource_impl.h>
+#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** A port identifier
  *

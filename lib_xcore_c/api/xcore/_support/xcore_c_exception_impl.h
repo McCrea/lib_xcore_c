@@ -8,8 +8,8 @@
 
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
+#include <xcore/error_codes.h>
 #include "trycatch.h"
-#include "xcore_c_error_codes.h"
 
 #ifndef XCORE_C_NO_EXCEPTION
 /** The exception policy for the library.
@@ -37,7 +37,7 @@
       expr ; \
     } \
     CATCH(e) { \
-      return e.type; \
+      return (xcore_c_error_t)e.type; \
     } \
   } \
   else { \

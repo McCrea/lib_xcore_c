@@ -6,9 +6,9 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
-#include "xcore_c_chan_impl.h"
-#include "xcore_c_resource_impl.h"
-#include "xcore_c_exception_impl.h"
+#include <xcore/_support/xcore_c_chan_impl.h>
+#include <xcore/_support/xcore_c_resource_impl.h>
+#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** Allocate a single streaming_chanend_t.
  *

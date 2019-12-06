@@ -31,7 +31,7 @@ typedef unsigned chanend;
 typedef unsigned streaming_chanend_t;
 #endif
 #include <xs1.h>
-#include "xcore_c_resource_impl.h"
+#include <xcore/_support/xcore_c_resource_impl.h>
 
 /** An opaque type for handling transactions
  *

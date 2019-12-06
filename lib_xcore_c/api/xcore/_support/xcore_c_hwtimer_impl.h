@@ -23,7 +23,7 @@
  */
 typedef unsigned hwtimer_t;
 #endif
-#include "xcore_c_resource_impl.h"
+#include <xcore/_support/xcore_c_resource_impl.h>
 #include <xs1.h>
 
 inline void _hwtimer_realloc_xc_timer(void)
