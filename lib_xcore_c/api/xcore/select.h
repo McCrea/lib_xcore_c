@@ -143,6 +143,14 @@ uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]);
  */
 #define SELECT_CALLBACK(callback) _SELECT_CALLBACK(callback)
 
+
+
+// new style
+
+#define SELECT_RESET do { goto* __xmm_select_reset; } while (0)
+#define CASE_THEN(...) (__VA_ARGS__)
+#define C_SELECT_RES(...) _XMM_C_SELECT_RES_I(_XMM_UNIQUE_LABEL(xmm_htable), _XMM_UNIQUE_LABEL(xmm_sel_reset), __VA_ARGS__)
+
 #endif // !defined(__XC__)
 
 #endif // __xcore_c_select_h__
