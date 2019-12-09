@@ -37,14 +37,15 @@
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*c* or *\*tc* argument.
  */
-inline xcore_c_error_t chan_init_transaction_master(chanend *c, transacting_chanend_t *tc)
+inline transacting_chanend_t chan_init_transaction_master(chanend)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_out_ct_end(*c); \
-                                tc->last_out = 0; \
-                                tc->c = (streaming_chanend_t)*c; \
-                                *c = 0; \
-                              } while (0) );
+  _s_chan_out_ct_end(c);
+
+  transacting_chanend_t tc;
+  tc.last_out = 0;
+  tc.c = (streaming_chanend_t)c;
+
+  return tc;
 }
 
 /** Start a transaction (slave).
@@ -68,14 +69,15 @@ inline xcore_c_error_t chan_init_transaction_master(chanend *c, transacting_chan
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*c* or *\*tc* argument.
  */
-inline xcore_c_error_t chan_init_transaction_slave(chanend *c, transacting_chanend_t *tc)
+inline transacting_chanend_t chan_init_transaction_slave(chanend c)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_check_ct_end(*c); \
-                                tc->last_out = 1; \
-                                tc->c = (streaming_chanend_t)*c; \
-                                *c = 0; \
-                              } while (0) );
+  _s_chan_check_ct_end(c);
+
+  transacting_chanend_t tc;
+  tc.last_out = 1;
+  tc.c = (streaming_chanend_t)c;
+
+  return tc;
 }
 
 /** Complete a transaction.
@@ -99,19 +101,18 @@ inline xcore_c_error_t chan_init_transaction_slave(chanend *c, transacting_chane
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*c* or *\*tc* argument.
  */
-inline xcore_c_error_t chan_complete_transaction(chanend *c, transacting_chanend_t *tc)
+inline void chan_complete_transaction(transacting_chanend_t tc)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                if (tc->last_out) { \
-                                  _s_chan_out_ct_end(tc->c); \
-                                  _s_chan_check_ct_end(tc->c); \
-                                } else { \
-                                  _s_chan_check_ct_end(tc->c); \
-                                  _s_chan_out_ct_end(tc->c); \
-                                } \
-                                *c = (chanend)tc->c; \
-                                tc->c = 0; \
-                              } while (0) );
+  if (tc.last_out)
+  {
+    _s_chan_out_ct_end(tc.c);
+    _s_chan_check_ct_end(tc.c);
+  }
+  else
+  {
+    _s_chan_check_ct_end(tc.c);
+    _s_chan_out_ct_end(tc.c);
+  }
 }
 
 /** Output a word over a transacting chan-end.
@@ -127,12 +128,10 @@ inline xcore_c_error_t chan_complete_transaction(chanend *c, transacting_chanend
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* argument.
  */
-inline xcore_c_error_t t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
+inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_output(tc); \
-                                _s_chan_out_word(tc->c, data); \
-                              } while (0) );
+  _t_chan_change_to_output(tc);
+  _s_chan_out_word(tc->c, data);
 }
 
 /** Output an byte over a transacting chan-end.
@@ -148,12 +147,10 @@ inline xcore_c_error_t t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* argument.
  */
-inline xcore_c_error_t t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
+inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_output(tc); \
-                                _s_chan_out_byte(tc->c, data); \
-                              } while (0) );
+  _t_chan_change_to_output(tc);
+  _s_chan_out_byte(tc->c, data);
 }
 
 /** Output a block of data over a transacting chan-end.
@@ -170,14 +167,13 @@ inline xcore_c_error_t t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* or *buf[]* argument.
  */
-inline xcore_c_error_t t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[], size_t n)
+inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_output(tc); \
-                                for (size_t i = 0; i < n; i++) { \
-                                  _s_chan_out_word(tc->c, buf[i]); \
-                                } \
-                              } while (0) );
+  _t_chan_change_to_output(tc);
+  for (size_t i = 0; i < n; i++)
+  {
+    _s_chan_out_word(tc->c, buf[i]);
+  }
 }
 
 /** Output a block of data over a transacting chan-end.
@@ -194,14 +190,13 @@ inline xcore_c_error_t t_chan_out_buf_word(transacting_chanend_t *tc, const uint
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* or *buf[]* argument.
  */
-inline xcore_c_error_t t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], size_t n)
+inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_output(tc); \
-                                for (size_t i = 0; i < n; i++) { \
-                                  _s_chan_out_byte(tc->c, buf[i]); \
-                                } \
-                              } while (0) );
+  _t_chan_change_to_output(tc);
+  for (size_t i = 0; i < n; i++)
+  {
+    _s_chan_out_byte(tc->c, buf[i]);
+  }
 }
 
 /** Input a word from a transacting chan-end.
@@ -217,12 +212,10 @@ inline xcore_c_error_t t_chan_out_buf_byte(transacting_chanend_t *tc, const uint
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* or *\*data* argument.
  */
-inline xcore_c_error_t t_chan_in_word(transacting_chanend_t *tc, uint32_t *data)
+inline uint32_t t_chan_in_word(transacting_chanend_t *tc)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_input(tc); \
-                                *data = _s_chan_in_word(tc->c); \
-                              } while (0) );
+  _t_chan_change_to_input(tc);
+  return _s_chan_in_word(tc->c);
 }
 
 /** Input a byte from a transacting chan-end.
@@ -238,12 +231,10 @@ inline xcore_c_error_t t_chan_in_word(transacting_chanend_t *tc, uint32_t *data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* or *\*data* argument.
  */
-inline xcore_c_error_t t_chan_in_byte(transacting_chanend_t *tc, uint8_t *data)
+inline uint8_t t_chan_in_byte(transacting_chanend_t *tc)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_input(tc); \
-                                *data = _s_chan_in_byte(tc->c); \
-                              } while (0) );
+  _t_chan_change_to_input(tc);
+  return _s_chan_in_byte(tc->c);
 }
 
 /** Input a block of data from a transacting chan-end.
@@ -260,14 +251,13 @@ inline xcore_c_error_t t_chan_in_byte(transacting_chanend_t *tc, uint8_t *data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* or *buf[]* argument.
  */
-inline xcore_c_error_t t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t n)
+inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_input(tc); \
-                                for (size_t i = 0; i < n; i++) { \
-                                  buf[i] = _s_chan_in_word(tc->c); \
-                                } \
-                              } while (0) );
+  _t_chan_change_to_input(tc);
+  for (size_t i = 0; i < n; i++)
+  {
+    buf[i] = _s_chan_in_word(tc->c);
+  }
 }
 
 /** Input a block of data from a transacting chan-end.
@@ -284,14 +274,13 @@ inline xcore_c_error_t t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t bu
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*tc* or *buf[]* argument.
  */
-inline xcore_c_error_t t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t n)
+inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _t_chan_change_to_input(tc); \
-                                for (size_t i = 0; i < n; i++) { \
-                                  buf[i] = _s_chan_in_byte(tc->c); \
-                                } \
-                              } while (0) );
+  _t_chan_change_to_input(tc);
+  for (size_t i = 0; i < n; i++)
+  {
+    buf[i] = _s_chan_in_byte(tc->c);
+  }
 }
 
 #endif // !defined(__XC__)

@@ -159,7 +159,7 @@ inline void _port_clear_trigger_in(port p)
 inline uint32_t _port_peek(port p)
 {
   uint32_t data;
-  asm volatile("peek %0, res[%1]" : "=r" (data): "r" (p));
+  asm("peek %0, res[%1]" : "=r" (data): "r" (p));
   return data;
 }
 
@@ -175,16 +175,18 @@ inline uint32_t _port_in(port p)
   return data;
 }
 
-inline void _port_out_shift_right(port p, uint32_t *data)
+inline uint32_t _port_out_shift_right(port p, uint32_t data)
 {
   // We read-write data
-  asm volatile("outshr res[%1], %0" : "+r" (*data) : "r" (p));
+  asm volatile("outshr res[%1], %0" : "+r" (data) : "r" (p));
+  return data;
 }
 
-inline void _port_in_shift_right(port p, uint32_t *data)
+inline uint32_t _port_in_shift_right(port p, uint32_t data)
 {
   // We read-write data
-  asm volatile("inshr %0, res[%1]" : "+r" (*data) : "r" (p));
+  asm volatile("inshr %0, res[%1]" : "+r" (data) : "r" (p));
+  return data;
 }
 
 inline size_t _port_endin(port p)

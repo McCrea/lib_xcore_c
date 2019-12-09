@@ -8,7 +8,6 @@
 #include <stdint.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
-#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** Allocate a single streaming_chanend_t.
  *
@@ -23,9 +22,9 @@
  *
  *  \exception  ET_LOAD_STORE         invalid *\*c* argument.
  */
-inline xcore_c_error_t s_chanend_alloc(streaming_chanend_t* c)
+inline streaming_chanend_t s_chanend_alloc()
 {
-  RETURN_EXCEPTION_OR_ERROR( *c = _s_chanend_alloc() );
+  return _s_chanend_alloc();
 }
 
 /** Deallocate a single streaming_chanend_t.
@@ -43,12 +42,9 @@ inline xcore_c_error_t s_chanend_alloc(streaming_chanend_t* c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
  *  \exception  ET_LOAD_STORE         invalid *\*c* argument.
  */
-inline xcore_c_error_t s_chanend_free(streaming_chanend_t *c)
+inline void s_chanend_free(streaming_chanend_t c)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chanend_free(*c); \
-                                *c = 0; \
-                              } while (0) );
+  _s_chanend_free(c);
 }
 
 /** Set the destination of a streaming_chanend_t
@@ -62,9 +58,9 @@ inline xcore_c_error_t s_chanend_free(streaming_chanend_t *c)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated streaming_chanend_t.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
 */
-inline xcore_c_error_t s_chanend_set_dest(streaming_chanend_t c, streaming_chanend_t dst)
+inline void s_chanend_set_dest(streaming_chanend_t c, streaming_chanend_t dst)
 {
-  RETURN_EXCEPTION_OR_ERROR( _s_chanend_set_dest(c, dst) );
+  _s_chanend_set_dest(c, dst);
 }
 
 /** Convert a chanend to a streaming_chanend_t.
@@ -93,9 +89,9 @@ inline streaming_chanend_t s_chanend_convert(chanend c)
  *
  *  \exception  ET_LOAD_STORE         invalid *\*c* argument.
  */
-inline xcore_c_error_t chanend_alloc(chanend* c)
+inline chanend chanend_alloc()
 {
-  return s_chanend_alloc((streaming_chanend_t*)c);
+  return (chanend)s_chanend_alloc();
 }
 
 /** Deallocate a single chanend.
@@ -113,9 +109,9 @@ inline xcore_c_error_t chanend_alloc(chanend* c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  *  \exception  ET_LOAD_STORE         invalid *\*c* argument.
  */
-inline xcore_c_error_t chanend_free(chanend *c)
+inline void chanend_free(chanend c)
 {
-  return s_chanend_free((streaming_chanend_t*)c);
+  s_chanend_free((streaming_chanend_t)c);
 }
 
 /** Set the destination of a chanend
@@ -129,9 +125,9 @@ inline xcore_c_error_t chanend_free(chanend *c)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chanend.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
 */
-inline xcore_c_error_t chanend_set_dest(chanend c, chanend dst)
+inline void chanend_set_dest(chanend c, chanend dst)
 {
-  return s_chanend_set_dest((streaming_chanend_t)c,(streaming_chanend_t)dst);
+  s_chanend_set_dest((streaming_chanend_t)c, (streaming_chanend_t)dst);
 }
 
 /** Convert a streaming_chanend_t to a chanend.
@@ -166,9 +162,9 @@ inline chanend chanend_convert(streaming_chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in enum_id.
 */
-inline xcore_c_error_t chanend_setup_select(chanend c, uint32_t enum_id)
+inline void chanend_setup_select(chanend c, uint32_t enum_id)
 {
-  RETURN_EXCEPTION_OR_ERROR( _resource_setup_select(c, enum_id) );
+  _resource_setup_select(c, enum_id);
 }
 
 /** Setup select events on a chan-end where the events are handled by a function.
@@ -188,9 +184,9 @@ inline xcore_c_error_t chanend_setup_select(chanend c, uint32_t enum_id)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in enum_id.
  */
-inline xcore_c_error_t chanend_setup_select_callback(chanend c, void *data, select_callback_t func)
+inline void chanend_setup_select_callback(chanend c, void *data, select_callback_t func)
 {
-  RETURN_EXCEPTION_OR_ERROR( _resource_setup_select_callback(c, data, func) );
+  _resource_setup_select_callback(c, data, func);
 }
 
 /** Setup interrupt events on a chan-end .
@@ -207,10 +203,10 @@ inline xcore_c_error_t chanend_setup_select_callback(chanend c, void *data, sele
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in enum_id.
  */
-inline xcore_c_error_t chanend_setup_interrupt_callback(chanend c, void *data,
-                                                 interrupt_callback_t func)
+inline void chanend_setup_interrupt_callback(chanend c, void *data,
+                                             interrupt_callback_t func)
 {
-  RETURN_EXCEPTION_OR_ERROR( _resource_setup_interrupt_callback(c, data, func) );
+  _resource_setup_interrupt_callback(c, data, func);
 }
 
 /** Enable select & interrupt events on a chan-end.
@@ -228,9 +224,9 @@ inline xcore_c_error_t chanend_setup_interrupt_callback(chanend c, void *data,
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
-inline xcore_c_error_t chanend_enable_trigger(chanend c)
+inline void chanend_enable_trigger(chanend c)
 {
-  RETURN_EXCEPTION_OR_ERROR( _resource_enable_trigger(c) );
+  _resource_enable_trigger(c);
 }
 
 /** Disable select & interrupt events for a given chan-end.
@@ -244,9 +240,9 @@ inline xcore_c_error_t chanend_enable_trigger(chanend c)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
-inline xcore_c_error_t chanend_disable_trigger(chanend c)
+inline void chanend_disable_trigger(chanend c)
 {
-  RETURN_EXCEPTION_OR_ERROR( _resource_disable_trigger(c) );
+  _resource_disable_trigger(c);
 }
 
 #endif // !defined(__XC__)

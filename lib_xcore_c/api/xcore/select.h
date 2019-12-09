@@ -8,7 +8,6 @@
 #include <stdint.h>
 #include <xcore/_support/xcore_c_select_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
-#include <xcore/error_codes.h>
 
 /** Starting value to use for the enum_id
  *
@@ -35,10 +34,9 @@
  *
  *  \return     error_none
  */
-inline xcore_c_error_t select_disable_trigger_all(void)
+inline void select_disable_trigger_all(void)
 {
   asm volatile("clre");
-  return error_none;
 }
 
 /** Wait for a select event to trigger.

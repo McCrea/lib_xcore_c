@@ -21,9 +21,9 @@
  *
  *  \exception  ET_LOAD_STORE         invalid *\*l* argument.
  */
-inline xcore_c_error_t lock_alloc(lock_t *l)
+inline lock_t lock_alloc()
 {
-  RETURN_EXCEPTION_OR_ERROR( *l = _lock_alloc() );
+  return _lock_alloc();
 }
 
 /** Deallocate a lock.
@@ -40,12 +40,9 @@ inline xcore_c_error_t lock_alloc(lock_t *l)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the lock.
  *  \exception  ET_LOAD_STORE         invalid *\*l* argument.
  */
-inline xcore_c_error_t lock_free(lock_t *l)
+inline void lock_free(lock_t l)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _resource_free((resource_t)*l); \
-                                *l = 0; \
-                              } while (0) );
+  _resource_free((resource_t)l);
 }
 
 /** Acquire a lock.
@@ -62,12 +59,10 @@ inline xcore_c_error_t lock_free(lock_t *l)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated lock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the lock.
  */
-inline xcore_c_error_t lock_acquire(lock_t l)
+inline void lock_acquire(lock_t l)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                unsigned dummy; \
-                                asm volatile("in %0, res[%1]" : "=r" (dummy): "r" (l) : "memory"); \
-                              } while (0) );
+  unsigned dummy;
+  asm volatile("in %0, res[%1]" : "=r" (dummy): "r" (l) : "memory");
 }
 
 /** Release a lock.
@@ -84,9 +79,9 @@ inline xcore_c_error_t lock_acquire(lock_t l)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated lock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the lock.
  */
-inline xcore_c_error_t lock_release(lock_t l)
+inline void lock_release(lock_t l)
 {
-  RETURN_EXCEPTION_OR_ERROR( asm volatile("out res[%0], %0" :: "r" (l) : "memory") );
+  asm volatile("out res[%0], %0" :: "r" (l) : "memory");
 }
 
 #endif // !defined(__XC__)

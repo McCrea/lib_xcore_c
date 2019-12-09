@@ -9,7 +9,6 @@
 #include <stddef.h>
 #include <xcore/channel_streaming.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
-#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** Helper type for passing around both ends of a channel.
 */
@@ -32,9 +31,9 @@ typedef streaming_channel_t channel_t;
  *
  *  \exception  ET_LOAD_STORE         invalid *\*c* argument.
  */
-inline xcore_c_error_t chan_alloc(channel_t *c)
+inline channel_t chan_alloc()
 {
-  return s_chan_alloc((streaming_channel_t*)c);
+  return (channel_t)s_chan_alloc();
 }
 
 /** Deallocate a channel.
@@ -50,15 +49,11 @@ inline xcore_c_error_t chan_alloc(channel_t *c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  *  \exception  ET_LOAD_STORE         invalid *\*c* argument.
  */
-inline xcore_c_error_t chan_free(channel_t *c)
+inline void chan_free(channel_t c)
 {
   // Not implemented in terms of s_chan_free() as we have already hand-shook a CT_END.
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chanend_free(c->end_a); \
-                                c->end_a = 0; \
-                                _s_chanend_free(c->end_b); \
-                                c->end_b = 0; \
-                              } while (0) );
+  _s_chanend_free(c.end_a);
+  _s_chanend_free(c.end_b);
 }
 
 /** Output a word over a channel.
@@ -74,15 +69,13 @@ inline xcore_c_error_t chan_free(channel_t *c)
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
-inline xcore_c_error_t chan_out_word(chanend c, uint32_t data)
+inline void chan_out_word(chanend c, uint32_t data)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                                _s_chan_out_word(c, data); \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                              } while (0) );
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
+  _s_chan_out_word(c, data);
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
 }
 
 /** Output a byte over a channel.
@@ -98,15 +91,13 @@ inline xcore_c_error_t chan_out_word(chanend c, uint32_t data)
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
-inline xcore_c_error_t chan_out_byte(chanend c, uint8_t data)
+inline void chan_out_byte(chanend c, uint8_t data)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                                _s_chan_out_byte(c, data); \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                              } while (0) );
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
+  _s_chan_out_byte(c, data);
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
 }
 
 /** Output a block of data over a channel.
@@ -125,17 +116,16 @@ inline xcore_c_error_t chan_out_byte(chanend c, uint8_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
-inline xcore_c_error_t chan_out_buf_word(chanend c, const uint32_t buf[], size_t n)
+inline void chan_out_buf_word(chanend c, const uint32_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                                for (size_t i = 0; i < n; i++) { \
-                                  _s_chan_out_word(c, buf[i]); \
-                                } \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                              } while (0) );
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
+  for (size_t i = 0; i < n; i++)
+  {
+    _s_chan_out_word(c, buf[i]);
+  }
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
 }
 
 /** Output a block of data over a channel.
@@ -154,17 +144,16 @@ inline xcore_c_error_t chan_out_buf_word(chanend c, const uint32_t buf[], size_t
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
-inline xcore_c_error_t chan_out_buf_byte(chanend c, const uint8_t buf[], size_t n)
+inline void chan_out_buf_byte(chanend c, const uint8_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                                for (size_t i = 0; i < n; i++) { \
-                                  _s_chan_out_byte(c, buf[i]); \
-                                } \
-                                _s_chan_out_ct_end(c); \
-                                _s_chan_check_ct_end(c); \
-                              } while (0) );
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
+  for (size_t i = 0; i < n; i++)
+  {
+    _s_chan_out_byte(c, buf[i]);
+  }
+  _s_chan_out_ct_end(c);
+  _s_chan_check_ct_end(c);
 }
 
 /** Input a word from a channel.
@@ -180,15 +169,14 @@ inline xcore_c_error_t chan_out_buf_byte(chanend c, const uint8_t buf[], size_t 
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
-inline xcore_c_error_t chan_in_word(chanend c, uint32_t *data)
+inline uint32_t chan_in_word(chanend c)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_check_ct_end(c); \
-                                _s_chan_out_ct_end(c); \
-                                *data = _s_chan_in_word(c); \
-                                _s_chan_check_ct_end(c); \
-                                _s_chan_out_ct_end(c); \
-                              } while (0) );
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
+  uint32_t data = _s_chan_in_word(c);
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
+  return data;
 }
 
 /** Input a byte from a channel.
@@ -204,15 +192,14 @@ inline xcore_c_error_t chan_in_word(chanend c, uint32_t *data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
-inline xcore_c_error_t chan_in_byte(chanend c, uint8_t *data)
+inline uint8_t chan_in_byte(chanend c)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_check_ct_end(c); \
-                                _s_chan_out_ct_end(c); \
-                                *data = _s_chan_in_byte(c); \
-                                _s_chan_check_ct_end(c); \
-                                _s_chan_out_ct_end(c); \
-                              } while (0) );
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
+  uint8_t data = _s_chan_in_byte(c);
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
+  return data;
 }
 
 /** Input a block of data from a channel.
@@ -230,17 +217,16 @@ inline xcore_c_error_t chan_in_byte(chanend c, uint8_t *data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
-inline xcore_c_error_t chan_in_buf_word(chanend c, uint32_t buf[], size_t n)
+inline void chan_in_buf_word(chanend c, uint32_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_check_ct_end(c);
-                                _s_chan_out_ct_end(c);
-                                for (size_t i = 0; i < n; i++) { \
-                                  buf[i] = _s_chan_in_word(c); \
-                                } \
-                                _s_chan_check_ct_end(c);
-                                _s_chan_out_ct_end(c);
-                              } while (0) );
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
+  for (size_t i = 0; i < n; i++)
+  {
+    buf[i] = _s_chan_in_word(c);
+  }
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
 }
 
 /** Input a block of data from a channel.
@@ -258,17 +244,16 @@ inline xcore_c_error_t chan_in_buf_word(chanend c, uint32_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
-inline xcore_c_error_t chan_in_buf_byte(chanend c, uint8_t buf[], size_t n)
+inline void chan_in_buf_byte(chanend c, uint8_t buf[], size_t n)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _s_chan_check_ct_end(c);
-                                _s_chan_out_ct_end(c);
-                                for (size_t i = 0; i < n; i++) { \
-                                  buf[i] = _s_chan_in_byte(c); \
-                                } \
-                                _s_chan_check_ct_end(c);
-                                _s_chan_out_ct_end(c);
-                              } while (0) );
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
+  for (size_t i = 0; i < n; i++)
+  {
+    buf[i] = _s_chan_in_byte(c);
+  }
+  _s_chan_check_ct_end(c);
+  _s_chan_out_ct_end(c);
 }
 
 #endif // !defined(__XC__)

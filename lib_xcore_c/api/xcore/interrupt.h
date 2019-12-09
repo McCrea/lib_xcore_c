@@ -100,10 +100,9 @@
  *
  *  \return     error_none
  */
-inline xcore_c_error_t interrupt_mask_all(void)
+inline void interrupt_mask_all(void)
 {
   asm volatile("clrsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));
-  return error_none;
 }
 
 /** Unmask all interrupts on this logical core.
@@ -113,10 +112,9 @@ inline xcore_c_error_t interrupt_mask_all(void)
  *
  *  \return     error_none
  */
-inline xcore_c_error_t interrupt_unmask_all(void)
+inline void interrupt_unmask_all(void)
 {
   asm volatile("setsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));
-  return error_none;
 }
 
 /** Define an interrupt handling function

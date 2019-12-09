@@ -56,9 +56,11 @@ inline void _hwtimer_free(hwtimer_t t)
   _resource_free((resource_t)t);
 }
 
-inline void _hwtimer_get_time(hwtimer_t t, uint32_t *now)
+inline uint32_t _hwtimer_get_time(hwtimer_t t)
 {
-  asm volatile("in %0, res[%1]" : "=r" (*now): "r" (t));
+  register uint32_t now;
+  asm volatile("in %0, res[%1]" : "=r" (now): "r" (t));
+  return now;
 }
 
 inline void _hwtimer_change_trigger_time(hwtimer_t t, uint32_t time)

@@ -35,20 +35,17 @@
  *                                    or readyin/readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
- inline xcore_c_error_t
- port_protocol_in_handshake(port p, port readyin, port readyout, clock clk)
+ inline void port_protocol_in_handshake(port p, port readyin, port readyout, clock clk)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _port_set_inout_data(p); \
-                                _port_set_buffered(p); \
-                                /* ensure port is in input mode. */ \
-                                (void) _port_in(p); \
-                                _clock_set_ready_src(clk, readyin); \
-                                _port_set_clock(p, clk); \
-                                _port_set_ready_handshake(p); \
-                                _port_clear_buffer(p); \
-                                _port_set_out_ready(readyout, p); \
-                              } while (0) );
+  _port_set_inout_data(p);
+  _port_set_buffered(p);
+  /* ensure port is in input mode. */
+  (void) _port_in(p);
+  _clock_set_ready_src(clk, readyin);
+  _port_set_clock(p, clk);
+  _port_set_ready_handshake(p);
+  _port_clear_buffer(p);
+  _port_set_out_ready(readyout, p);
 }
 
 /** configures a port to be a clocked output port in handshake mode.
@@ -83,20 +80,17 @@
  *                                    or readyin/readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline xcore_c_error_t
-port_protocol_out_handshake(port p, port readyin, port readyout, clock clk, uint32_t initial)
+inline void port_protocol_out_handshake(port p, port readyin, port readyout, clock clk, uint32_t initial)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _port_set_inout_data(p); \
-                                _port_set_buffered(p); \
-                                /* ensure port is in output mode. */ \
-                                _port_out(p, initial); \
-                                _clock_set_ready_src(clk, readyin); \
-                                _port_set_clock(p, clk); \
-                                _port_set_ready_handshake(p); \
-                                _port_clear_buffer(p); \
-                                _port_set_out_ready(readyout, p); \
-                              } while (0) );
+  _port_set_inout_data(p);
+  _port_set_buffered(p);
+  /* ensure port is in output mode. */
+  _port_out(p, initial);
+  _clock_set_ready_src(clk, readyin);
+  _port_set_clock(p, clk);
+  _port_set_ready_handshake(p);
+  _port_clear_buffer(p);
+  _port_set_out_ready(readyout, p);
 }
 
 /** configures a port to be a clocked input port in strobed master mode.
@@ -123,20 +117,17 @@ port_protocol_out_handshake(port p, port readyin, port readyout, clock clk, uint
  *                                    or readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline xcore_c_error_t
-port_protocol_in_strobed_master(port p, port readyout, clock clk)
+inline void port_protocol_in_strobed_master(port p, port readyout, clock clk)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _port_set_inout_data(p); \
-                                _port_set_buffered(p); \
-                                /* ensure port is in input mode. */ \
-                                (void) _port_in(p); \
-                                _port_set_clock(p, clk); \
-                                _port_set_ready_strobed(p); \
-                                _port_set_master(p); \
-                                _port_clear_buffer(p); \
-                                _port_set_out_ready(readyout, p); \
-                              } while (0) );
+  _port_set_inout_data(p);
+  _port_set_buffered(p);
+  /* ensure port is in input mode. */
+  (void) _port_in(p);
+  _port_set_clock(p, clk);
+  _port_set_ready_strobed(p);
+  _port_set_master(p);
+  _port_clear_buffer(p);
+  _port_set_out_ready(readyout, p);
 }
 
 /** configures a port to be a clocked output port in strobed master mode.
@@ -163,20 +154,17 @@ port_protocol_in_strobed_master(port p, port readyout, clock clk)
  *                                    or readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline xcore_c_error_t
-port_protocol_out_strobed_master(port p, port readyout, clock clk, uint32_t initial)
+inline void port_protocol_out_strobed_master(port p, port readyout, clock clk, uint32_t initial)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _port_set_inout_data(p); \
-                                _port_set_buffered(p); \
-                                /* ensure port is in output mode. */ \
-                                _port_out(p, initial); \
-                                _port_set_clock(p, clk); \
-                                _port_set_ready_strobed(p); \
-                                _port_set_master(p); \
-                                _port_clear_buffer(p); \
-                                _port_set_out_ready(readyout, p); \
-                              } while (0) );
+  _port_set_inout_data(p);
+  _port_set_buffered(p);
+  /* ensure port is in output mode. */
+  _port_out(p, initial);
+  _port_set_clock(p, clk);
+  _port_set_ready_strobed(p);
+  _port_set_master(p);
+  _port_clear_buffer(p);
+  _port_set_out_ready(readyout, p);
 }
 
 /** configures a port to be a clocked input port in strobed slave mode.
@@ -200,20 +188,17 @@ port_protocol_out_strobed_master(port p, port readyout, clock clk, uint32_t init
  *                                    or readyin not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline xcore_c_error_t
-port_protocol_in_strobed_slave(port p, port readyin, clock clk)
+inline void port_protocol_in_strobed_slave(port p, port readyin, clock clk)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _port_set_inout_data(p); \
-                                _port_set_buffered(p); \
-                                /* ensure port is in input mode. */ \
-                                (void) _port_in(p); \
-                                _clock_set_ready_src(clk, readyin); \
-                                _port_set_clock(p, clk); \
-                                _port_set_ready_strobed(p); \
-                                _port_set_slave(p); \
-                                _port_clear_buffer(p); \
-                              } while (0) ); \
+  _port_set_inout_data(p);
+  _port_set_buffered(p);
+  /* ensure port is in input mode. */
+  (void) _port_in(p);
+  _clock_set_ready_src(clk, readyin);
+  _port_set_clock(p, clk);
+  _port_set_ready_strobed(p);
+  _port_set_slave(p);
+  _port_clear_buffer(p);
 }
 
 /** configures a port to be a clocked output port in strobed slave mode.
@@ -242,16 +227,14 @@ port_protocol_in_strobed_slave(port p, port readyin, clock clk)
 inline xcore_c_error_t
 port_protocol_out_strobed_slave(port p, port readyin, clock clk, uint32_t initial)
 {
-  RETURN_EXCEPTION_OR_ERROR(  do { \
-                                _port_set_inout_data(p); \
-                                _port_set_buffered(p); \
-                                /* ensure port is in output mode. */ \
-                                _port_out(p, initial); \
-                                _clock_set_ready_src(clk, readyin); \
-                                _port_set_clock(p, clk); \
-                                _port_set_ready_strobed(p); \
-                                _port_set_slave(p); \
-                              } while (0) );
+  _port_set_inout_data(p);
+  _port_set_buffered(p);
+  /* ensure port is in output mode. */
+  _port_out(p, initial);
+  _clock_set_ready_src(clk, readyin);
+  _port_set_clock(p, clk);
+  _port_set_ready_strobed(p);
+  _port_set_slave(p);
 }
 
 #endif // !defined(__XC__)
