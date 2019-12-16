@@ -69,14 +69,14 @@ inline void _resource_setup_select(resource_t r, uint32_t value)
   _resource_setup_select_callback(r, (void*)value, _select_non_callback);
 }
 
-#define _RESOURCE_ALLOC(res, id) asm volatile( "getr %0, " _XCORE_C_STR(id) : "=r" (res))
+#define _RESOURCE_ALLOC(res, id) asm volatile( "getr %0, %1" : "=r" (res) : "n" (id))
 
 inline void _resource_free(resource_t r)
 {
   asm volatile("freer res[%0]" :: "r" (r));
 }
 
-#define _RESOURCE_SETCI(res, c) asm volatile( "setc res[%0], " _XCORE_C_STR(c) :: "r" (res))
+#define _RESOURCE_SETCI(res, c) asm volatile( "setc res[%0], %1" :: "r" (res), "n" (c))
 
 #endif // !defined(__XC__)
 

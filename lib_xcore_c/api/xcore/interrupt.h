@@ -6,7 +6,6 @@
 #include <xcore/_support/xcore_c_interrupt_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 #include <xcore/_support/xcore_c_macros.h>
-#include <xcore/error_codes.h>
 #include <xs1.h>
 
 #ifndef XCORE_C_KSTACK_WORDS

@@ -61,8 +61,7 @@ inline void lock_free(lock_t l)
  */
 inline void lock_acquire(lock_t l)
 {
-  unsigned dummy;
-  asm volatile("in %0, res[%1]" : "=r" (dummy): "r" (l) : "memory");
+  _lock_acquire(l);
 }
 
 /** Release a lock.
@@ -81,7 +80,7 @@ inline void lock_acquire(lock_t l)
  */
 inline void lock_release(lock_t l)
 {
-  asm volatile("out res[%0], %0" :: "r" (l) : "memory");
+  _lock_release(l);
 }
 
 #endif // !defined(__XC__)

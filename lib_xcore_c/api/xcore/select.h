@@ -36,7 +36,7 @@
  */
 inline void select_disable_trigger_all(void)
 {
-  asm volatile("clre");
+  _select_disable_trigger_all();
 }
 
 /** Wait for a select event to trigger.
@@ -148,7 +148,12 @@ uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]);
 // new style
 
 #define SELECT_RESET do { goto* __xmm_select_reset; } while (0)
-#define CASE_THEN(...) (__VA_ARGS__)
+
+//TODO: Decide where this all lives...
+#define GUARD(GTYPE, EXPR) (GTYPE, EXPR)
+#define _XMM_GUARD_NONE (GTYPE_NONE_, /* Should never be used */)
+
+#define CASE_THEN(RES, LABEL) (RES, LABEL, _XMM_GUARD_NONE) //TODO: redefined in cpp
 #define C_SELECT_RES(...) _XMM_C_SELECT_RES_I(_XMM_UNIQUE_LABEL(xmm_htable), _XMM_UNIQUE_LABEL(xmm_sel_reset), __VA_ARGS__)
 
 #endif // !defined(__XC__)

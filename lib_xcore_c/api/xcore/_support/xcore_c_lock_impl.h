@@ -25,6 +25,17 @@ inline lock_t _lock_alloc(void)
   return l;
 }
 
+inline void _lock_acquire(l)
+{
+  unsigned dummy;
+  asm volatile("in %0, res[%1]" : "=r" (dummy): "r" (l) : "memory");
+}
+
+inline void _lock_release(lock_t l)
+{
+  asm volatile("out res[%0], %0" :: "r" (l) : "memory");
+}
+
 #endif // !defined(__XC__)
 
 #endif // __xcore_c_lock_impl_h__

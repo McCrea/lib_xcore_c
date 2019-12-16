@@ -56,10 +56,10 @@
 
 // new style
 
-#define _XMM_LABEL_I(VAL_, LABEL) LABEL
+#define _XMM_LABEL_I(VAL_, LABEL, GUARD_) LABEL
 #define _XMM_LABEL(PACK) _XMM_PSHIM(_XMM_LABEL_I, PACK)
 
-#define _XMM_C_SELECT_RES_SETUP_I(RES, LABEL) \
+#define _XMM_C_SELECT_RES_SETUP_I(RES, LABEL, GUARD) \
   do { \
     chanend_setup_select(RES, __xmm_htable_idx); \
     chanend_enable_trigger(RES); \
@@ -93,6 +93,11 @@
   } \
   else
 
+
+inline void _select_disable_trigger_all(void)
+{
+  asm volatile("clre");
+}
 
 #endif // !defined(__XC__)
 

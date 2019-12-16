@@ -25,6 +25,8 @@ typedef unsigned port;
 #include <xs1.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 
+#include <xcore/clock.h> //TODO: for xclock, consider removing once naming is fixed
+
 inline void _port_set_transfer_width(port p, size_t width)
 {
   asm volatile("settw res[%0], %1" :: "r" (p), "r" (width));
@@ -56,7 +58,7 @@ inline void _port_set_unbuffered(port p)
   _RESOURCE_SETCI(p, XS1_SETC_BUF_NOBUFFERS);
 }
 
-inline void _port_set_clock(port p, clock clk)
+inline void _port_set_clock(port p, xclock clk)
 {
   asm volatile("setclk res[%0], %1" :: "r" (p), "r" (clk));
 }

@@ -209,7 +209,7 @@ inline void port_set_unbuffered(port p)
  *                                    or clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
-inline void port_set_clock(port p, clock clk)
+inline void port_set_clock(port p, xclock clk)
 {
   _port_set_clock(p, clk);
 }

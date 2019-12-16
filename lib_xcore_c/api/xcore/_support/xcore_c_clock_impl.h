@@ -18,12 +18,34 @@
  *
  *  Users must not access its raw underlying type.
  */
-typedef unsigned clock;
+typedef unsigned xclock;
+#else //TODO - remove this once naming sorted
+typedef unsigned xclock;
 #endif
 
-inline void _clock_set_ready_src(clock clk, port ready_source)
+inline void _clock_set_ready_src(xclock clk, port ready_source)
 {
   asm volatile("setrdy res[%0], %1" :: "r" (clk), "r" (ready_source));
+}
+
+inline void _clock_set_source_port(xclock clk, port p)
+{
+  asm volatile("setclk res[%0], %1" :: "r" (clk), "r" (p));
+}
+
+inline void _clock_set_source_clk_ref(xclock clk)
+{
+  asm volatile("setclk res[%0], %1" :: "r" (clk), "r" (XS1_CLK_REF));
+}
+
+inline void _clock_set_source_clk_xcore(xclock clk)
+{
+  asm volatile("setclk res[%0], %1" :: "r" (clk), "r" (XS1_CLK_XCORE));
+}
+
+inline void _clock_set_divide(xclock clk, uint8_t divide)
+{
+  asm volatile("setd res[%0], %1" :: "r" (clk), "r" (divide));
 }
 
 #endif // !defined(__XC__)
