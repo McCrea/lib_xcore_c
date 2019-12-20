@@ -56,10 +56,10 @@
 
 // new style
 
-#define _XMM_LABEL_I(VAL_, LABEL, GUARD_) LABEL
+#define _XMM_LABEL_I(VAL_, LABEL, ...) LABEL
 #define _XMM_LABEL(PACK) _XMM_PSHIM(_XMM_LABEL_I, PACK)
 
-#define _XMM_C_SELECT_RES_SETUP_I(RES, LABEL, GUARD) \
+#define _XMM_C_SELECT_RES_SETUP_I(RES, LABEL, ...) \
   do { \
     chanend_setup_select(RES, __xmm_htable_idx); \
     chanend_enable_trigger(RES); \
@@ -97,6 +97,87 @@
 inline void _select_disable_trigger_all(void)
 {
   asm volatile("clre");
+}
+
+inline void _select_event_enable_unconditional(const resource_t resource)
+{
+  asm volatile(
+    "eeu res[%[res]] \n"
+    : /* No outputs */
+    : [res] "r"(resource));
+}
+
+inline void _select_event_disable_unconditional(const resource_t resource)
+{
+  asm volatile(
+    "edu res[%[res]] \n"
+    : /* No outputs */
+    : [res] "r"(resource));
+}
+
+inline void _select_event_set_enable(const resource_t resource, const int condition)
+{
+  asm volatile(
+    "eet %[cond], res[%[res]] \n"
+    : /* No outputs */
+    : [res] "r"(resource) , [cond] "r"(condition));
+}
+
+inline void _select_event_set_enable_inv(const resource_t resource, const int condition)
+{
+  asm volatile(
+    "eef %[cond], res[%[res]] \n"
+    : /* No outputs */
+    : [res] "r"(resource) , [cond] "r"(condition));
+}
+
+inline void _select_event_enable_if_true(const resource_t resource, const int condition)
+{
+  if (__builtin_constant_p(condition))
+  {
+    if (condition)
+    {
+      _select_event_enable_unconditional(resource);
+    }
+    else
+    {
+      _select_event_disable_unconditional(resource);
+    }
+  }
+  else 
+  {
+    _select_event_set_enable(resource, condition);
+  }
+  return condition;
+}
+
+inline void _select_event_enable_if_false(const resource_t resource, const int condition)
+{
+  if (__builtin_constant_p(condition))
+  {
+    if (condition)
+    {
+      _select_event_disable_unconditional(resource);
+    }
+    else
+    {
+      _select_event_enable_unconditional(resource);
+    }
+  }
+  else 
+  {
+    _select_event_set_enable_inv(resource, condition);
+  }
+  return condition;
+}
+
+inline void _register_event_vector(const resource_t resource, void * const vector)
+{
+  register void * const vector_reg asm("r11") = vector; 
+  asm volatile (
+    "setv res[%[res]], %[target] \n"
+    :
+    : [res] "r"(resource), [target] "r"(vector_reg));
 }
 
 #endif // !defined(__XC__)
