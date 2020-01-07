@@ -8,10 +8,10 @@
 #include <stdint.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 
-#ifndef NO_XCLANG_ADDITIONS
-#include <xcore/_support/xcore_c_select_impl_xclang.h>
-#else
+#if defined(XCC_VERSION_MAJOR) || defined(NO_XCLANG_ADDITIONS)
 #include <xcore/_support/xcore_c_select_impl_xcc.h>
+#else
+#include <xcore/_support/xcore_c_select_impl_xclang.h>
 #endif
 
 /** Starting value to use for the enum_id
@@ -109,7 +109,7 @@ uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]);
 
 
 #define SELECT_RESET _XMM_SELECT_RESET_I
-#define CASE_THEN(RES, LABEL) _XMM_SELECT_RES(RES, LABEL, _XMM_GUARD_NONE) //TODO: redefined in cpp
+#define CASE_THEN(RES, LABEL) _XMM_SELECT_RES(RES, LABEL, _XMM_GUARD_NONE)
 #define CASE_GUARD_THEN(RES, GUARD_EXPR, LABEL) _XMM_SELECT_RES(RES, LABEL, _XMM_GUARD_TRUE(GUARD_EXPR))
 #define CASE_NGUARD_THEN(RES, GUARD_EXPR, LABEL) _XMM_SELECT_RES(RES, LABEL, _XMM_GUARD_FALSE(GUARD_EXPR))
 #define DEFAULT_THEN(LABEL) _XMM_SELECT_DEFAULT(LABEL, _XMM_GUARD_NONE)
