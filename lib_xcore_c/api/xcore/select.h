@@ -6,8 +6,13 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
-#include <xcore/_support/xcore_c_select_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
+
+#ifndef NO_XCLANG_ADDITIONS
+#include <xcore/_support/xcore_c_select_impl_xclang.h>
+#else
+#include <xcore/_support/xcore_c_select_impl_xcc.h>
+#endif
 
 /** Starting value to use for the enum_id
  *
@@ -100,73 +105,16 @@ uint32_t select_wait_ordered(const resource_t ids[]);
  */
 uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]);
 
-/** Define a select callback handling function
- *
- *  This macro will define two functions for you:
- *    - An ordinary function that may be called directly
- *      Its signature will be 'void *callback* ( void\* *data* )'
- *    - An select_callback_t function for passing to the res_setup_select_callback functions
- *      The select_callback_t function name is accessed using the SELECT_CALLBACK() macro
- *
- *  Example usage: \code
- *    DEFINE_SELECT_CALLBACK(myfunc, arg)
- *    {
- *      // This is the body of 'void myfunc(void* arg)'
- *    }
- *  \endcode
- *
- *  \param callback this is the name of the ordinary function
- *  \param data     the name to use for the void* argument
- */
-#define DEFINE_SELECT_CALLBACK(callback, data) _DEFINE_SELECT_CALLBACK(callback, data)
-
-/** Declare a select callback handling function
- *
- *  Use this macro when you require a declaration of your select callback function types
- *
- *  Example usage: \code
- *    DECLARE_SELECT_CALLBACK(myfunc, arg);
- *    chanend_setup_select_callback(c, 0 , SELECT_CALLBACK(myfunc));
- *	\endcode
- *
- *  \param callback this is the name of the ordinary function
- *  \param data     the name to use for the void* argument
- */
-#define DECLARE_SELECT_CALLBACK(callback, data) _DECLARE_SELECT_CALLBACK(callback, data)
-
-/** The name of the defined 'select_callback_t' function
- *
- *  Use this macro for retriving the name of the declared select callback function.
- *  This is the name that is passed to *res*_setup_select_callback() for registration.
- *
- *  \return     the name of the defined select_callback_t function
- */
-#define SELECT_CALLBACK(callback) _SELECT_CALLBACK(callback)
 
 
 
-// new style
-
-#define SELECT_RESET do { goto* __xmm_select_reset; } while (0)
-
-//TODO: Decide where this all lives...
-#define GUARD(GTYPE, EXPR) (GTYPE, EXPR)
-#define _XMM_GUARD_NONE _XMM_GTYPE_NONE, /* Should never be used */
-#define _XMM_GUARD_TRUE(EXPR) _XMM_GTYPE_TRUE, EXPR
-#define _XMM_GUARD_FALSE(EXPR) _XMM_GTYPE_FALSE, EXPR
-
-#define _XMM_SELECT_RES(...) (_XMM_SEL_RES, (__VA_ARGS__))
-#define _XMM_SELECT_DEFAULT(...) (_XMM_SEL_DEFAULT, (__VA_ARGS__))
-
+#define SELECT_RESET _XMM_SELECT_RESET_I
 #define CASE_THEN(RES, LABEL) _XMM_SELECT_RES(RES, LABEL, _XMM_GUARD_NONE) //TODO: redefined in cpp
 #define CASE_GUARD_THEN(RES, GUARD_EXPR, LABEL) _XMM_SELECT_RES(RES, LABEL, _XMM_GUARD_TRUE(GUARD_EXPR))
 #define CASE_NGUARD_THEN(RES, GUARD_EXPR, LABEL) _XMM_SELECT_RES(RES, LABEL, _XMM_GUARD_FALSE(GUARD_EXPR))
 #define DEFAULT_THEN(LABEL) _XMM_SELECT_DEFAULT(LABEL, _XMM_GUARD_NONE)
 #define DEFAULT_GUARD_THEN(GUARD_EXPR, LABEL) _XMM_SELECT_DEFAULT(LABEL, _XMM_GUARD_TRUE(GUARD_EXPR))
 #define DEFAULT_NGUARD_THEN(GUARD_EXPR, LABEL) _XMM_SELECT_DEFAULT(LABEL, _XMM_GUARD_FALSE(GUARD_EXPR))
-
-
-#define C_SELECT_RES(...) _XMM_C_SELECT_RES_I(_XMM_UNIQUE_LABEL(xmm_htable), _XMM_UNIQUE_LABEL(xmm_sel_reset), __VA_ARGS__)
 
 #endif // !defined(__XC__)
 

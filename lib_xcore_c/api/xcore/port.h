@@ -1064,6 +1064,12 @@ inline void port_disable_trigger(port p)
   _resource_disable_trigger(p);
 }
 
+
+inline void port_set_trigger_value(port p, uint32_t d)
+{
+  asm volatile("setd res[%0], %1" :: "r" (p), "r" (d));
+}
+
 #endif // !defined(__XC__)
 
 #endif // __xcore_c_port_h__
