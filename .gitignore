@@ -19,3 +19,10 @@
 *.xmt
 *.csv
 **/tests/build_with_no_inline/src/test.c
+
+#For xClang
+*.d
+*.s.tmp
+*.xo
+*.xd
+
