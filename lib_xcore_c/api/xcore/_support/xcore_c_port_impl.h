@@ -32,10 +32,9 @@ inline void _port_set_transfer_width(port p, size_t width)
   asm volatile("settw res[%0], %1" :: "r" (p), "r" (width));
 }
 
-inline port _port_alloc(unsigned id)
+inline void _port_enable(unsigned id)
 {
   _RESOURCE_SETCI((resource_t)id, XS1_SETC_INUSE_ON);
-  return id;
 }
 
 inline void _port_reset(port p)
@@ -141,16 +140,21 @@ inline void _port_clear_trigger_time(port p)
   asm volatile("clrpt res[%0]" :: "r" (p));
 }
 
+inline void _port_set_trigger_value(port p, uint32_t d)
+{
+  asm volatile("setd res[%0], %1" :: "r" (p), "r" (d));
+}
+
 inline void _port_set_trigger_in_equal(port p, uint32_t d)
 {
   _RESOURCE_SETCI(p, XS1_SETC_COND_EQ);
-  asm volatile("setd res[%0], %1" :: "r" (p), "r" (d));
+  _port_set_trigger_value(p, d);
 }
 
 inline void _port_set_trigger_in_not_equal(port p, uint32_t d)
 {
   _RESOURCE_SETCI(p, XS1_SETC_COND_NEQ);
-  asm volatile("setd res[%0], %1" :: "r" (p), "r" (d));
+  _port_set_trigger_value(p, d);
 }
 
 inline void _port_clear_trigger_in(port p)

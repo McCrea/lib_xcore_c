@@ -127,7 +127,7 @@
   } \
   else
 
-#define SELECT_RES(...) _XMM_SELECT_RES_I(_XMM_UNIQUE_LABEL(__xmm_htable), _XMM_UNIQUE_LABEL(__xmm_sel_reset), _XMM_SELECT_RES_FILTER_DEFAULT(__VA_ARGS__), _XMM_SELECT_RES_FILTER_RES(__VA_ARGS__))
+#define _XMM_SELECT_RES(...) _XMM_SELECT_RES_I(_XMM_UNIQUE_LABEL(__xmm_htable), _XMM_UNIQUE_LABEL(__xmm_sel_reset), _XMM_SELECT_RES_FILTER_DEFAULT(__VA_ARGS__), _XMM_SELECT_RES_FILTER_RES(__VA_ARGS__))
 
 #define _XMM_SELECT_RES_ENABLER_ORDERED__XMM_GTYPE_TRUE(RES, EXPR, TNAME, ...) \
   do { \
@@ -179,7 +179,7 @@
 // Note: TNAME gets passed as first label name for convenience
 #define _XMM_SELECT_RES_ORDERED_I(TNAME, LNAME, DEFAULT_PACK, ...) _XMM_SELECT_RES_ORDERED_II(TNAME, LNAME, DEFAULT_PACK, (TNAME, _XMM_APPLY(_XMM_LABEL, __VA_ARGS__)), __VA_ARGS__)
 
-#define SELECT_RES_ORDERED(...) \
+#define _XMM_SELECT_RES_ORDERED(...) \
   _XMM_SELECT_RES_ORDERED_I( \
     _XMM_UNIQUE_LABEL(__xmm_htable), \
     _XMM_UNIQUE_LABEL(__xmm_sel_reset), \

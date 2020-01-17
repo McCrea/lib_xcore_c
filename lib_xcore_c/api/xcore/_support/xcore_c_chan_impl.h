@@ -10,26 +10,6 @@
 
 #include <stdint.h>
 #include <xccompat.h>
-#ifdef __DOXYGEN__
-// Copy typedefs from xccompat.h for use by doxygen
-/** Opaque type for use in C/C++ code.
- *
- * It enables a xC function prototyped as taking a parameter of type chanend to
- * be called from C and vice versa.
- *
- *  Users must not access its raw underlying type.
- */
-typedef unsigned chanend;
-
-/** Opaque type for use in C/C++ code.
- *
- * It enables a xC function prototyped as taking a parameter of type
- * streaming_chanend_t to be called from C and vice versa.
- *
- *  Users must not access its raw underlying type.
- */
-typedef unsigned streaming_chanend_t;
-#endif
 #include <xs1.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 
@@ -38,10 +18,8 @@ typedef unsigned streaming_chanend_t;
  *  Users must not access its raw underlying type.
  */
 typedef struct transacting_chanend_t {
-#ifndef __DOXYGEN__
   streaming_chanend_t c;
   unsigned last_out;
-#endif // __DOXYGEN__
 } transacting_chanend_t;
 
 inline streaming_chanend_t _s_chanend_alloc(void)

@@ -1,5 +1,9 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
 
+/** \file
+ *  \brief Helpers for implementing interrupt-enabled functions.
+ */
+
 #ifndef __xcore_c_interrupt_h__
 #define __xcore_c_interrupt_h__
 
@@ -9,20 +13,22 @@
 #include <xs1.h>
 
 #ifndef XCORE_C_KSTACK_WORDS
-/** Specify the minimum kernel stack size the interrupt permitting function should create.
+/** \brief Specify the minimum kernel stack size the interrupt permitting function should create.
  *
- *  The user may specify a minimum kstack size by setting the XCORE_C_KSTACK_WORDS
+ *  The user may specify a minimum kstack size by setting the \ref XCORE_C_KSTACK_WORDS
  *  define in their Makefile.
  *  This should be done when the kstack is being used by more than interrupt_callback_t functions.
+ *
+ *  \showinitializer
  */ 
 #define XCORE_C_KSTACK_WORDS 0
 #endif
 
-/** Define a function that allows interrpts to occur within its scope
+/** \brief Define a function that allows interrupts to occur within its scope
  *
  *  This macro will define two functions for you:
  *    - An ordinary function that may be called directly
- *     	Its signature will be '*ret* *root_function* ( *...* )'
+ *     	Its signature will be <tt>\a ret \a root_function ( \a ... )</tt>
  *    - A function that will also reserve space for and set up a stack
  *     	for handling interrupts.
  *     	The function name is accessed using the INTERRUPT_PERMITTED() macro
@@ -34,11 +40,11 @@
  *  kernel stack nor ksp is valid.
  *
  *  The kernel stack allocated has enough space for the interrupt_callback_t
- *  function (+callees) in the given 'group'. The use of the 'group' identifier
+ *  function (+callees) in the given \a group. The use of the \a group identifier
  *  allows a kernel stack to be no larger than that required by its greediest member.
  *
- *  **The kernel stack is not re-entrant so kernel mode must not be masked
- *  from within an interrupt_callback_t**
+ *  \warning The kernel stack is not re-entrant so kernel mode must not be masked
+ *  from within an interrupt_callback_t
  *
  *  The user may specify a larger kernel stack by defining XCORE_C_KSTACK_WORDS.
  *
@@ -49,16 +55,17 @@
  *    }
  *  \endcode
  *
- *  \param group            this is the group of interrupt_callback_t function
- *                          that may be safely enabled - see DEFINE_INTERRUPT_CALLBACK()
- *  \param ret              the return type of the ordinary function
- *  \param root_function    the name of the ordinary function
- *  \param ...              the arguments of the ordinary function
+ *  \param group          this is the group of interrupt_callback_t function
+ *                        that may be safely enabled - see DEFINE_INTERRUPT_CALLBACK()
+ *  \param ret            the return type of the ordinary function
+ *  \param root_function  the name of the ordinary function
+ *  \param ...            the arguments of the ordinary function
+ *  \hideinitializer
  */
 #define DEFINE_INTERRUPT_PERMITTED(group, ret, root_function, ...) \
         _DEFINE_INTERRUPT_PERMITTED(group, ret, root_function, __VA_ARGS__)
 
-/** Declare an interrupt permitting function
+/** \brief Declare an interrupt permitting function
  *
  *  Use this macro when you require a declaration of your interrupt permitting function types
  *
@@ -74,58 +81,57 @@
  *          INTERRUPT_PERMITTED(anotherfunc)();  // kstack for groupB.
  *  \endcode
  *
- *  \param ret              the return type of the ordinary function
- *  \param root_function    the name of the ordinary function
- *  \param ...              the arguments of the ordinary function
+ *  \param ret            the return type of the ordinary function
+ *  \param root_function  the name of the ordinary function
+ *  \param ...            the arguments of the ordinary function
+ *  \hideinitializer
  */
 #define DECLARE_INTERRUPT_PERMITTED(ret, root_function, ...) \
         _DECLARE_INTERRUPT_PERMITTED(ret, root_function, __VA_ARGS__)
 
-/** The name of the defined interrupt permitting function
+/** \brief The name of the defined interrupt permitting function
  *
  *  Use this macro for retriving the name of the declared interrupt function.
  *  This is the name used to invoke the function.
  *
- *  \return     the name of the defined interrupt permitting function
+ *  \return the name of the defined interrupt permitting function
+*   \hideinitializer
  */
 #define INTERRUPT_PERMITTED(root_function) _INTERRUPT_PERMITTED(root_function)
 
-/** Mask all interrupts on this logical core.
+/** \brief Mask all interrupts on this logical core.
  *
- *  Prevent any enabled *res*_setup_interrupt_callback() functions
+ *  Prevent any enabled \c *_setup_interrupt_callback() functions
  *  from triggering.
- *  This has no effect on *res*_setup_select_callback() triggering.
+ *  This has no effect on \c *_setup_select_callback() triggering.
  *  They can be restored by using interrupt_unmask_all().
- *
- *  \return     error_none
  */
 inline void interrupt_mask_all(void)
 {
   asm volatile("clrsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));
 }
 
-/** Unmask all interrupts on this logical core.
+/** \brief Unmask all interrupts on this logical core.
  *
- *  Allow any *res*_setup_interrupt_callback() functions to trigger.
+ *  Allow any \c *_setup_interrupt_callback() functions to trigger.
  *  They can be suppressed by using interrupt_mask_all().
- *
- *  \return     error_none
+ *  \hideinitializer
  */
 inline void interrupt_unmask_all(void)
 {
   asm volatile("setsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));
 }
 
-/** Define an interrupt handling function
+/** \brief Define an interrupt handling function
  *
  *  This macro will define two functions for you:
  *    - An ordinary function that may be called directly
- *      Its signature will be 'void *intrpt* ( void\* *data* )'
+ *      Its signature will be <tt>void \a intrpt ( void* \a data )</tt>
  *    - An interrupt_callback_t function for passing to a res_setup_interrupt_callback function.
  *      The interrupt_callback_t function name is accessed using the INTERRUPT_CALLBACK() macro
  *
- *  **The kernel stack is not re-entrant so kernel mode must not be masked
- *  from within an interrupt_callback_t**
+ *  \warning The kernel stack is not re-entrant so kernel mode must not be masked
+ *  from within an interrupt_callback_t
  *
  *  Example usage: \code
  *    DEFINE_INTERRUPT_CALLBACK(groupA, myfunc, arg)
@@ -134,15 +140,16 @@ inline void interrupt_unmask_all(void)
  *    }
  *  \endcode
  *
- *  \param group    the group of interrupt_callback_t function we belong to
- *                  see DEFINE_INTERRUPT_PERMITTED()
- *  \param intrpt   this is the name of the ordinary function
- *  \param data     the name to use for the void* argument
+ *  \param group   the group of interrupt_callback_t function we belong to
+ *                 see DEFINE_INTERRUPT_PERMITTED()
+ *  \param intrpt  this is the name of the ordinary function
+ *  \param data    the name to use for the void* argument
+ *  \hideinitializer
  */
 #define DEFINE_INTERRUPT_CALLBACK(group, intrpt, data) \
         _DEFINE_INTERRUPT_CALLBACK(group, intrpt, data)
 
-/** Declare an interrupt handling function
+/** \brief Declare an interrupt handling function
  *
  *  Use this macro when you require a declaration of your interrupt function types
  *
@@ -151,18 +158,20 @@ inline void interrupt_unmask_all(void)
  *    chanend_setup_interrupt_callback(c, 0 , INTERRUPT_CALLBACK(myfunc));
  *  \endcode
  *
- *  \param intrpt   this is the name of the ordinary function
- *  \param data     the name to use for the void* argument
+ *  \param intrpt  this is the name of the ordinary function
+ *  \param data    the name to use for the void* argument
+ *  \hideinitializer
  */
 #define DECLARE_INTERRUPT_CALLBACK(intrpt, data) \
         _DECLARE_INTERRUPT_CALLBACK(intrpt, data)
 
-/** The name of the defined 'interrupt_callback_t' function
+/** \brief The name of the defined \c interrupt_callback_t function
  *
  *  Use this macro for retriving the name of the declared interrupt callback function.
- *  This is the name that is passed to *res*_setup_interrupt_callback() for registration.
+ *  This is the name that is passed to \c *_setup_interrupt_callback() for registration.
  *
- *  \return     the name of the defined interrupt_callback_t function
+ *  \return the name of the defined interrupt_callback_t function
+ *  \hideinitializer
  */
 #define INTERRUPT_CALLBACK(intrpt) _INTERRUPT_CALLBACK(intrpt)
 
