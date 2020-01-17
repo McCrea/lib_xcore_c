@@ -11,9 +11,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <xcore/_support/xcore_c_channel_streaming.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
-#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** \brief Start a transaction (master).
  *
@@ -108,7 +106,7 @@ inline chanend chan_complete_transaction(transacting_chanend_t tc)
     _s_chan_out_ct_end(tc.c);
   }
 
-  return (chanend)tc->c.;
+  return (chanend)tc.c;
 }
 
 /** \brief Output a word over a transacting chan-end.

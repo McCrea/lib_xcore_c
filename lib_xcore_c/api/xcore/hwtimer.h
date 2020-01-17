@@ -12,7 +12,6 @@
 #include <stdint.h>
 #include <xcore/_support/xcore_c_hwtimer_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
-#include <xcore/_support/xcore_c_exception_impl.h>
 
 /** \brief Deallcoates the hardware timer automatically allocated
  *
@@ -146,7 +145,7 @@ inline void hwtimer_clear_trigger_time(hwtimer_t t)
 
 /** \brief Wait until after a specified time.
  *
- *  **This will destroy any select or interrupt event triggers set on this resource**
+ *  \attention This will destroy any select or interrupt event triggers set on this resource.
  *
  *  \param t      The timer to use for timing
  *  \param until  The time to wait until
@@ -159,7 +158,7 @@ inline void hwtimer_clear_trigger_time(hwtimer_t t)
 inline uint32_t hwtimer_wait_until(hwtimer_t t, uint32_t until)
 {
   _hwtimer_set_trigger_time(t, until);
-  uint32_t now = _hwtimer_get_time(t, now);
+  uint32_t now = _hwtimer_get_time(t);
   _hwtimer_clear_trigger_time(t);
   return now;
 }

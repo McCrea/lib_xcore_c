@@ -10,22 +10,9 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <xccompat.h>
-#ifdef __DOXYGEN__
-// Copy typedefs from xccompat.h for use by doxygen
-/**
- * port is an opaque type for use in C/C++ code.
- * It enables a xC function prototyped as taking a parameter of type port to
- * be called from C and vice versa.
- *
- *  Users must not access its raw underlying type.
- */
-typedef unsigned port;
-#endif
+
 #include <xs1.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
-
-#include <xcore/clock.h> //TODO: for xclock, consider removing once naming is fixed
 
 inline void _port_set_transfer_width(port p, size_t width)
 {

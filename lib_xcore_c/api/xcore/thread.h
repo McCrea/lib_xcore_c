@@ -25,15 +25,16 @@ inline threadgroup_t thread_group_alloc(void)
  *  Adds a thead function invocation to a thread group allocated using thread_group_alloc().
  *  This configures a hardware thread to execute \a func with \a argument as its sole parameter
  *  and with its stack pointer initialised to \a stack_base.
- *  \a stack_base must be word aligned and point to the end of a block of memory sufficient to
- *  satisfy <tt>func</tt>'s stack requirements.
+ *  \a stack_base must be word aligned and point to the last word of a block of memory sufficient 
+ *  to satisfy <tt>func</tt>'s stack requirements.
  *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base)</tt> 
  *  will be  used as the thread's stack and will be clobbered.
  *  
  *  \param group           Thread group handle as returned by thread_group_alloc().
  *  \param func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
  *  \param[in] argument    Parameter to pass to \a func.
- *  \param[in] stack_base  Word aligned pointer past the end of the region to use as a stack when calling \a func.
+ *  \param[in] stack_base  Word aligned pointer to the last word of the region to use as a stack 
+ *                         when calling \a func. Note that this can be calculated with stack_base().
  *
  * \note Execution of \a func will not begin until the group is started using thread_group_start().
  */
@@ -109,8 +110,8 @@ inline void thread_group_wait_and_free(const threadgroup_t group)
  *
  *  Starts executing \a func in a separate hardware thread with \a argument as its sole parameter
  *  and with its stack pointer initialised to \a stack_base.
- *  \a stack_base must be word aligned and point to the end of a block of memory sufficient to
- *  satisfy <tt>func</tt>'s stack requirements.
+ *  \a stack_base must be word aligned and point to the last word of a block of memory sufficient
+ *  to satisfy <tt>func</tt>'s stack requirements.
  *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base)</tt> 
  *  will be  used as the thread's stack and will be clobbered.
  *
@@ -120,7 +121,8 @@ inline void thread_group_wait_and_free(const threadgroup_t group)
  *
  *  \param func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
  *  \param[in] argument    Parameter to pass to \a func.
- *  \param[in] stack_base  Word aligned pointer past the end of the region to use as a stack when calling \a func.
+ *  \param[in] stack_base  Word aligned pointer to the last word of the region to use as a stack 
+ *                         when calling \a func. Note that this can be calculated with stack_base().
  *  \return A waitable handle for the hardware thread.
  */
 inline xthread_t xthread_alloc_and_start(const thread_function_t func, 
@@ -152,8 +154,8 @@ inline void xthread_wait_and_free(const xthread_t thread)
  *
  *  Starts executing \a func in a separate hardware thread with \a argument as its sole parameter
  *  and with its stack pointer initialised to \a stack_base.
- *  \a stack_base must be word aligned and point to the end of a block of memory sufficient to
- *  satisfy <tt>func</tt>'s stack requirements.
+ *  \a stack_base must be word aligned and point to the last word of a block of memory sufficient
+ *  to satisfy <tt>func</tt>'s stack requirements.
  *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base)</tt> 
  *  will be  used as the thread's stack and will be clobbered.
  *
@@ -164,7 +166,8 @@ inline void xthread_wait_and_free(const xthread_t thread)
  *
  *  \param func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
  *  \param[in] argument    Parameter to pass to \a func.
- *  \param[in] stack_base  Word aligned pointer past the end of the region to use as a stack when calling \a func.
+ *  \param[in] stack_base  Word aligned pointer to the last word of the region to use as a stack 
+ *                         when calling \a func. Note that this can be calculated with stack_base().
  */
 inline void run_async(const thread_function_t func,
                       void * const argument,
@@ -176,4 +179,28 @@ inline void run_async(const thread_function_t func,
   __xcore_c_set_thread_parameter0(thread, argument);
   __xcore_c_set_thread_terminator(thread, _xcore_c_unsynchronised_thread_end);
   __xcore_c_unsynronised_thread_start(thread);
+}
+
+
+/** \brief Returns a stack pointer suitable for use as a \c stack_base argument 
+ *         given a base address and a size.
+ * 
+ *   Given a base pointer (e.g. as returned by malloc or found by taking the address of an object)
+ *   and the size of the intended stack in words, returns a stack base pointer to the
+ *   last word of the stack - which is suitable for passing to the \c stack_base arguments of
+ *   xthread_alloc_and_start(), run_async() and thread_group_add(). The given base address
+ *   must be word aligned as the resulting stack pointer is required to be word aligned also.
+ *   The resulting pointer will be a valid stack pointer for a stack \p words words in size.
+ *   If used as a stack pointer for a function with a stack requirement no greater than \p words
+ *   words then the memory region used as a stack by that function will not be beyond
+ *   <tt>[mem_base, (char *)mem_base + words*WORD_SIZE)</tt> in either direction.
+ *
+ *   \param[in] mem_base  The base (lowest) address of the object/region to use as a stack.
+ *                        Must be word aligned.
+ *   \param words         Size of the stack the returned pointed will return to in words
+ *   \return              The stack pointer.
+ */
+inline void *stack_base(void * const mem_base, size_t const words)
+{
+  return (void *)((char *)mem_base + sizeof(int)*(words-1));
 }

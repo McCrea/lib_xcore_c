@@ -28,6 +28,9 @@
 #define ENUM_ID_BASE 0x10000
 #endif
 
+
+inline void _select_disable_trigger_all();
+
 /** Disable all select events on this logical core.
  *
  *  This function is called before starting to configure select events for

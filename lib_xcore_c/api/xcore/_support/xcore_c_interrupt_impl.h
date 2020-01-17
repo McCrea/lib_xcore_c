@@ -6,8 +6,8 @@
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
-#include <xocre/_support/xcore_c_macros.h>
-#include <xocre/_support/xcore_c_resource_impl.h>
+#include <xcore/_support/xcore_c_macros.h>
+#include <xcore/_support/xcore_c_resource_impl.h>
 
 // The user may define a larger kstack for their own worse case use.
 #ifndef XCORE_C_KSTACK_WORDS

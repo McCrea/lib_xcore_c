@@ -12,7 +12,8 @@
 #include <stdint.h>
 #include <xcore/_support/xcore_c_port_impl.h>
 #include <xcore/_support/xcore_c_clock_impl.h>
-#include <xcore/_support/xcore_c_exception_impl.h>
+#include <xcore/clock_id.h>
+#include <xcore/port_id.h>
 
 /** \brief Configure a port to be a clocked input port in handshake mode.
  *
@@ -37,7 +38,7 @@
  *                                    or readyin/readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
- inline void port_protocol_in_handshake(port p, port readyin, port readyout, clock clk)
+ inline void port_protocol_in_handshake(port_id_t p, port_id_t readyin, port_id_t readyout, clock_id_t clk)
 {
   _port_set_inout_data(p);
   _port_set_buffered(p);
@@ -80,7 +81,7 @@
  *                                    or readyin/readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline void port_protocol_out_handshake(port p, port readyin, port readyout, clock clk, uint32_t initial)
+inline void port_protocol_out_handshake(port_id_t p, port_id_t readyin, port_id_t readyout, clock_id_t clk, uint32_t initial)
 {
   _port_set_inout_data(p);
   _port_set_buffered(p);
@@ -115,7 +116,7 @@ inline void port_protocol_out_handshake(port p, port readyin, port readyout, clo
  *                                    or readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline void port_protocol_in_strobed_master(port p, port readyout, clock clk)
+inline void port_protocol_in_strobed_master(port_id_t p, port_id_t readyout, clock_id_t clk)
 {
   _port_set_inout_data(p);
   _port_set_buffered(p);
@@ -150,7 +151,7 @@ inline void port_protocol_in_strobed_master(port p, port readyout, clock clk)
  *                                    or readyout not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline void port_protocol_out_strobed_master(port p, port readyout, clock clk, uint32_t initial)
+inline void port_protocol_out_strobed_master(port_id_t p, port_id_t readyout, clock_id_t clk, uint32_t initial)
 {
   _port_set_inout_data(p);
   _port_set_buffered(p);
@@ -182,7 +183,7 @@ inline void port_protocol_out_strobed_master(port p, port readyout, clock clk, u
  *                                    or readyin not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline void port_protocol_in_strobed_slave(port p, port readyin, clock clk)
+inline void port_protocol_in_strobed_slave(port_id_t p, port_id_t readyin, clock_id_t clk)
 {
   _port_set_inout_data(p);
   _port_set_buffered(p);
@@ -218,8 +219,7 @@ inline void port_protocol_in_strobed_slave(port p, port readyin, clock clk)
  *                                    or readyin not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing a port/clock
  */
-inline xcore_c_error_t
-port_protocol_out_strobed_slave(port p, port readyin, clock clk, uint32_t initial)
+inline void port_protocol_out_strobed_slave(port_id_t p, port_id_t readyin, clock_id_t clk, uint32_t initial)
 {
   _port_set_inout_data(p);
   _port_set_buffered(p);
