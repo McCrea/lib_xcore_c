@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
 
 /** \brief Start a transaction (master).
@@ -36,6 +37,7 @@
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline transacting_chanend_t chan_init_transaction_master(chanend c)
 {
   _s_chan_out_ct_end(c);
@@ -63,6 +65,7 @@ inline transacting_chanend_t chan_init_transaction_master(chanend c)
  *                                    or does not contain CT_END token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline transacting_chanend_t chan_init_transaction_slave(chanend c)
 {
   _s_chan_check_ct_end(c);
@@ -93,6 +96,7 @@ inline transacting_chanend_t chan_init_transaction_slave(chanend c)
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline chanend chan_complete_transaction(transacting_chanend_t tc)
 {
   if (tc.last_out)
@@ -120,6 +124,7 @@ inline chanend chan_complete_transaction(transacting_chanend_t tc)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
+_XCORE_C_EXFUN
 inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
 {
   _t_chan_change_to_output(tc);
@@ -137,6 +142,7 @@ inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
+_XCORE_C_EXFUN
 inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
 {
   _t_chan_change_to_output(tc);
@@ -155,6 +161,7 @@ inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
+_XCORE_C_EXFUN
 inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[], size_t n)
 {
   _t_chan_change_to_output(tc);
@@ -176,6 +183,7 @@ inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[],
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
+_XCORE_C_EXFUN
 inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], size_t n)
 {
   _t_chan_change_to_output(tc);
@@ -196,6 +204,7 @@ inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], 
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
+_XCORE_C_EXFUN
 inline uint32_t t_chan_in_word(transacting_chanend_t *tc)
 {
   _t_chan_change_to_input(tc);
@@ -213,6 +222,7 @@ inline uint32_t t_chan_in_word(transacting_chanend_t *tc)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a data argument.
  */
+_XCORE_C_EXFUN
 inline uint8_t t_chan_in_byte(transacting_chanend_t *tc)
 {
   _t_chan_change_to_input(tc);
@@ -231,6 +241,7 @@ inline uint8_t t_chan_in_byte(transacting_chanend_t *tc)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
+_XCORE_C_EXFUN
 inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t n)
 {
   _t_chan_change_to_input(tc);
@@ -252,6 +263,7 @@ inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
+_XCORE_C_EXFUN
 inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t n)
 {
   _t_chan_change_to_input(tc);

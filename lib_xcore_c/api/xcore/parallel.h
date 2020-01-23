@@ -5,6 +5,8 @@
  * \brief Helper macros for fork/join style parallel execution
  */
 
+#include <xcore/thread.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_parallel_impl.h>
 
 /** \brief Calls a list of <tt>void (void*)</tt> functions with each utilising a different hardware thread

@@ -8,6 +8,7 @@
 
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_macros.h>
 #include <xcore/_support/xcore_c_meta_macro.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
@@ -27,25 +28,6 @@
 #else
 #define ENUM_ID_BASE 0x10000
 #endif
-
-
-inline void _select_disable_trigger_all();
-
-/** Disable all select events on this logical core.
- *
- *  This function is called before starting to configure select events for
- *  a new event loop.
- *  This will ensure that no events set up by other code will be triggered
- *
- *  This affect events setup using *res*_setup_select() and
- *  *res*_setup_select_callback() but not *res*_setup_interrupt_callback()
- *
- *  \return     error_none
- */
-inline void select_disable_trigger_all(void)
-{
-  _select_disable_trigger_all();
-}
 
 /** Wait for a select event to trigger.
  *
@@ -112,11 +94,13 @@ uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]);
 
 // Start of support for new style
 
+_XCORE_C_EXFUN
 inline void _select_disable_trigger_all(void)
 {
   asm volatile("clre");
 }
 
+_XCORE_C_EXFUN
 inline void _select_event_enable_unconditional(const resource_t resource)
 {
   asm volatile(
@@ -125,6 +109,7 @@ inline void _select_event_enable_unconditional(const resource_t resource)
     : [res] "r"(resource));
 }
 
+_XCORE_C_EXFUN
 inline void _select_event_disable_unconditional(const resource_t resource)
 {
   asm volatile(
@@ -133,6 +118,7 @@ inline void _select_event_disable_unconditional(const resource_t resource)
     : [res] "r"(resource));
 }
 
+_XCORE_C_EXFUN
 inline void _select_event_set_enable(const resource_t resource, const int condition)
 {
   asm volatile(
@@ -141,6 +127,7 @@ inline void _select_event_set_enable(const resource_t resource, const int condit
     : [res] "r"(resource) , [cond] "r"(condition));
 }
 
+_XCORE_C_EXFUN
 inline void _select_event_set_enable_inv(const resource_t resource, const int condition)
 {
   asm volatile(
@@ -149,6 +136,7 @@ inline void _select_event_set_enable_inv(const resource_t resource, const int co
     : [res] "r"(resource) , [cond] "r"(condition));
 }
 
+_XCORE_C_EXFUN
 inline void _select_event_enable_if_true(const resource_t resource, const int condition)
 {
   if (__builtin_constant_p(condition))
@@ -166,9 +154,9 @@ inline void _select_event_enable_if_true(const resource_t resource, const int co
   {
     _select_event_set_enable(resource, condition);
   }
-  return condition;
 }
 
+_XCORE_C_EXFUN
 inline void _select_event_enable_if_false(const resource_t resource, const int condition)
 {
   if (__builtin_constant_p(condition))
@@ -186,9 +174,9 @@ inline void _select_event_enable_if_false(const resource_t resource, const int c
   {
     _select_event_set_enable_inv(resource, condition);
   }
-  return condition;
 }
 
+_XCORE_C_EXFUN
 inline void _register_event_vector(const resource_t resource, void * const vector)
 {
   register void * const vector_reg asm("r11") = vector; 

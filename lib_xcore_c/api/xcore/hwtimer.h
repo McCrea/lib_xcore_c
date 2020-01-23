@@ -10,8 +10,13 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_hwtimer_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
+
+/** brief Hardware timer handle type. */
+typedef resource_t hwtimer_t;
+
 
 /** \brief Deallcoates the hardware timer automatically allocated
  *
@@ -29,6 +34,7 @@
  *
  *  \exception  ET_ILLEGAL_RESOURCE   timer has already been deallocated.
  */
+_XCORE_C_EXFUN
 inline void hwtimer_free_xc_timer(void)
 {
   _hwtimer_free_xc_timer();
@@ -43,6 +49,7 @@ inline void hwtimer_free_xc_timer(void)
  *
  *  \exception  ET_ECALL   no available hw timer, reallocation failed.
  */
+_XCORE_C_EXFUN
 inline void hwtimer_realloc_xc_timer(void)
 {
   _hwtimer_realloc_xc_timer();
@@ -56,6 +63,7 @@ inline void hwtimer_realloc_xc_timer(void)
  *
  *  \return     Timer handle to the allocated timer
  */
+_XCORE_C_EXFUN
 inline hwtimer_t hwtimer_alloc()
 {
   return _hwtimer_alloc();
@@ -68,6 +76,7 @@ inline hwtimer_t hwtimer_alloc()
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
+_XCORE_C_EXFUN
 inline void hwtimer_free(hwtimer_t t)
 {
   _hwtimer_free(t);
@@ -83,9 +92,27 @@ inline void hwtimer_free(hwtimer_t t)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
+_XCORE_C_EXFUN
 inline uint32_t hwtimer_get_time(hwtimer_t t)
 {
   return _hwtimer_get_time(t);
+}
+
+/** \brief Get the trigger time value.
+ *
+ *  The trigger time value is set using hwtimer_set_trigger_time().
+ *  The trigger may be cleared using hwtimer_clear_trigger_time().
+ *
+ *  \param t  The timer whose time value is requested.
+ *  \return   The time value
+ *
+ *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
+ *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
+ */
+_XCORE_C_EXFUN
+inline uint32_t hwtimer_get_trigger_time(hwtimer_t t)
+{
+  return _hwtimer_get_trigger_time(t);
 }
 
 /** \brief Setup an event trigger on a timer.
@@ -95,7 +122,7 @@ inline uint32_t hwtimer_get_time(hwtimer_t t)
  *
  *  \note hwtimer_wait_until(), hwtimer_delay(), hwtimer_setup_select()
  *  hwtimer_setup_select_callback() and hwtimer_setup_interrupt_callback()
- *  call hwtimer_set_trigger_time()**
+ *  call hwtimer_set_trigger_time()
  *
  *  \param t     The timer to setup a event trigger on.
  *  \param time  The time at which the timer will trigger an event. The default
@@ -104,6 +131,7 @@ inline uint32_t hwtimer_get_time(hwtimer_t t)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
+_XCORE_C_EXFUN
 inline void hwtimer_set_trigger_time(hwtimer_t t, uint32_t time)
 {
   _hwtimer_set_trigger_time(t, time);
@@ -121,6 +149,7 @@ inline void hwtimer_set_trigger_time(hwtimer_t t, uint32_t time)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
+_XCORE_C_EXFUN
 inline void hwtimer_change_trigger_time(hwtimer_t t, uint32_t time)
 {
   _hwtimer_change_trigger_time(t, time);
@@ -138,6 +167,7 @@ inline void hwtimer_change_trigger_time(hwtimer_t t, uint32_t time)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 
+_XCORE_C_EXFUN
 inline void hwtimer_clear_trigger_time(hwtimer_t t)
 {
   _hwtimer_clear_trigger_time(t);
@@ -155,7 +185,8 @@ inline void hwtimer_clear_trigger_time(hwtimer_t t)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
-inline uint32_t hwtimer_wait_until(hwtimer_t t, uint32_t until)
+_XCORE_C_EXFUN
+inline uint32_t hwtimer_wait_until(resource_t t, uint32_t until)
 {
   _hwtimer_set_trigger_time(t, until);
   uint32_t now = _hwtimer_get_time(t);
@@ -174,70 +205,14 @@ inline uint32_t hwtimer_wait_until(hwtimer_t t, uint32_t until)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  *  \exception  ET_LOAD_STORE         invalid *\*now* argument.
  */
-inline void hwtimer_delay(hwtimer_t t, uint32_t period)
+_XCORE_C_EXFUN
+inline void hwtimer_delay(resource_t t, uint32_t period)
 {
   uint32_t start = _hwtimer_get_time(t);
   uint32_t until = start + period;
   _hwtimer_set_trigger_time(t, until);
   (void)_hwtimer_get_time(t);
   _hwtimer_clear_trigger_time(t);
-}
-
-/** \brief Setup interrupt event on a timer.
- *
- *  \note Once the event is setup you need to call hwtimer_enable_trigger() to enable it.
- *
- *  \param t     The timer to setup the events on
- *  \param time  The time at which the timer will trigger an event. The default
- *               timer ticks are at a 10ns resolution.
- *  \param data  The value to be passed to the interrupt_callback_t function
- *  \param func  The interrupt_callback_t function to handle the events
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
- *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in enum_id.
- */
-inline void hwtimer_setup_interrupt_callback(hwtimer_t t, uint32_t time, void *data, interrupt_callback_t func)
-{
-  _resource_setup_interrupt_callback(t, data, func);
-  _hwtimer_set_trigger_time(t, time);
-}
-
-/** \brief Enable select & interrupt events on a timer.
- *
- *  \note Prior to enabling, hwtimer_setup_select(), hwtimer_setup_select_callback() or
- *         hwtimer_setup_interrupt_callback() must have been called.
- *
- * \note Events can be temporarily disabled and re-enabled using hwtimer_disable_trigger()
- *       and hwtimer_enable_trigger().
- *       When the event fires, hwtimer_get_time() must be called to clear the event.
- *       The time of the next event is set using hwtimer_change_trigger_time().
- *  
- *  \param t  The timer to enable events on
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
- */
-inline void hwtimer_enable_trigger(hwtimer_t t)
-{
-  _resource_enable_trigger(t);
-}
-
-/** \brief Disable select & interrupt events for a given timer.
- *
- *  Prevents any further select or interrupt events being triggered
- *  by the given timer.
- *
- *  \attention This does not clear the trigger setup
- *
- *  \param t  The timer to disable events on
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
- */
-inline void hwtimer_disable_trigger(hwtimer_t t)
-{
-  _resource_disable_trigger(t);
 }
 
 #endif // !defined(__XC__)

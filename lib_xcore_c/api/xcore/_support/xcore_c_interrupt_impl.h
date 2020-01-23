@@ -5,7 +5,7 @@
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
-
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_macros.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 

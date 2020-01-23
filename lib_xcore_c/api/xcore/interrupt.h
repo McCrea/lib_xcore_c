@@ -7,6 +7,7 @@
 #ifndef __xcore_c_interrupt_h__
 #define __xcore_c_interrupt_h__
 
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_interrupt_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 #include <xcore/_support/xcore_c_macros.h>
@@ -106,6 +107,7 @@
  *  This has no effect on \c *_setup_select_callback() triggering.
  *  They can be restored by using interrupt_unmask_all().
  */
+_XCORE_C_EXFUN
 inline void interrupt_mask_all(void)
 {
   asm volatile("clrsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));
@@ -117,6 +119,7 @@ inline void interrupt_mask_all(void)
  *  They can be suppressed by using interrupt_mask_all().
  *  \hideinitializer
  */
+_XCORE_C_EXFUN
 inline void interrupt_unmask_all(void)
 {
   asm volatile("setsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));

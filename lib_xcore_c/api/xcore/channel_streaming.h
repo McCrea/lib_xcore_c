@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
 
 /** \typedef streaming_channel_t
@@ -33,6 +34,7 @@ typedef struct streaming_channel_t {
  *  \return    streaming_channel_t variable holding the two initialised and
  *             joined chan-ends or 0s.
  */
+_XCORE_C_EXFUN
 inline streaming_channel_t s_chan_alloc()
 {
   streaming_channel_t c;
@@ -70,6 +72,7 @@ inline streaming_channel_t s_chan_alloc()
  *                                    or an input/output is pending.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the channel.
  */
+_XCORE_C_EXFUN
 inline void s_chan_free(streaming_channel_t c)
 {
   _s_chan_out_ct_end(c.end_a);
@@ -89,6 +92,7 @@ inline void s_chan_free(streaming_channel_t c)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void s_chan_out_word(streaming_chanend_t c, uint32_t data)
 {
   _s_chan_out_word(c, data);
@@ -103,6 +107,7 @@ inline void s_chan_out_word(streaming_chanend_t c, uint32_t data)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void s_chan_out_byte(streaming_chanend_t c, uint8_t data)
 {
   _s_chan_out_byte(c, data);
@@ -119,6 +124,7 @@ inline void s_chan_out_byte(streaming_chanend_t c, uint8_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
+_XCORE_C_EXFUN
 inline void s_chan_out_buf_word(streaming_chanend_t c, const uint32_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
@@ -138,6 +144,7 @@ inline void s_chan_out_buf_word(streaming_chanend_t c, const uint32_t buf[], siz
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
+_XCORE_C_EXFUN
 inline void s_chan_out_buf_byte(streaming_chanend_t c, const uint8_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
@@ -155,6 +162,7 @@ inline void s_chan_out_buf_byte(streaming_chanend_t c, const uint8_t buf[], size
  *                                    or has pending control token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline uint32_t s_chan_in_word(streaming_chanend_t c)
 {
   return _s_chan_in_word(c);
@@ -169,6 +177,7 @@ inline uint32_t s_chan_in_word(streaming_chanend_t c)
  *                                    or has pending control token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline uint8_t s_chan_in_byte(streaming_chanend_t c)
 {
   return _s_chan_in_byte(c);
@@ -185,6 +194,7 @@ inline uint8_t s_chan_in_byte(streaming_chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
+_XCORE_C_EXFUN
 inline void s_chan_in_buf_word(streaming_chanend_t c, uint32_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
@@ -204,6 +214,7 @@ inline void s_chan_in_buf_word(streaming_chanend_t c, uint32_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
+_XCORE_C_EXFUN
 inline void s_chan_in_buf_byte(streaming_chanend_t c, uint8_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
@@ -223,6 +234,7 @@ inline void s_chan_in_buf_byte(streaming_chanend_t c, uint8_t buf[], size_t n)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void s_chan_out_ct(streaming_chanend_t c, uint8_t ct)
 {
   _s_chan_out_ct(c, ct);
@@ -243,6 +255,7 @@ inline void s_chan_out_ct(streaming_chanend_t c, uint8_t ct)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void s_chan_out_ct_end(streaming_chanend_t c)
 {
   _s_chan_out_ct_end(c);
@@ -261,6 +274,7 @@ inline void s_chan_out_ct_end(streaming_chanend_t c)
  *                                    or does not contain expected token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void s_chan_check_ct(streaming_chanend_t c, uint8_t ct)
 {
   _s_chan_check_ct(c, ct);
@@ -278,6 +292,7 @@ inline void s_chan_check_ct(streaming_chanend_t c, uint8_t ct)
  *                                    or does not contain CT_END token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void s_chan_check_ct_end(streaming_chanend_t c)
 {
   _s_chan_check_ct_end(c);

@@ -1,7 +1,5 @@
 #pragma once
 
-/* Provided for verification purposes only - this file should not be included by library or user code. */
-
 #include <xcore/chanend.h>
 #include <xcore/channel.h>
 #include <xcore/channel_streaming.h>

@@ -10,20 +10,11 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 
-#ifdef __DOXYGEN__
-// Copy typedefs from xccompat.h for use by doxygen
-/** \typedef chanend
- *  \brief Opaque channel type for use in C/C++ code.
- *
- *  It enables a xC function prototyped as taking a parameter of type chanend to
- *  be called from C and vice versa.
- *
- *  \attention Users must not access its raw underlying type.
- */
-typedef unsigned chanend;
+typedef resource_t chanend_t;
 
 /** \typedef streaming_chanend_t
  *  \brief Opaque streaming channel type for use in C/C++ code.
@@ -34,7 +25,6 @@ typedef unsigned chanend;
  *  \attention Users must not access its raw underlying type.
  */
 typedef unsigned streaming_chanend_t;
-#endif
 
 /** \brief Allocate a single streaming_chanend_t.
  * 
@@ -44,6 +34,7 @@ typedef unsigned streaming_chanend_t;
  *
  *  \return     chanend (0 if none are available)
  */
+_XCORE_C_EXFUN
 inline streaming_chanend_t s_chanend_alloc(void)
 {
   return _s_chanend_alloc();
@@ -60,6 +51,7 @@ inline streaming_chanend_t s_chanend_alloc(void)
  *                                    or it has not received/sent a CT_END token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
  */
+_XCORE_C_EXFUN
 inline void s_chanend_free(streaming_chanend_t c)
 {
   _s_chanend_free(c);
@@ -73,6 +65,7 @@ inline void s_chanend_free(streaming_chanend_t c)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated streaming_chanend_t.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
 */
+_XCORE_C_EXFUN
 inline void s_chanend_set_dest(streaming_chanend_t c, streaming_chanend_t dst)
 {
   _s_chanend_set_dest(c, dst);
@@ -85,6 +78,7 @@ inline void s_chanend_set_dest(streaming_chanend_t c, streaming_chanend_t dst)
  *  \param c    chanend to convert.
  *  \return     the streaming_chanend_t
  */
+_XCORE_C_EXFUN
 inline streaming_chanend_t s_chanend_convert(chanend c)
 {
   return (streaming_chanend_t)c;
@@ -98,6 +92,7 @@ inline streaming_chanend_t s_chanend_convert(chanend c)
  *
  *  \return    Allocated chanend (0 if none are available)
  */
+_XCORE_C_EXFUN
 inline chanend chanend_alloc()
 {
   return (chanend)s_chanend_alloc();
@@ -114,6 +109,7 @@ inline chanend chanend_alloc()
  *                                    or it has not received/sent a CT_END token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  */
+_XCORE_C_EXFUN
 inline void chanend_free(chanend c)
 {
   s_chanend_free((streaming_chanend_t)c);
@@ -127,6 +123,7 @@ inline void chanend_free(chanend c)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chanend.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
 */
+_XCORE_C_EXFUN
 inline void chanend_set_dest(chanend c, chanend dst)
 {
   s_chanend_set_dest((streaming_chanend_t)c, (streaming_chanend_t)dst);
@@ -140,6 +137,7 @@ inline void chanend_set_dest(chanend c, chanend dst)
  *  \param c    streaming_chanend_t to convert.
  *  \return     the chanend
  */
+_XCORE_C_EXFUN
 inline chanend chanend_convert(streaming_chanend_t c)
 {
   return (chanend)c;
@@ -161,6 +159,7 @@ inline chanend chanend_convert(streaming_chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set \a enum_id.
 */
+_XCORE_C_EXFUN
 inline void chanend_setup_select(chanend c, uint32_t enum_id)
 {
   _resource_setup_select(c, enum_id);
@@ -181,6 +180,7 @@ inline void chanend_setup_select(chanend c, uint32_t enum_id)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in \a data.
  */
+_XCORE_C_EXFUN
 inline void chanend_setup_select_callback(chanend c, void *data, select_callback_t func)
 {
   _resource_setup_select_callback(c, data, func);
@@ -198,6 +198,7 @@ inline void chanend_setup_select_callback(chanend c, void *data, select_callback
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in \a data.
  */
+_XCORE_C_EXFUN
 inline void chanend_setup_interrupt_callback(chanend c, void *data,
                                              interrupt_callback_t func)
 {
@@ -217,6 +218,7 @@ inline void chanend_setup_interrupt_callback(chanend c, void *data,
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void chanend_enable_trigger(chanend c)
 {
   _resource_enable_trigger(c);
@@ -231,6 +233,7 @@ inline void chanend_enable_trigger(chanend c)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void chanend_disable_trigger(chanend c)
 {
   _resource_disable_trigger(c);

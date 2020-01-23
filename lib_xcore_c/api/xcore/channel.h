@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/channel_streaming.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
 
@@ -29,6 +30,7 @@ typedef streaming_channel_t channel_t;
  *
  *  \return     The channel_t (both fields will be 0 if allocation was not possible)
  */
+_XCORE_C_EXFUN
 inline channel_t chan_alloc()
 {
   return (channel_t)s_chan_alloc();
@@ -42,6 +44,7 @@ inline channel_t chan_alloc()
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  */
+_XCORE_C_EXFUN
 inline void chan_free(channel_t c)
 {
   // Not implemented in terms of s_chan_free() as we have already hand-shook a CT_END.
@@ -59,6 +62,7 @@ inline void chan_free(channel_t c)
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void chan_out_word(chanend c, uint32_t data)
 {
   _s_chan_out_ct_end(c);
@@ -78,6 +82,7 @@ inline void chan_out_word(chanend c, uint32_t data)
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
+_XCORE_C_EXFUN
 inline void chan_out_byte(chanend c, uint8_t data)
 {
   _s_chan_out_ct_end(c);
@@ -99,6 +104,7 @@ inline void chan_out_byte(chanend c, uint8_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
+_XCORE_C_EXFUN
 inline void chan_out_buf_word(chanend c, const uint32_t buf[], size_t n)
 {
   _s_chan_out_ct_end(c);
@@ -123,6 +129,7 @@ inline void chan_out_buf_word(chanend c, const uint32_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
+_XCORE_C_EXFUN
 inline void chan_out_buf_byte(chanend c, const uint8_t buf[], size_t n)
 {
   _s_chan_out_ct_end(c);
@@ -145,6 +152,7 @@ inline void chan_out_buf_byte(chanend c, const uint8_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
+_XCORE_C_EXFUN
 inline uint32_t chan_in_word(chanend c)
 {
   _s_chan_check_ct_end(c);
@@ -165,6 +173,7 @@ inline uint32_t chan_in_word(chanend c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
+_XCORE_C_EXFUN
 inline uint8_t chan_in_byte(chanend c)
 {
   _s_chan_check_ct_end(c);
@@ -186,6 +195,7 @@ inline uint8_t chan_in_byte(chanend c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
+_XCORE_C_EXFUN
 inline void chan_in_buf_word(chanend c, uint32_t buf[], size_t n)
 {
   _s_chan_check_ct_end(c);
@@ -211,6 +221,7 @@ inline void chan_in_buf_word(chanend c, uint32_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
+_XCORE_C_EXFUN
 inline void chan_in_buf_byte(chanend c, uint8_t buf[], size_t n)
 {
   _s_chan_check_ct_end(c);

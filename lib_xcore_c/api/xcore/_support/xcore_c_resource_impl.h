@@ -9,6 +9,7 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_macros.h>
 #include "xassert.h"
 
@@ -42,11 +43,13 @@ typedef callback_function interrupt_callback_t;
 
 extern void _select_non_callback(void);  // Implemented in xcore_c_select.S
 
+_XCORE_C_EXFUN
 inline void _resource_enable_trigger(resource_t r)
 {
   asm volatile("eeu res[%0]" :: "r" (r));
 }
 
+_XCORE_C_EXFUN
 inline void _resource_disable_trigger(resource_t r)
 {
   asm volatile("edu res[%0]" :: "r" (r));
@@ -54,16 +57,19 @@ inline void _resource_disable_trigger(resource_t r)
 
 extern void _resource_setup_callback(resource_t r, void *data, callback_function func, uint32_t type);
 
+_XCORE_C_EXFUN
 inline void _resource_setup_interrupt_callback(resource_t r, void *data, interrupt_callback_t intrpt)
 {
   _resource_setup_callback(r, data, intrpt, 0xA);  // Raise interrupts instead of events
 }
 
+_XCORE_C_EXFUN
 inline void _resource_setup_select_callback(resource_t r, void *data, select_callback_t callback)
 {
   _resource_setup_callback(r, data, callback, 0x2);  // Raise events instead of interrupts
 }
 
+_XCORE_C_EXFUN
 inline void _resource_setup_select(resource_t r, uint32_t value)
 {
   _resource_setup_select_callback(r, (void*)value, _select_non_callback);
@@ -71,6 +77,7 @@ inline void _resource_setup_select(resource_t r, uint32_t value)
 
 #define _RESOURCE_ALLOC(res, id) asm volatile( "getr %0, %1" : "=r" (res) : "n" (id))
 
+_XCORE_C_EXFUN
 inline void _resource_free(resource_t r)
 {
   asm volatile("freer res[%0]" :: "r" (r));

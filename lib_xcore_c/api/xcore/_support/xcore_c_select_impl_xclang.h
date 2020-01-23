@@ -1,5 +1,6 @@
 #pragma once
 
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_select_impl_common.h>
 
 #define _XMM_SELECT_RES_HANDLER_SETUP_I(RES, LABEL, ...) _register_event_vector(RES, &&LABEL);
@@ -120,7 +121,7 @@
   default: \
     __xmm_select_reset = &&LNAME; \
   LNAME: \
-    asm volatile("clre"); \
+    _select_disable_trigger_all(); \
     _XMM_APPLY_NOSEP(_XMM_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
     _XMM_APPLY_NOSEP(_XMM_SELECT_RES_ENABLER_ONEOFF, __VA_ARGS__) \
   } \
@@ -158,7 +159,7 @@
 #define _XMM_SELECT_RES_ORDERED_II(LNAME, DEFAULT_PACK, LABELS, ...) \
   switch (0) for (const void *__xmm_select_reset;;) if (1) \
   { \
-    asm volatile("clre"); \
+    _select_disable_trigger_all(); \
     _XMM_SHIM(_XMM_APPLY_NOSEP, _XMM_SELECT_RES_ENABLER_ORDERED, _XMM_I(_XMM_TAG(LABELS, __VA_ARGS__))) \
     _XMM_SELECT_WAIT_HANDLER(DEFAULT_PACK, _XMM_APPLY(_XMM_LABEL, __VA_ARGS__)) \
   } \
@@ -181,8 +182,7 @@
     _XMM_SELECT_RES_FILTER_RES(__VA_ARGS__))
 
 
-#define _XMM_SELECT_RES(...) (_XMM_SEL_RES, (__VA_ARGS__))
-#define _XMM_SELECT_DEFAULT(...) (_XMM_SEL_DEFAULT, (__VA_ARGS__))
-
 #define _XMM_SELECT_RESET_I do { goto* __xmm_select_reset; } while (0)
 
+#define _XMM_CASE_RES(...) (_XMM_SEL_RES, (__VA_ARGS__))
+#define _XMM_CASE_DEFAULT(...) (_XMM_SEL_DEFAULT, (__VA_ARGS__))

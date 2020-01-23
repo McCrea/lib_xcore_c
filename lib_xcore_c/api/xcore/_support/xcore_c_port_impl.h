@@ -12,184 +12,218 @@
 #include <stddef.h>
 
 #include <xs1.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 
-inline void _port_set_transfer_width(port p, size_t width)
+_XCORE_C_EXFUN
+inline void _port_set_transfer_width(resource_t p, size_t width)
 {
   asm volatile("settw res[%0], %1" :: "r" (p), "r" (width));
 }
 
+_XCORE_C_EXFUN
 inline void _port_enable(unsigned id)
 {
   _RESOURCE_SETCI((resource_t)id, XS1_SETC_INUSE_ON);
 }
 
-inline void _port_reset(port p)
+_XCORE_C_EXFUN
+inline void _port_reset(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_INUSE_ON);
 }
 
-inline void _port_free(port p)
+_XCORE_C_EXFUN
+inline void _port_free(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_INUSE_OFF);
 }
 
-inline void _port_set_buffered(port p)
+_XCORE_C_EXFUN
+inline void _port_set_buffered(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_BUF_BUFFERS);
 }
 
-inline void _port_set_unbuffered(port p)
+_XCORE_C_EXFUN
+inline void _port_set_unbuffered(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_BUF_NOBUFFERS);
 }
 
-inline void _port_set_clock(port p, xclock clk)
+_XCORE_C_EXFUN
+inline void _port_set_clock(resource_t p, resource_t clk)
 {
   asm volatile("setclk res[%0], %1" :: "r" (p), "r" (clk));
 }
 
-inline void _port_set_inout_data(port p)
+_XCORE_C_EXFUN
+inline void _port_set_inout_data(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_PORT_DATAPORT);
 }
 
-inline void _port_set_out_clock(port p)
+_XCORE_C_EXFUN
+inline void _port_set_out_clock(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_PORT_CLOCKPORT);
 }
 
-inline void _port_set_out_ready(port p, port ready_source)
+_XCORE_C_EXFUN
+inline void _port_set_out_ready(resource_t p, resource_t ready_source)
 {
   _RESOURCE_SETCI(p, XS1_SETC_PORT_READYPORT);
   asm volatile("setrdy res[%0], %1" :: "r" (p), "r" (ready_source));
 }
 
-inline void _port_set_invert(port p)
+_XCORE_C_EXFUN
+inline void _port_set_invert(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_INV_INVERT);
 }
 
-inline void _port_set_no_invert(port p)
+_XCORE_C_EXFUN
+inline void _port_set_no_invert(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_INV_NOINVERT);
 }
 
-inline void _port_set_sample_falling_edge(port p)
+_XCORE_C_EXFUN
+inline void _port_set_sample_falling_edge(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_SDELAY_SDELAY);
 }
 
-inline void _port_set_sample_rising_edge(port p)
+_XCORE_C_EXFUN
+inline void _port_set_sample_rising_edge(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_SDELAY_NOSDELAY);
 }
 
-inline void _port_set_master(port p)
+_XCORE_C_EXFUN
+inline void _port_set_master(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_MS_MASTER);
 }
 
-inline void _port_set_slave(port p)
+_XCORE_C_EXFUN
+inline void _port_set_slave(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_MS_SLAVE);
 }
 
-inline void _port_set_no_ready(port p)
+_XCORE_C_EXFUN
+inline void _port_set_no_ready(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_RDY_NOREADY);
 }
 
-inline void _port_set_ready_strobed(port p)
+_XCORE_C_EXFUN
+inline void _port_set_ready_strobed(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_RDY_STROBED);
 }
 
-inline void _port_set_ready_handshake(port p)
+_XCORE_C_EXFUN
+inline void _port_set_ready_handshake(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_RDY_HANDSHAKE);
 }
 
-inline int16_t _port_get_trigger_time(port p)
+_XCORE_C_EXFUN
+inline int16_t _port_get_trigger_time(resource_t p)
 {
   int16_t ts;
   asm volatile("getts %0, res[%1]" : "=r" (ts) : "r" (p));
   return ts;
 }
 
-inline void _port_set_trigger_time(port p, int16_t t)
+_XCORE_C_EXFUN
+inline void _port_set_trigger_time(resource_t p, int16_t t)
 {
   asm volatile("setpt res[%0], %1" :: "r" (p), "r" (t));
 }
 
-inline void _port_clear_trigger_time(port p)
+_XCORE_C_EXFUN
+inline void _port_clear_trigger_time(resource_t p)
 {
   asm volatile("clrpt res[%0]" :: "r" (p));
 }
 
-inline void _port_set_trigger_value(port p, uint32_t d)
+_XCORE_C_EXFUN
+inline void _port_set_trigger_value(resource_t p, uint32_t d)
 {
   asm volatile("setd res[%0], %1" :: "r" (p), "r" (d));
 }
 
-inline void _port_set_trigger_in_equal(port p, uint32_t d)
+_XCORE_C_EXFUN
+inline void _port_set_trigger_in_equal(resource_t p, uint32_t d)
 {
   _RESOURCE_SETCI(p, XS1_SETC_COND_EQ);
   _port_set_trigger_value(p, d);
 }
 
-inline void _port_set_trigger_in_not_equal(port p, uint32_t d)
+_XCORE_C_EXFUN
+inline void _port_set_trigger_in_not_equal(resource_t p, uint32_t d)
 {
   _RESOURCE_SETCI(p, XS1_SETC_COND_NEQ);
   _port_set_trigger_value(p, d);
 }
 
-inline void _port_clear_trigger_in(port p)
+_XCORE_C_EXFUN
+inline void _port_clear_trigger_in(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_COND_NONE);
 }
 
-inline uint32_t _port_peek(port p)
+_XCORE_C_EXFUN
+inline uint32_t _port_peek(resource_t p)
 {
   uint32_t data;
   asm("peek %0, res[%1]" : "=r" (data): "r" (p));
   return data;
 }
 
-inline void _port_out(port p, uint32_t data)
+_XCORE_C_EXFUN
+inline void _port_out(resource_t p, uint32_t data)
 {
   asm volatile("out res[%0], %1" :: "r" (p), "r" (data));
 }
 
-inline uint32_t _port_in(port p)
+_XCORE_C_EXFUN
+inline uint32_t _port_in(resource_t p)
 {
   uint32_t data;
   asm volatile("in %0, res[%1]" : "=r" (data): "r" (p));
   return data;
 }
 
-inline uint32_t _port_out_shift_right(port p, uint32_t data)
+_XCORE_C_EXFUN
+inline uint32_t _port_out_shift_right(resource_t p, uint32_t data)
 {
   // We read-write data
   asm volatile("outshr res[%1], %0" : "+r" (data) : "r" (p));
   return data;
 }
 
-inline uint32_t _port_in_shift_right(port p, uint32_t data)
+_XCORE_C_EXFUN
+inline uint32_t _port_in_shift_right(resource_t p, uint32_t data)
 {
   // We read-write data
   asm volatile("inshr %0, res[%1]" : "+r" (data) : "r" (p));
   return data;
 }
 
-inline size_t _port_endin(port p)
+_XCORE_C_EXFUN
+inline size_t _port_endin(resource_t p)
 {
   size_t num;
   asm volatile("endin %0, res[%1]" : "=r" (num) : "r" (p));
   return num;
 }
 
-inline void _port_clear_buffer(port p)
+_XCORE_C_EXFUN
+inline void _port_clear_buffer(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_RUN_CLRBUF);
 }

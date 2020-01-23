@@ -9,7 +9,12 @@
 
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_lock_impl.h>
+
+/** \brief Hardware lock handle type. */
+typedef resource_t lock_t;
+
 
 /** \brief Allocates a lock.
  *
@@ -19,6 +24,7 @@
  *
  *  \return  handle for the allocated lock, 0 is no locks were available
  */
+_XCORE_C_EXFUN
 inline lock_t lock_alloc()
 {
   return _lock_alloc();
@@ -35,6 +41,7 @@ inline lock_t lock_alloc()
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the lock.
  *  \exception  ET_LOAD_STORE        invalid \a l argument.
  */
+_XCORE_C_EXFUN
 inline void lock_free(lock_t l)
 {
   _resource_free((resource_t)l);
@@ -52,6 +59,7 @@ inline void lock_free(lock_t l)
  *  \exception  ET_ILLEGAL_RESOURCE  not an allocated lock.
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the lock.
  */
+_XCORE_C_EXFUN
 inline void lock_acquire(lock_t l)
 {
   _lock_acquire(l);
@@ -69,6 +77,7 @@ inline void lock_acquire(lock_t l)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated lock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the lock.
  */
+_XCORE_C_EXFUN
 inline void lock_release(lock_t l)
 {
   _lock_release(l);

@@ -1,11 +1,23 @@
 #pragma once
 
+#include <stddef.h>
+
 /** \file
  *  \brief Hardware-assisted threading support
  */
 
 #include <xcore/_support/xcore_c_thread_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
+
+/** \brief Handle for a single joinable thread. */
+typedef resource_t xthread_t;
+
+/** \brief Handle for a group of threads which are jointly joinable. */
+typedef resource_t threadgroup_t;
+
+/** \brief Callback type which can be executed in another thread. */
+typedef void (*thread_function_t)(void *);
+
 
 /** \brief Allocates a hardware thread
  *
@@ -15,6 +27,7 @@
  * 
  *  \return A thread group handle, or 0 if none were available.
  */
+_XCORE_C_EXFUN
 inline threadgroup_t thread_group_alloc(void)
 {
   return __xcore_c_allocate_thread_group();
@@ -38,6 +51,7 @@ inline threadgroup_t thread_group_alloc(void)
  *
  * \note Execution of \a func will not begin until the group is started using thread_group_start().
  */
+_XCORE_C_EXFUN
 inline void thread_group_add(const threadgroup_t group, 
                              const thread_function_t func, 
                              void * const argument, 
@@ -58,6 +72,7 @@ inline void thread_group_add(const threadgroup_t group,
  *
  *  \param group  The thread group to start.
  */
+_XCORE_C_EXFUN
 inline void thread_group_start(const threadgroup_t group)
 {
   __xcore_c_thread_group_sync(group);
@@ -72,6 +87,7 @@ inline void thread_group_start(const threadgroup_t group)
  *
  *  \param group  The group to free. 
  */
+_XCORE_C_EXFUN
 inline void thread_group_free(const threadgroup_t group)
 {
   _resource_free((resource_t)group);
@@ -88,6 +104,7 @@ inline void thread_group_free(const threadgroup_t group)
  *
  *  \param group  The group to wait for completion.
  */
+_XCORE_C_EXFUN
 inline void thread_group_wait(const threadgroup_t group)
 {
   __xcore_c_thread_group_join(group);
@@ -100,6 +117,7 @@ inline void thread_group_wait(const threadgroup_t group)
  *
  * \b Calls \li thread_group_wait() \li thread_group_free()
  */
+_XCORE_C_EXFUN
 inline void thread_group_wait_and_free(const threadgroup_t group)
 {
   thread_group_wait(group);
@@ -125,6 +143,7 @@ inline void thread_group_wait_and_free(const threadgroup_t group)
  *                         when calling \a func. Note that this can be calculated with stack_base().
  *  \return A waitable handle for the hardware thread.
  */
+_XCORE_C_EXFUN
 inline xthread_t xthread_alloc_and_start(const thread_function_t func, 
                                          void * const argument,
                                          void * const stack_base)
@@ -144,6 +163,7 @@ inline xthread_t xthread_alloc_and_start(const thread_function_t func,
  *
  *  \param thread  The thread to wait on, as returned by xthread_alloc_and_start().
  */
+_XCORE_C_EXFUN
 inline void xthread_wait_and_free(const xthread_t thread)
 {
   thread_group_wait_and_free(thread);
@@ -169,6 +189,7 @@ inline void xthread_wait_and_free(const xthread_t thread)
  *  \param[in] stack_base  Word aligned pointer to the last word of the region to use as a stack 
  *                         when calling \a func. Note that this can be calculated with stack_base().
  */
+_XCORE_C_EXFUN
 inline void run_async(const thread_function_t func,
                       void * const argument,
                       void * const stack_base)
@@ -200,6 +221,7 @@ inline void run_async(const thread_function_t func,
  *   \param words         Size of the stack the returned pointed will return to in words
  *   \return              The stack pointer.
  */
+_XCORE_C_EXFUN
 inline void *stack_base(void * const mem_base, size_t const words)
 {
   return (void *)((char *)mem_base + sizeof(int)*(words-1));

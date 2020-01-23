@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_select_impl_common.h>
 
 #define _XMM_SELECT_RES_HANDLER_SETUP_I(RES, LABEL, ...) \
@@ -120,7 +121,7 @@
   default: \
     __xmm_select_reset = &&LNAME; \
   LNAME: \
-    select_disable_trigger_all(); \
+    _select_disable_trigger_all(); \
     unsigned __xmm_htable_idx = RES_EV_FORCE_MASK; \
     _XMM_APPLY_NOSEP(_XMM_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
     _XMM_APPLY_NOSEP(_XMM_SELECT_RES_ENABLER_ONEOFF, __VA_ARGS__) \
@@ -160,7 +161,7 @@
   switch (0) for (const void *__xmm_select_reset;;) if (1) \
   { \
     static void *TNAME[] = { _XMM_SHIM(_XMM_APPLY, _XMM_LABELADDR, _XMM_APPLY(_XMM_LABEL, __VA_ARGS__)) }; \
-    asm volatile("clre"); \
+    _select_disable_trigger_all(); \
     _XMM_SHIM(_XMM_APPLY_NOSEP, _XMM_SELECT_RES_ENABLER_ORDERED, _XMM_I(_XMM_TAG(LABELS, __VA_ARGS__))) \
     _XMM_SELECT_WAIT_HANDLER(DEFAULT_PACK, TNAME, _XMM_APPLY(_XMM_LABEL, __VA_ARGS__)) \
   } \
@@ -170,7 +171,7 @@
   default: \
     __xmm_select_reset = &&LNAME; \
   LNAME: \
-    select_disable_trigger_all(); \
+    _select_disable_trigger_all(); \
     unsigned __xmm_htable_idx = RES_EV_FORCE_MASK; \
     _XMM_APPLY_NOSEP(_XMM_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
   } \
@@ -187,9 +188,8 @@
     _XMM_SELECT_RES_FILTER_RES(__VA_ARGS__))
 
 
-#define _XMM_SELECT_RES(...) (_XMM_SEL_RES, (__VA_ARGS__))
-#define _XMM_SELECT_DEFAULT(...) (_XMM_SEL_DEFAULT, (__VA_ARGS__))
-
 #define _XMM_SELECT_RESET_I do { goto* __xmm_select_reset; } while (0)
 
+#define _XMM_CASE_RES(...) (_XMM_SEL_RES, (__VA_ARGS__))
+#define _XMM_CASE_DEFAULT(...) (_XMM_SEL_DEFAULT, (__VA_ARGS__))
 

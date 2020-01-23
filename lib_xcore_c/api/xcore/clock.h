@@ -10,9 +10,12 @@
 #if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
+#include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_clock_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
-#include <xcore/clock_id.h>
+
+/** \brief Clock handle type. */
+typedef resource_t xclock_t;
 
 
 /** \brief Enables a specified clock block so that it may be used.
@@ -25,7 +28,8 @@
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_enable(clock_id_t id)
+_XCORE_C_EXFUN
+inline void clock_enable(xclock_t id)
 {
   _RESOURCE_SETCI(id, XS1_SETC_INUSE_ON);
 }
@@ -40,7 +44,8 @@ inline void clock_enable(clock_id_t id)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_disable(clock_id_t clk)
+_XCORE_C_EXFUN
+inline void clock_disable(xclock_t clk)
 {
   _RESOURCE_SETCI(clk, XS1_SETC_INUSE_OFF);
 }
@@ -52,7 +57,8 @@ inline void clock_disable(clock_id_t clk)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_start(clock_id_t clk)
+_XCORE_C_EXFUN
+inline void clock_start(xclock_t clk)
 {
   _RESOURCE_SETCI(clk, XS1_SETC_RUN_STARTR);
 }
@@ -66,7 +72,8 @@ inline void clock_start(clock_id_t clk)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_stop(clock_id_t clk)
+_XCORE_C_EXFUN
+inline void clock_stop(xclock_t clk)
 {
   _RESOURCE_SETCI(clk, XS1_SETC_RUN_STOPR);
 }
@@ -86,7 +93,8 @@ inline void clock_stop(clock_id_t clk)
  *                                    or p not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_set_source_port(clock_id_t clk, port p)
+_XCORE_C_EXFUN
+inline void clock_set_source_port(xclock_t clk, port p)
 {
   _clock_set_source_port(clk, p);
 }
@@ -99,7 +107,8 @@ inline void clock_set_source_port(clock_id_t clk, port p)
  *                                    or the clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_set_source_clk_ref(clock_id_t clk)
+_XCORE_C_EXFUN
+inline void clock_set_source_clk_ref(xclock_t clk)
 {
   _clock_set_source_clk_ref(clk);
 }
@@ -115,7 +124,8 @@ inline void clock_set_source_clk_ref(clock_id_t clk)
  *                                    or the clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_set_source_clk_xcore(clock_id_t clk)
+_XCORE_C_EXFUN
+inline void clock_set_source_clk_xcore(xclock_t clk)
 {
   _clock_set_source_clk_xcore(clk);
 }
@@ -139,7 +149,8 @@ inline void clock_set_source_clk_xcore(clock_id_t clk)
  *                                    or the clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_set_divide(clock_id_t clk, uint8_t divide)
+_XCORE_C_EXFUN
+inline void clock_set_divide(xclock_t clk, uint8_t divide)
 {
   _clock_set_divide(clk, divide);
 }
@@ -156,7 +167,8 @@ inline void clock_set_divide(clock_id_t clk, uint8_t divide)
  *                                    or ready_source not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-inline void clock_set_ready_src(clock_id_t clk, port ready_source)
+_XCORE_C_EXFUN
+inline void clock_set_ready_src(xclock_t clk, port ready_source)
 {
   _clock_set_ready_src(clk, ready_source);
 }
