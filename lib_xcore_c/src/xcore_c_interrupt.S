@@ -1,4 +1,4 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
 
 #ifdef __XS2A__
 # define _XCORE_C_STACK_ALIGN(n)   ((n+1)/2)*2

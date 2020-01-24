@@ -1,7 +1,5 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_interrupt_impl_h__
-#define __xcore_c_interrupt_impl_h__
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
@@ -93,6 +91,4 @@
 #define _DEFINE_INTERRUPT_CALLBACK(grp, intrpt, data) \
     asm(_XCORE_C_STR(_DEFINE_INTERRUPT_CALLBACK_DEF(grp, intrpt))); \
     _DECLARE_INTERRUPT_CALLBACK(intrpt, data)
-
-#endif // __xcore_c_interrupt_impl_h__
 

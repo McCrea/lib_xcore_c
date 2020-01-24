@@ -1,11 +1,11 @@
+// Copyright (c) 2019-2020, XMOS Ltd, All rights reserved
 #pragma once
-
-#include <stddef.h>
 
 /** \file
  *  \brief Hardware-assisted threading support
  */
 
+#include <stddef.h>
 #include <xcore/_support/xcore_c_thread_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 

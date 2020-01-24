@@ -1,4 +1,4 @@
-
+// Copyright (c) 2020, XMOS Ltd, All rights reserved
 .text
 
 .globl _xcore_c_unsynchronised_thread_end

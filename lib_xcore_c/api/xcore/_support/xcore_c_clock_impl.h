@@ -1,14 +1,8 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_clock_impl_h__
-#define __xcore_c_clock_impl_h__
-
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
-#include <xccompat.h>
 #include <xcore/_support/xcore_c_common.h>
 
 _XCORE_C_EXFUN
@@ -40,7 +34,3 @@ inline void _clock_set_divide(resource_t clk, uint8_t divide)
 {
   asm volatile("setd res[%0], %1" :: "r" (clk), "r" (divide));
 }
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_clock_impl_h__

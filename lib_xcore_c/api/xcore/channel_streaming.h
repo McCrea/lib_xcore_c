@@ -1,18 +1,15 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief Streaming channel API
  */
 
-#ifndef __xcore_c_channel_streaming_h__
-#define __xcore_c_channel_streaming_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
 #include <stdint.h>
 #include <stddef.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
+#include <xcore/chanend.h>
 
 /** \typedef streaming_channel_t
  *  \brief Helper type for passing around both ends of a streaming channel.
@@ -298,6 +295,3 @@ inline void s_chan_check_ct_end(streaming_chanend_t c)
   _s_chan_check_ct_end(c);
 }
 
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_channel_streaming_h__

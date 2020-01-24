@@ -1,13 +1,10 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_select_impl_h__
-#define __xcore_c_select_impl_h__
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
+#include <stdint.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_macros.h>
 #include <xcore/_support/xcore_c_meta_macro.h>
@@ -189,8 +186,4 @@ inline void _register_event_vector(const resource_t resource, void * const vecto
 #define _XMM_GUARD_NONE _XMM_GTYPE_NONE, /* Guard expression should never be used */
 #define _XMM_GUARD_TRUE(EXPR) _XMM_GTYPE_TRUE, EXPR
 #define _XMM_GUARD_FALSE(EXPR) _XMM_GTYPE_FALSE, EXPR
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_select_impl_h__
 

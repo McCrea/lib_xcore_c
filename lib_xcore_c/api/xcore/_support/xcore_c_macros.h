@@ -1,7 +1,5 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_macros_h__
-#define __xcore_c_macros_h__
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
@@ -33,4 +31,3 @@
 #define _XCORE_C_SINGLE_ISSUE
 #endif
 
-#endif // __xcore_c_macros_h__

@@ -1,12 +1,13 @@
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
 #pragma once
 
-#include <platform.h>
 
 /** \file
  *  \brief Provides an enumeration of the available ports.
  *  \see \ref port.h - \copybrief port.h
  */
 
+#include <platform.h>
 
 /** \brief A port identifier
  *

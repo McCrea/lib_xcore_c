@@ -1,4 +1,4 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
 
 // _SELECT_CALLBACK_STACK_SIZE also defined in xcore_c_select_impl.h
 #ifdef __XS2A__

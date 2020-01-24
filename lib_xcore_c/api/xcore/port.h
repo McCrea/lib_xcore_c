@@ -1,20 +1,16 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief API for IO using ports
  */
 
-#ifndef __xcore_c_port_h__
-#define __xcore_c_port_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
 #include <stdint.h>
 #include <stddef.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_port_impl.h>
-#include <xcore/clock.h> // for xclock_t
 #include <xcore/_support/xcore_c_resource_impl.h>
+#include <xcore/clock.h>
 
 /** \brief Enumeration to declare how the port was set up */
 typedef enum {
@@ -22,6 +18,7 @@ typedef enum {
   PORT_BUFFERED = 1,
 } port_type_t;
 
+/** \brief Port handle type. */
 typedef resource_t port_t;
 
 /** \brief Enables a port.
@@ -946,7 +943,3 @@ inline void port_set_trigger_value(port_t p, uint32_t value)
 {
   _port_set_trigger_value(p, value);
 }
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_port_h__

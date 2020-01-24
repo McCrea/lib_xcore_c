@@ -1,13 +1,9 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief API for using hardware timers to measure and wait time
  */
-
-#ifndef __xcore_c_hwtimer_h__
-#define __xcore_c_hwtimer_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
 #include <xcore/_support/xcore_c_common.h>
@@ -214,7 +210,3 @@ inline void hwtimer_delay(resource_t t, uint32_t period)
   (void)_hwtimer_get_time(t);
   _hwtimer_clear_trigger_time(t);
 }
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_hwtimer_h__

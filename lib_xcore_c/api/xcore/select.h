@@ -1,4 +1,5 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief Macros for efficiently handling events from multiple resources
@@ -115,14 +116,6 @@
  *  That is, the same resource must not be used for two different cases. This applies even if 
  *  cases are guarded by mutually exclusive conditions.
  */
-
-#ifndef __xcore_c_select_h__
-#define __xcore_c_select_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
-#include <stdint.h>
-#include <xcore/_support/xcore_c_resource_impl.h>
 
 #if defined(XCC_VERSION_MAJOR) || defined(NO_XCLANG_ADDITIONS)
 #include <xcore/_support/xcore_c_select_impl_xcc.h>
@@ -268,7 +261,3 @@
  *  \hideinitializer
  */
 #define DEFAULT_NGUARD_THEN(GUARD_EXPR, LABEL) _XMM_CASE_DEFAULT(LABEL, _XMM_GUARD_FALSE(GUARD_EXPR))
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_select_h__

@@ -3,8 +3,8 @@
 #include <xcore/parallel.h>
 
 
-DECLARE_JOB(sends_first, (chanend), 256);
-void sends_first(const chanend c)
+DECLARE_JOB(sends_first, (chanend_t), 256);
+void sends_first(const chanend_t c)
 {
   int a = 5;
   printf("sends_first: Sending %d\n", a);
@@ -14,8 +14,8 @@ void sends_first(const chanend c)
   printf("sends_first: Received %d\n", a);
 }
 
-DECLARE_JOB(receives_first, (chanend), 256);
-void receives_first(const chanend c)
+DECLARE_JOB(receives_first, (chanend_t), 256);
+void receives_first(const chanend_t c)
 {
   int a = chan_in_word(c);
   printf("receives_first: Received %d\n", a);

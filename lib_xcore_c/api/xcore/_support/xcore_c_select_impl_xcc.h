@@ -1,3 +1,4 @@
+// Copyright (c) 2019-2020, XMOS Ltd, All rights reserved
 #pragma once
 
 #include <limits.h>

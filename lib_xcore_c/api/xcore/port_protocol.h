@@ -1,13 +1,9 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief Helper functinos for port usage patterns
  */
-
-#ifndef __xcore_c_port_protocol_h__
-#define __xcore_c_port_protocol_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
 #include <xcore/_support/xcore_c_common.h>
@@ -237,7 +233,3 @@ inline void port_protocol_out_strobed_slave(port_t p, port_t readyin, xclock_t c
   _port_set_ready_strobed(p);
   _port_set_slave(p);
 }
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_port_protocol_h__

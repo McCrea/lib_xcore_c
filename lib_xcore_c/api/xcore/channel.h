@@ -1,18 +1,15 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
+
 /** \file
  *  \brief API for channel communications
  */
 
-#ifndef __xcore_c_channel_h__
-#define __xcore_c_channel_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
 #include <stdint.h>
 #include <stddef.h>
 #include <xcore/_support/xcore_c_common.h>
-#include <xcore/channel_streaming.h>
 #include <xcore/_support/xcore_c_chan_impl.h>
+#include <xcore/channel_streaming.h>
 
 /** \typedef clock_id_t
  *  \brief Helper type for passing around both ends of a channel.
@@ -63,7 +60,7 @@ inline void chan_free(channel_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_C_EXFUN
-inline void chan_out_word(chanend c, uint32_t data)
+inline void chan_out_word(chanend_t c, uint32_t data)
 {
   _s_chan_out_ct_end(c);
   _s_chan_check_ct_end(c);
@@ -83,7 +80,7 @@ inline void chan_out_word(chanend c, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_C_EXFUN
-inline void chan_out_byte(chanend c, uint8_t data)
+inline void chan_out_byte(chanend_t c, uint8_t data)
 {
   _s_chan_out_ct_end(c);
   _s_chan_check_ct_end(c);
@@ -105,7 +102,7 @@ inline void chan_out_byte(chanend c, uint8_t data)
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
 _XCORE_C_EXFUN
-inline void chan_out_buf_word(chanend c, const uint32_t buf[], size_t n)
+inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
 {
   _s_chan_out_ct_end(c);
   _s_chan_check_ct_end(c);
@@ -130,7 +127,7 @@ inline void chan_out_buf_word(chanend c, const uint32_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
 _XCORE_C_EXFUN
-inline void chan_out_buf_byte(chanend c, const uint8_t buf[], size_t n)
+inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
 {
   _s_chan_out_ct_end(c);
   _s_chan_check_ct_end(c);
@@ -153,7 +150,7 @@ inline void chan_out_buf_byte(chanend c, const uint8_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
 _XCORE_C_EXFUN
-inline uint32_t chan_in_word(chanend c)
+inline uint32_t chan_in_word(chanend_t c)
 {
   _s_chan_check_ct_end(c);
   _s_chan_out_ct_end(c);
@@ -174,7 +171,7 @@ inline uint32_t chan_in_word(chanend c)
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
 _XCORE_C_EXFUN
-inline uint8_t chan_in_byte(chanend c)
+inline uint8_t chan_in_byte(chanend_t c)
 {
   _s_chan_check_ct_end(c);
   _s_chan_out_ct_end(c);
@@ -196,7 +193,7 @@ inline uint8_t chan_in_byte(chanend c)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_C_EXFUN
-inline void chan_in_buf_word(chanend c, uint32_t buf[], size_t n)
+inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
 {
   _s_chan_check_ct_end(c);
   _s_chan_out_ct_end(c);
@@ -222,7 +219,7 @@ inline void chan_in_buf_word(chanend c, uint32_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_C_EXFUN
-inline void chan_in_buf_byte(chanend c, uint8_t buf[], size_t n)
+inline void chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
 {
   _s_chan_check_ct_end(c);
   _s_chan_out_ct_end(c);
@@ -234,6 +231,3 @@ inline void chan_in_buf_byte(chanend c, uint8_t buf[], size_t n)
   _s_chan_out_ct_end(c);
 }
 
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_channel_h__

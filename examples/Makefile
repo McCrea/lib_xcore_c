@@ -4,9 +4,9 @@
 _default: all
 
 XCC ?= xcc
-build_dir := .build
+build_dir := ./.build
 TARGET ?= XR-USB-AUDIO
-lib_xcore_c := ../libxcore_c.a
+lib_xcore_c := ../lib_xcore_c/libxcore_c.a
 
 include $(wildcard $(build_dir)/*.d)
 
@@ -15,7 +15,7 @@ $(build_dir):
 
 .INTERMEDIATE: $(build_dir)/%.o
 $(build_dir)/%.o : %.c | $(build_dir)
-	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d -isystem ../api -target=$(TARGET) -I../../../lib_xassert/lib_xassert/api
+	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d -isystem ../lib_xcore_c/api -target=$(TARGET) -I../../lib_xassert/lib_xassert/api
 
 %.xe : $(build_dir)/%.o $(lib_xcore_c)
 	$(XCC) $^ -o $@ -target=$(TARGET) 
@@ -31,7 +31,6 @@ examples := \
 	timer_wait \
 	port_invert_peek \
 	port_condition \
-	port_ready_signal \
 
 
 

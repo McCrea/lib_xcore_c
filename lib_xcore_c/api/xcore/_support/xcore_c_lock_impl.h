@@ -1,15 +1,11 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_lock_impl_h__
-#define __xcore_c_lock_impl_h__
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
+#include <xs1.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
-#include <xs1.h>
 
 _XCORE_C_EXFUN
 inline resource_t _lock_alloc(void)
@@ -31,7 +27,3 @@ inline void _lock_release(resource_t l)
 {
   asm volatile("out res[%0], %0" :: "r" (l) : "memory");
 }
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_lock_impl_h__

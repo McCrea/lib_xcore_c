@@ -1,3 +1,4 @@
+// Copyright (c) 2020, XMOS Ltd, All rights reserved
 #pragma once
 
 #include <xcore/_support/xcore_c_common.h>

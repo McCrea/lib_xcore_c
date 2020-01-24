@@ -1,3 +1,5 @@
+// Copyright (c) 2020, XMOS Ltd, All rights reserved
+
 #ifndef _XCORE_C_EXFUN
 // TODO: When using Clang we make all inlines static as a workaround... Remove this once that's fixed!
 #ifdef XCC_VERSION_MAJOR

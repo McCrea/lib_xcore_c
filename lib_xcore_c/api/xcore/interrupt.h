@@ -1,17 +1,15 @@
 // Copyright (c) 2016, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief Helpers for implementing interrupt-enabled functions.
  */
 
-#ifndef __xcore_c_interrupt_h__
-#define __xcore_c_interrupt_h__
-
+#include <xs1.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_interrupt_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
 #include <xcore/_support/xcore_c_macros.h>
-#include <xs1.h>
 
 #ifndef XCORE_C_KSTACK_WORDS
 /** \brief Specify the minimum kernel stack size the interrupt permitting function should create.
@@ -177,5 +175,3 @@ inline void interrupt_unmask_all(void)
  *  \hideinitializer
  */
 #define INTERRUPT_CALLBACK(intrpt) _INTERRUPT_CALLBACK(intrpt)
-
-#endif // __xcore_c_interrupt_h__

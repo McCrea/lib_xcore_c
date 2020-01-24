@@ -1,3 +1,4 @@
+// Copyright (c) 2019-2020, XMOS Ltd, All rights reserved
 #pragma once
 
 #define _XMM_SHIM(FLM, ...) FLM(__VA_ARGS__)

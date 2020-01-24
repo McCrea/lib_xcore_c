@@ -1,13 +1,9 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief API for transaction-based channel communications
  */
-
-#ifndef __xcore_c_channel_transaction_h__
-#define __xcore_c_channel_transaction_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
 #include <stddef.h>
@@ -38,7 +34,7 @@
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_C_EXFUN
-inline transacting_chanend_t chan_init_transaction_master(chanend c)
+inline transacting_chanend_t chan_init_transaction_master(chanend_t c)
 {
   _s_chan_out_ct_end(c);
 
@@ -66,7 +62,7 @@ inline transacting_chanend_t chan_init_transaction_master(chanend c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_C_EXFUN
-inline transacting_chanend_t chan_init_transaction_slave(chanend c)
+inline transacting_chanend_t chan_init_transaction_slave(chanend_t c)
 {
   _s_chan_check_ct_end(c);
 
@@ -97,7 +93,7 @@ inline transacting_chanend_t chan_init_transaction_slave(chanend c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_C_EXFUN
-inline chanend chan_complete_transaction(transacting_chanend_t tc)
+inline chanend_t chan_complete_transaction(transacting_chanend_t tc)
 {
   if (tc.last_out)
   {
@@ -110,7 +106,7 @@ inline chanend chan_complete_transaction(transacting_chanend_t tc)
     _s_chan_out_ct_end(tc.c);
   }
 
-  return (chanend)tc.c;
+  return (chanend_t)tc.c;
 }
 
 /** \brief Output a word over a transacting chan-end.
@@ -273,6 +269,3 @@ inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t 
   }
 }
 
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_channel_transaction_h__

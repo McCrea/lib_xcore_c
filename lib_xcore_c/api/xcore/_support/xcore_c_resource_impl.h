@@ -1,37 +1,14 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_resource_impl_h__
-#define __xcore_c_resource_impl_h__
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
 #include <stdint.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_macros.h>
-#include "xassert.h"
+#include "xassert.h" //TODO: remove
 
-/** generic resource handle
- *
- *  This is an opaque base of the types 'chanend', 'port' and 'timer'.
- *  It is used to form a list to pass into select_wait_ordered()
- *  and select_no_wait_ordered().
- *
- *  Users must not access its raw underlying type.
- */
-typedef uint32_t resource_t;
-
-typedef void(*callback_function)(void);
-
-/** wrapped select callback function
- *
- *  This is an opaque type returned by the SELECT_CALLBACK() macro.
- *
- *  Users must not access its raw underlying type.
- */
-typedef callback_function select_callback_t;
 
 /** wrapped interrupt callback function
  *
@@ -39,7 +16,7 @@ typedef callback_function select_callback_t;
  *
  *  Users must not access its raw underlying type.
  */
-typedef callback_function interrupt_callback_t;
+typedef void(*interrupt_callback_t)(void);
 
 extern void _select_non_callback(void);  // Implemented in xcore_c_select.S
 
@@ -55,18 +32,10 @@ inline void _resource_disable_trigger(resource_t r)
   asm volatile("edu res[%0]" :: "r" (r));
 }
 
-extern void _resource_setup_callback(resource_t r, void *data, callback_function func, uint32_t type);
-
 _XCORE_C_EXFUN
 inline void _resource_setup_interrupt_callback(resource_t r, void *data, interrupt_callback_t intrpt)
 {
   _resource_setup_callback(r, data, intrpt, 0xA);  // Raise interrupts instead of events
-}
-
-_XCORE_C_EXFUN
-inline void _resource_setup_select_callback(resource_t r, void *data, select_callback_t callback)
-{
-  _resource_setup_callback(r, data, callback, 0x2);  // Raise events instead of interrupts
 }
 
 _XCORE_C_EXFUN
@@ -84,7 +53,3 @@ inline void _resource_free(resource_t r)
 }
 
 #define _RESOURCE_SETCI(res, c) asm volatile( "setc res[%0], %1" :: "r" (res), "n" (c))
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_resource_impl_h__

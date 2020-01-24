@@ -1,13 +1,9 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 /** \file
  *  \brief Hardware clock API
  */
-
-#ifndef __xcore_c_clock_h__
-#define __xcore_c_clock_h__
-
-#if !defined(__XC__) || defined(__DOXYGEN__)
 
 #include <stdint.h>
 #include <xcore/_support/xcore_c_common.h>
@@ -94,7 +90,7 @@ inline void clock_stop(xclock_t clk)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
 _XCORE_C_EXFUN
-inline void clock_set_source_port(xclock_t clk, port p)
+inline void clock_set_source_port(xclock_t clk, resource_t p)
 {
   _clock_set_source_port(clk, p);
 }
@@ -168,11 +164,8 @@ inline void clock_set_divide(xclock_t clk, uint8_t divide)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
 _XCORE_C_EXFUN
-inline void clock_set_ready_src(xclock_t clk, port ready_source)
+inline void clock_set_ready_src(xclock_t clk, resource_t ready_source)
 {
   _clock_set_ready_src(clk, ready_source);
 }
 
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_clock_h__

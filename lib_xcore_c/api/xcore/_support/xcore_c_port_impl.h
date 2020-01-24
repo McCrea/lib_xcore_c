@@ -1,16 +1,11 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_port_impl_h__
-#define __xcore_c_port_impl_h__
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
 #include <stdint.h>
 #include <stddef.h>
-
 #include <xs1.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
@@ -228,6 +223,3 @@ inline void _port_clear_buffer(resource_t p)
   _RESOURCE_SETCI(p, XS1_SETC_RUN_CLRBUF);
 }
 
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_port_impl_h__

@@ -1,18 +1,14 @@
-// Copyright (c) 2016, XMOS Ltd, All rights reserved
-
-#ifndef __xcore_c_hwtimer_impl_h__
-#define __xcore_c_hwtimer_impl_h__
+// Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
+#pragma once
 
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
 
-#if !defined(__XC__) || defined(__DOXYGEN__)
-
 #include <stdint.h>
+#include <xs1.h>
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
-#include <xs1.h>
 
 _XCORE_C_EXFUN
 inline void _hwtimer_realloc_xc_timer(void)
@@ -83,7 +79,3 @@ inline void _hwtimer_clear_trigger_time(resource_t t)
   _RESOURCE_SETCI(t, XS1_SETC_COND_NONE);
   // hwtimer_get_time() will respond immediately
 }
-
-#endif // !defined(__XC__)
-
-#endif // __xcore_c_hwtimer_impl_h__
