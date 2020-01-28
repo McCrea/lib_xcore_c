@@ -1,5 +1,6 @@
 #pragma once
 
+#include <xcore/assert.h>
 #include <xcore/chanend.h>
 #include <xcore/channel.h>
 #include <xcore/channel_streaming.h>
@@ -13,4 +14,3 @@
 #include <xcore/port_protocol.h>
 #include <xcore/select.h>
 #include <xcore/thread.h>
-

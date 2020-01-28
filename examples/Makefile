@@ -15,7 +15,7 @@ $(build_dir):
 
 .INTERMEDIATE: $(build_dir)/%.o
 $(build_dir)/%.o : %.c | $(build_dir)
-	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d -isystem ../lib_xcore_c/api -target=$(TARGET) -I../../lib_xassert/lib_xassert/api
+	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -isystem ../lib_xcore_c/api -target=$(TARGET)
 
 %.xe : $(build_dir)/%.o $(lib_xcore_c)
 	$(XCC) $^ -o $@ -target=$(TARGET) 
@@ -31,6 +31,7 @@ examples := \
 	timer_wait \
 	port_invert_peek \
 	port_condition \
+	assert
 
 
 

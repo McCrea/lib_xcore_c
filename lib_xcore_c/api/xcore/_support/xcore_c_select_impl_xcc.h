@@ -7,8 +7,8 @@
 
 #define _XMM_SELECT_RES_HANDLER_SETUP_I(RES, LABEL, ...) \
   do { \
-    chanend_setup_select(RES, __xmm_htable_idx); \
-    chanend_enable_trigger(RES); \
+    _resource_setup_select(RES, __xmm_htable_idx); \
+    _resource_enable_trigger(RES); \
     __xmm_htable_idx += 1; \
   } while(0);
 
