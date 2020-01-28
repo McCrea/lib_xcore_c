@@ -24,7 +24,7 @@ typedef resource_t xclock_t;
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_enable(xclock_t id)
 {
   _RESOURCE_SETCI(id, XS1_SETC_INUSE_ON);
@@ -40,7 +40,7 @@ inline void clock_enable(xclock_t id)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_disable(xclock_t clk)
 {
   _RESOURCE_SETCI(clk, XS1_SETC_INUSE_OFF);
@@ -53,7 +53,7 @@ inline void clock_disable(xclock_t clk)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_start(xclock_t clk)
 {
   _RESOURCE_SETCI(clk, XS1_SETC_RUN_STARTR);
@@ -68,7 +68,7 @@ inline void clock_start(xclock_t clk)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid clock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_stop(xclock_t clk)
 {
   _RESOURCE_SETCI(clk, XS1_SETC_RUN_STOPR);
@@ -89,10 +89,10 @@ inline void clock_stop(xclock_t clk)
  *                                    or p not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_set_source_port(xclock_t clk, resource_t p)
 {
-  _clock_set_source_port(clk, p);
+  __xcore_clock_set_source_port(clk, p);
 }
 
 /** \brief Configure a clock's source to be the 100MHz reference clock
@@ -103,10 +103,10 @@ inline void clock_set_source_port(xclock_t clk, resource_t p)
  *                                    or the clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_set_source_clk_ref(xclock_t clk)
 {
-  _clock_set_source_clk_ref(clk);
+  __xcore_clock_set_source_clk_ref(clk);
 }
 
 /** \brief Configure a clock's source to be the xCORE clock.
@@ -120,10 +120,10 @@ inline void clock_set_source_clk_ref(xclock_t clk)
  *                                    or the clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_set_source_clk_xcore(xclock_t clk)
 {
-  _clock_set_source_clk_xcore(clk);
+  __xcore_clock_set_source_clk_xcore(clk);
 }
 
 /** \brief Configure the divider for a clock.
@@ -145,10 +145,10 @@ inline void clock_set_source_clk_xcore(xclock_t clk)
  *                                    or the clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_set_divide(xclock_t clk, uint8_t divide)
 {
-  _clock_set_divide(clk, divide);
+  __xcore_clock_set_divide(clk, divide);
 }
 
 /** \brief Sets a clock to use a 1-bit port for the ready-in signal.
@@ -163,9 +163,9 @@ inline void clock_set_divide(xclock_t clk, uint8_t divide)
  *                                    or ready_source not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the clock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void clock_set_ready_src(xclock_t clk, resource_t ready_source)
 {
-  _clock_set_ready_src(clk, ready_source);
+  __xcore_clock_set_ready_src(clk, ready_source);
 }
 

@@ -30,10 +30,10 @@ typedef resource_t hwtimer_t;
  *
  *  \exception  ET_ILLEGAL_RESOURCE   timer has already been deallocated.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void hwtimer_free_xc_timer(void)
 {
-  _hwtimer_free_xc_timer();
+  __xcore_hwtimer_free_xc_timer();
 }
 
 /** \brief Reallcoates a logical core's xC hardware timer that was
@@ -45,10 +45,10 @@ inline void hwtimer_free_xc_timer(void)
  *
  *  \exception  ET_ECALL   no available hw timer, reallocation failed.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void hwtimer_realloc_xc_timer(void)
 {
-  _hwtimer_realloc_xc_timer();
+  __xcore_hwtimer_realloc_xc_timer();
 }
 
 /** \brief Allocates a hardware timer.
@@ -59,10 +59,10 @@ inline void hwtimer_realloc_xc_timer(void)
  *
  *  \return     Timer handle to the allocated timer
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline hwtimer_t hwtimer_alloc()
 {
-  return _hwtimer_alloc();
+  return __xcore_hwtimer_alloc();
 }
 
 /** \brief Deallocate a timer.
@@ -72,10 +72,10 @@ inline hwtimer_t hwtimer_alloc()
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void hwtimer_free(hwtimer_t t)
 {
-  _hwtimer_free(t);
+  __xcore_hwtimer_free(t);
 }
 
 /** \brief Get the current time from the timer.
@@ -88,10 +88,10 @@ inline void hwtimer_free(hwtimer_t t)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline uint32_t hwtimer_get_time(hwtimer_t t)
 {
-  return _hwtimer_get_time(t);
+  return __xcore_hwtimer_get_time(t);
 }
 
 /** \brief Get the trigger time value.
@@ -105,10 +105,10 @@ inline uint32_t hwtimer_get_time(hwtimer_t t)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline uint32_t hwtimer_get_trigger_time(hwtimer_t t)
 {
-  return _hwtimer_get_trigger_time(t);
+  return __xcore_hwtimer_get_trigger_time(t);
 }
 
 /** \brief Setup an event trigger on a timer.
@@ -127,10 +127,10 @@ inline uint32_t hwtimer_get_trigger_time(hwtimer_t t)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void hwtimer_set_trigger_time(hwtimer_t t, uint32_t time)
 {
-  _hwtimer_set_trigger_time(t, time);
+  __xcore_hwtimer_set_trigger_time(t, time);
 }
 
 /** \brief Change the time at which a timer trigger will fire.
@@ -145,10 +145,10 @@ inline void hwtimer_set_trigger_time(hwtimer_t t, uint32_t time)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void hwtimer_change_trigger_time(hwtimer_t t, uint32_t time)
 {
-  _hwtimer_change_trigger_time(t, time);
+  __xcore_hwtimer_change_trigger_time(t, time);
 }
 
 /** \brief Clear an event trigger on a timer.
@@ -163,10 +163,10 @@ inline void hwtimer_change_trigger_time(hwtimer_t t, uint32_t time)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void hwtimer_clear_trigger_time(hwtimer_t t)
 {
-  _hwtimer_clear_trigger_time(t);
+  __xcore_hwtimer_clear_trigger_time(t);
 }
 
 /** \brief Wait until after a specified time.
@@ -181,12 +181,12 @@ inline void hwtimer_clear_trigger_time(hwtimer_t t)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline uint32_t hwtimer_wait_until(resource_t t, uint32_t until)
 {
-  _hwtimer_set_trigger_time(t, until);
-  uint32_t now = _hwtimer_get_time(t);
-  _hwtimer_clear_trigger_time(t);
+  __xcore_hwtimer_set_trigger_time(t, until);
+  uint32_t now = __xcore_hwtimer_get_time(t);
+  __xcore_hwtimer_clear_trigger_time(t);
   return now;
 }
 
@@ -201,12 +201,12 @@ inline uint32_t hwtimer_wait_until(resource_t t, uint32_t until)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  *  \exception  ET_LOAD_STORE         invalid *\*now* argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void hwtimer_delay(resource_t t, uint32_t period)
 {
-  uint32_t start = _hwtimer_get_time(t);
+  uint32_t start = __xcore_hwtimer_get_time(t);
   uint32_t until = start + period;
-  _hwtimer_set_trigger_time(t, until);
+  __xcore_hwtimer_set_trigger_time(t, until);
   (void)_hwtimer_get_time(t);
-  _hwtimer_clear_trigger_time(t);
+  __xcore_hwtimer_clear_trigger_time(t);
 }

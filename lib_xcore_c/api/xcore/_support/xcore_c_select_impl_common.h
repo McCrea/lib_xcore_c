@@ -91,14 +91,14 @@ uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]);
 
 // Start of support for new style
 
-_XCORE_C_EXFUN
-inline void _select_disable_trigger_all(void)
+_XCORE_EXFUN
+inline void __xcore_select_disable_trigger_all(void)
 {
   asm volatile("clre");
 }
 
-_XCORE_C_EXFUN
-inline void _select_event_enable_unconditional(const resource_t resource)
+_XCORE_EXFUN
+inline void __xcore_select_event_enable_unconditional(const resource_t resource)
 {
   asm volatile(
     "eeu res[%[res]] \n"
@@ -106,8 +106,8 @@ inline void _select_event_enable_unconditional(const resource_t resource)
     : [res] "r"(resource));
 }
 
-_XCORE_C_EXFUN
-inline void _select_event_disable_unconditional(const resource_t resource)
+_XCORE_EXFUN
+inline void __xcore_select_event_disable_unconditional(const resource_t resource)
 {
   asm volatile(
     "edu res[%[res]] \n"
@@ -115,8 +115,8 @@ inline void _select_event_disable_unconditional(const resource_t resource)
     : [res] "r"(resource));
 }
 
-_XCORE_C_EXFUN
-inline void _select_event_set_enable(const resource_t resource, const int condition)
+_XCORE_EXFUN
+inline void __xcore_select_event_set_enable(const resource_t resource, const int condition)
 {
   asm volatile(
     "eet %[cond], res[%[res]] \n"
@@ -124,8 +124,8 @@ inline void _select_event_set_enable(const resource_t resource, const int condit
     : [res] "r"(resource) , [cond] "r"(condition));
 }
 
-_XCORE_C_EXFUN
-inline void _select_event_set_enable_inv(const resource_t resource, const int condition)
+_XCORE_EXFUN
+inline void __xcore_select_event_set_enable_inv(const resource_t resource, const int condition)
 {
   asm volatile(
     "eef %[cond], res[%[res]] \n"
@@ -133,48 +133,48 @@ inline void _select_event_set_enable_inv(const resource_t resource, const int co
     : [res] "r"(resource) , [cond] "r"(condition));
 }
 
-_XCORE_C_EXFUN
-inline void _select_event_enable_if_true(const resource_t resource, const int condition)
+_XCORE_EXFUN
+inline void __xcore_select_event_enable_if_true(const resource_t resource, const int condition)
 {
   if (__builtin_constant_p(condition))
   {
     if (condition)
     {
-      _select_event_enable_unconditional(resource);
+      __xcore_select_event_enable_unconditional(resource);
     }
     else
     {
-      _select_event_disable_unconditional(resource);
+      __xcore_select_event_disable_unconditional(resource);
     }
   }
   else 
   {
-    _select_event_set_enable(resource, condition);
+    __xcore_select_event_set_enable(resource, condition);
   }
 }
 
-_XCORE_C_EXFUN
-inline void _select_event_enable_if_false(const resource_t resource, const int condition)
+_XCORE_EXFUN
+inline void __xcore_select_event_enable_if_false(const resource_t resource, const int condition)
 {
   if (__builtin_constant_p(condition))
   {
     if (condition)
     {
-      _select_event_disable_unconditional(resource);
+      __xcore_select_event_disable_unconditional(resource);
     }
     else
     {
-      _select_event_enable_unconditional(resource);
+      __xcore_select_event_enable_unconditional(resource);
     }
   }
   else 
   {
-    _select_event_set_enable_inv(resource, condition);
+    __xcore_select_event_set_enable_inv(resource, condition);
   }
 }
 
-_XCORE_C_EXFUN
-inline void _register_event_vector(const resource_t resource, void * const vector)
+_XCORE_EXFUN
+inline void __xcore_register_event_vector(const resource_t resource, void * const vector)
 {
   register void * const vector_reg asm("r11") = vector; 
   asm volatile (
@@ -183,7 +183,7 @@ inline void _register_event_vector(const resource_t resource, void * const vecto
     : [res] "r"(resource), [target] "r"(vector_reg));
 }
 
-#define _XMM_GUARD_NONE _XMM_GTYPE_NONE, /* Guard expression should never be used */
-#define _XMM_GUARD_TRUE(EXPR) _XMM_GTYPE_TRUE, EXPR
-#define _XMM_GUARD_FALSE(EXPR) _XMM_GTYPE_FALSE, EXPR
+#define _XCORE_GUARD_NONE _XCORE_GTYPE_NONE, /* Guard expression should never be used */
+#define _XCORE_GUARD_TRUE(EXPR) _XCORE_GTYPE_TRUE, EXPR
+#define _XCORE_GUARD_FALSE(EXPR) _XCORE_GTYPE_FALSE, EXPR
 

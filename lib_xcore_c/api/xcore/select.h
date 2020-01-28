@@ -161,7 +161,7 @@
     \endcode
  *  \hideinitializer
  */
-#define SELECT_RES(...) _XMM_SELECT_RES(__VA_ARGS__)
+#define SELECT_RES(...) _XCORE_SELECT_RES(__VA_ARGS__)
 
 /** \brief Repeatedly wait for an event on an arbitrary set of events giving priority to resources based on order.
  *
@@ -187,7 +187,7 @@
  *
  *  \hideinitializer
  */
-#define SELECT_RES_ORDERED(...) _XMM_SELECT_RES_ORDERED(__VA_ARGS__)
+#define SELECT_RES_ORDERED(...) _XCORE_SELECT_RES_ORDERED(__VA_ARGS__)
 
 /** \brief Restores the configuration of the immediately enclosing select block and continues.
  *
@@ -197,7 +197,7 @@
  *
  *  \hideinitializer
  */
-#define SELECT_RESET _XMM_SELECT_RESET_I
+#define SELECT_RESET _XCORE_SELECT_RESET_I
 
 /** \brief Unconditionally wait for an event on a given resource.
  *
@@ -207,7 +207,7 @@
  *
  *  \hideinitializer
  */
-#define CASE_THEN(RES, LABEL) _XMM_CASE_RES(RES, LABEL, _XMM_GUARD_NONE)
+#define CASE_THEN(RES, LABEL) _XCORE_CASE_RES(RES, LABEL, _XCORE_GUARD_NONE)
 
 /** \brief Wait for an event on a given resource if a condition evaluates true.
  *
@@ -219,7 +219,7 @@
  *
  *  \hideinitializer
  */
-#define CASE_GUARD_THEN(RES, GUARD_EXPR, LABEL) _XMM_CASE_RES(RES, LABEL, _XMM_GUARD_TRUE(GUARD_EXPR))
+#define CASE_GUARD_THEN(RES, GUARD_EXPR, LABEL) _XCORE_CASE_RES(RES, LABEL, _XCORE_GUARD_TRUE(GUARD_EXPR))
 
 /** \brief Wait for an event on a given resource is a condition evaluates false.
  *
@@ -231,7 +231,7 @@
  *
  *  \hideinitializer
  */
-#define CASE_NGUARD_THEN(RES, GUARD_EXPR, LABEL) _XMM_CASE_RES(RES, LABEL, _XMM_GUARD_FALSE(GUARD_EXPR))
+#define CASE_NGUARD_THEN(RES, GUARD_EXPR, LABEL) _XCORE_CASE_RES(RES, LABEL, _XCORE_GUARD_FALSE(GUARD_EXPR))
 
 /** \brief Defines a label to jump to if no enabled resource events are ready.
  *
@@ -240,7 +240,7 @@
  *
  *  \hideinitializer
  */
-#define DEFAULT_THEN(LABEL) _XMM_CASE_DEFAULT(LABEL, _XMM_GUARD_NONE)
+#define DEFAULT_THEN(LABEL) _XCORE_CASE_DEFAULT(LABEL, _XCORE_GUARD_NONE)
 
 /** \brief Defines a label to jump to if no enabled resource events are ready and a condition evaluates true.
  *
@@ -250,7 +250,7 @@
  *
  *  \hideinitializer
  */
-#define DEFAULT_GUARD_THEN(GUARD_EXPR, LABEL) _XMM_CASE_DEFAULT(LABEL, _XMM_GUARD_TRUE(GUARD_EXPR))
+#define DEFAULT_GUARD_THEN(GUARD_EXPR, LABEL) _XCORE_CASE_DEFAULT(LABEL, _XCORE_GUARD_TRUE(GUARD_EXPR))
 
 /** \brief Defines a label to jump to if no enabled resource events are ready and a condition evaluates false.
  *
@@ -260,4 +260,4 @@
  * 
  *  \hideinitializer
  */
-#define DEFAULT_NGUARD_THEN(GUARD_EXPR, LABEL) _XMM_CASE_DEFAULT(LABEL, _XMM_GUARD_FALSE(GUARD_EXPR))
+#define DEFAULT_NGUARD_THEN(GUARD_EXPR, LABEL) _XCORE_CASE_DEFAULT(LABEL, _XCORE_GUARD_FALSE(GUARD_EXPR))

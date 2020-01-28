@@ -105,10 +105,10 @@
  *  This has no effect on \c *_setup_select_callback() triggering.
  *  They can be restored by using interrupt_unmask_all().
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void interrupt_mask_all(void)
 {
-  asm volatile("clrsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));
+  asm volatile("clrsr" _XCORE_STR(XS1_SR_IEBLE_MASK));
 }
 
 /** \brief Unmask all interrupts on this logical core.
@@ -117,10 +117,10 @@ inline void interrupt_mask_all(void)
  *  They can be suppressed by using interrupt_mask_all().
  *  \hideinitializer
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void interrupt_unmask_all(void)
 {
-  asm volatile("setsr" _XCORE_C_STR(XS1_SR_IEBLE_MASK));
+  asm volatile("setsr" _XCORE_STR(XS1_SR_IEBLE_MASK));
 }
 
 /** \brief Define an interrupt handling function

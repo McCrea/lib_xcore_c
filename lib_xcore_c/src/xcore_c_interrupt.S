@@ -1,18 +1,18 @@
 // Copyright (c) 2016-2020, XMOS Ltd, All rights reserved
 
 #ifdef __XS2A__
-# define _XCORE_C_STACK_ALIGN(n)   ((n+1)/2)*2
+# define _XCORE_STACK_ALIGN(n)   ((n+1)/2)*2
 #else
-# define _XCORE_C_STACK_ALIGN(n)   n
+# define _XCORE_STACK_ALIGN(n)   n
 #endif
 
-.globl _xcore_c_interrupt_permitted_common
+.globl __xcore_interrupt_permitted_common
 .align 2  // We arrive in single issue mode.
-.type  _xcore_c_interrupt_permitted_common,@function
-.cc_top _xcore_c_interrupt_permitted_common.function,_xcore_c_interrupt_permitted_common
-_xcore_c_interrupt_permitted_common:
-  // This is the body of the _xcore_c_interrupt_permitted_XXX functions.
-  // We have an active _XCORE_C_STACK_ALIGN(3) word sp frame.
+.type  __xcore_interrupt_permitted_common,@function
+.cc_top __xcore_interrupt_permitted_common.function,__xcore_interrupt_permitted_common
+__xcore_interrupt_permitted_common:
+  // This is the body of the __xcore_interrupt_permitted_XXX functions.
+  // We have an active _XCORE_STACK_ALIGN(3) word sp frame.
   // sp[2] = saved r5
   // sp[1] = saved r4
   // sp[0] will be trashed when we set up the kstack.
@@ -53,26 +53,26 @@ _xcore_c_interrupt_permitted_common:
   // And return.
   ldw r4, sp[1]
   ldw r5, sp[2]
-  retsp _XCORE_C_STACK_ALIGN(3)
-.cc_bottom _xcore_c_interrupt_permitted_common.function
-.set   _xcore_c_interrupt_permitted_common.nstackwords, 0
-.globl _xcore_c_interrupt_permitted_common.nstackwords
-.set   _xcore_c_interrupt_permitted_common.maxcores, 1
-.globl _xcore_c_interrupt_permitted_common.maxcores
-.set   _xcore_c_interrupt_permitted_common.maxtimers, 0
-.globl _xcore_c_interrupt_permitted_common.maxtimers
-.set   _xcore_c_interrupt_permitted_common.maxchanends, 0
-.globl _xcore_c_interrupt_permitted_common.maxchanends
-.size  _xcore_c_interrupt_permitted_common, . - _xcore_c_interrupt_permitted_common
+  retsp _XCORE_STACK_ALIGN(3)
+.cc_bottom __xcore_interrupt_permitted_common.function
+.set   __xcore_interrupt_permitted_common.nstackwords, 0
+.globl __xcore_interrupt_permitted_common.nstackwords
+.set   __xcore_interrupt_permitted_common.maxcores, 1
+.globl __xcore_interrupt_permitted_common.maxcores
+.set   __xcore_interrupt_permitted_common.maxtimers, 0
+.globl __xcore_interrupt_permitted_common.maxtimers
+.set   __xcore_interrupt_permitted_common.maxchanends, 0
+.globl __xcore_interrupt_permitted_common.maxchanends
+.size  __xcore_interrupt_permitted_common, . - __xcore_interrupt_permitted_common
 
 
-.globl _xcore_c_interrupt_callback_common
+.globl __xcore_interrupt_callback_common
 .align 2  // We arrive in single issue mode.
-.type  _xcore_c_interrupt_callback_common,@function
-.cc_top _xcore_c_interrupt_callback_common.function,_xcore_c_interrupt_callback_common
-_xcore_c_interrupt_callback_common:
-  // This is the body of the _xcore_c_interrupt_callback_XXX functions.
-  // We have an active _XCORE_C_STACK_ALIGN(7) word ksp frame.
+.type  __xcore_interrupt_callback_common,@function
+.cc_top __xcore_interrupt_callback_common.function,__xcore_interrupt_callback_common
+__xcore_interrupt_callback_common:
+  // This is the body of the __xcore_interrupt_callback_XXX functions.
+  // We have an active _XCORE_STACK_ALIGN(7) word ksp frame.
   // r1 = interrupt_callback_t function
   stw lr, sp[6]
   // ksp[5] = r11
@@ -92,15 +92,15 @@ _xcore_c_interrupt_callback_common:
   ldw r0, sp[4]
   ldw r11, sp[5]
   ldw lr, sp[6]
-  krestsp _XCORE_C_STACK_ALIGN(7)
+  krestsp _XCORE_STACK_ALIGN(7)
   kret
-.cc_bottom _xcore_c_interrupt_callback_common.function
-.set   _xcore_c_interrupt_callback_common.nstackwords, 0
-.globl _xcore_c_interrupt_callback_common.nstackwords
-.set   _xcore_c_interrupt_callback_common.maxcores, 1
-.globl _xcore_c_interrupt_callback_common.maxcores
-.set   _xcore_c_interrupt_callback_common.maxtimers, 0
-.globl _xcore_c_interrupt_callback_common.maxtimers
-.set   _xcore_c_interrupt_callback_common.maxchanends, 0
-.globl _xcore_c_interrupt_callback_common.maxchanends
-.size  _xcore_c_interrupt_callback_common, . - _xcore_c_interrupt_callback_common
+.cc_bottom __xcore_interrupt_callback_common.function
+.set   __xcore_interrupt_callback_common.nstackwords, 0
+.globl __xcore_interrupt_callback_common.nstackwords
+.set   __xcore_interrupt_callback_common.maxcores, 1
+.globl __xcore_interrupt_callback_common.maxcores
+.set   __xcore_interrupt_callback_common.maxtimers, 0
+.globl __xcore_interrupt_callback_common.maxtimers
+.set   __xcore_interrupt_callback_common.maxchanends, 0
+.globl __xcore_interrupt_callback_common.maxchanends
+.size  __xcore_interrupt_callback_common, . - __xcore_interrupt_callback_common

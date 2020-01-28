@@ -3,8 +3,8 @@
 
 #include <xcore/_support/xcore_c_common.h>
 
-_XCORE_C_EXFUN
-inline void __xcore_c_ecallt(unsigned value)
+_XCORE_EXFUN
+inline void __xcore_ecallt(unsigned value)
 {
   if (!(__builtin_constant_p(value) && !value))
   {
@@ -13,8 +13,8 @@ inline void __xcore_c_ecallt(unsigned value)
   __builtin_assume(value == 0);
 }
 
-_XCORE_C_EXFUN
-inline void __xcore_c_ecallf(unsigned value)
+_XCORE_EXFUN
+inline void __xcore_ecallf(unsigned value)
 {
   if (!(__builtin_constant_p(value) && value))
   {
@@ -23,12 +23,12 @@ inline void __xcore_c_ecallf(unsigned value)
   __builtin_assume(value != 0);
 }
 
-_XCORE_C_EXFUN
-inline void __xcore_c_elate(unsigned value)
+_XCORE_EXFUN
+inline void __xcore_elate(unsigned value)
 {
 #if !defined(__XS1B__) && !defined(__XS1C__)
   asm volatile("elate %[value]" : : [value] "r" (value));
 #else
-  __xcore_c_ecallf(0); //TODO 
+  __xcore_ecallf(0); //TODO 
 #endif
 }

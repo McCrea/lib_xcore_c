@@ -27,7 +27,7 @@ typedef streaming_channel_t channel_t;
  *
  *  \return     The channel_t (both fields will be 0 if allocation was not possible)
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline channel_t chan_alloc()
 {
   return (channel_t)s_chan_alloc();
@@ -41,12 +41,12 @@ inline channel_t chan_alloc()
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chan_free(channel_t c)
 {
   // Not implemented in terms of s_chan_free() as we have already hand-shook a CT_END.
-  _s_chanend_free(c.end_a);
-  _s_chanend_free(c.end_b);
+  __xcore_s_chanend_free(c.end_a);
+  __xcore_s_chanend_free(c.end_b);
 }
 
 /** \brief Output a word over a channel.
@@ -59,14 +59,14 @@ inline void chan_free(channel_t c)
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chan_out_word(chanend_t c, uint32_t data)
 {
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
-  _s_chan_out_word(c, data);
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_word(c, data);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
 }
 
 /** \brief Output a byte over a channel.
@@ -79,14 +79,14 @@ inline void chan_out_word(chanend_t c, uint32_t data)
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chan_out_byte(chanend_t c, uint8_t data)
 {
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
-  _s_chan_out_byte(c, data);
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_byte(c, data);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
 }
 
 /** \brief Output a block of data over a channel.
@@ -101,17 +101,17 @@ inline void chan_out_byte(chanend_t c, uint8_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
 {
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
   for (size_t i = 0; i < n; i++)
   {
-    _s_chan_out_word(c, buf[i]);
+    __xcore_s_chan_out_word(c, buf[i]);
   }
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
 }
 
 /** \brief Output a block of data over a channel.
@@ -126,17 +126,17 @@ inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
 {
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
   for (size_t i = 0; i < n; i++)
   {
-    _s_chan_out_byte(c, buf[i]);
+    __xcore_s_chan_out_byte(c, buf[i]);
   }
-  _s_chan_out_ct_end(c);
-  _s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
 }
 
 /** \brief Input a word from a channel.
@@ -149,14 +149,14 @@ inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline uint32_t chan_in_word(chanend_t c)
 {
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
-  uint32_t data = _s_chan_in_word(c);
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  uint32_t data = __xcore_s_chan_in_word(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
   return data;
 }
 
@@ -170,14 +170,14 @@ inline uint32_t chan_in_word(chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline uint8_t chan_in_byte(chanend_t c)
 {
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
-  uint8_t data = _s_chan_in_byte(c);
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
+  uint8_t data = __xcore_s_chan_in_byte(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
   return data;
 }
 
@@ -192,17 +192,17 @@ inline uint8_t chan_in_byte(chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
 {
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = _s_chan_in_word(c);
+    buf[i] = __xcore_s_chan_in_word(c);
   }
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
 }
 
 /** \brief Input a block of data from a channel.
@@ -218,16 +218,16 @@ inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
 {
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = _s_chan_in_byte(c);
+    buf[i] = __xcore_s_chan_in_byte(c);
   }
-  _s_chan_check_ct_end(c);
-  _s_chan_out_ct_end(c);
+  __xcore_s_chan_check_ct_end(c);
+  __xcore_s_chan_out_ct_end(c);
 }
 

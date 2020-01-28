@@ -26,7 +26,7 @@
  * \see PFUNC
  * \hideinitializer
  */
-#define PAR_FUNCS(...) _XMM_PAR_FUNCS_I(__VA_ARGS__)
+#define PAR_FUNCS(...) _XCORE_PAR_FUNCS_I(__VA_ARGS__)
 
 /** \brief Specifies a parallelised function call
  *
@@ -61,8 +61,8 @@
  */
 #define DECLARE_JOB(NAME, ARG_TYPES_PACK, SSIZE) \
   DECLARE_JOB_I(NAME, \
-                _XMM_PAR_ARG_STRUCT_NAME(NAME), \
-                _XMM_PAR_ARG_PACK_PREPARE(ARG_TYPES_PACK), \
+                _XCORE_PAR_ARG_STRUCT_NAME(NAME), \
+                _XCORE_PAR_ARG_PACK_PREPARE(ARG_TYPES_PACK), \
                 ARG_TYPES_PACK, \
                 SSIZE)
 
@@ -88,7 +88,7 @@
  * \see \li PJOB \li DECLARE_JOB
  * \hideinitializer
  */
-#define PAR_JOBS(...) _XMM_JPAR_JOBS_I(__VA_ARGS__)
+#define PAR_JOBS(...) _XCORE_JPAR_JOBS_I(__VA_ARGS__)
 
 /** \brief Specifies a parallelised call of a function declared with DECLARE_JOB
  *

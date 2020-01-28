@@ -20,10 +20,10 @@ typedef resource_t lock_t;
  *
  *  \return  handle for the allocated lock, 0 is no locks were available
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline lock_t lock_alloc()
 {
-  return _lock_alloc();
+  return __xcore_lock_alloc();
 }
 
 /** \brief Deallocates a given lock.
@@ -37,10 +37,10 @@ inline lock_t lock_alloc()
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the lock.
  *  \exception  ET_LOAD_STORE        invalid \a l argument.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void lock_free(lock_t l)
 {
-  _resource_free((resource_t)l);
+  __xcore_resource_free((resource_t)l);
 }
 
 /** \brief Acquire a lock.
@@ -55,10 +55,10 @@ inline void lock_free(lock_t l)
  *  \exception  ET_ILLEGAL_RESOURCE  not an allocated lock.
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the lock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void lock_acquire(lock_t l)
 {
-  _lock_acquire(l);
+  __xcore_lock_acquire(l);
 }
 
 /** \brief Release a lock.
@@ -73,9 +73,9 @@ inline void lock_acquire(lock_t l)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated lock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the lock.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void lock_release(lock_t l)
 {
-  _lock_release(l);
+  __xcore_lock_release(l);
 }
 

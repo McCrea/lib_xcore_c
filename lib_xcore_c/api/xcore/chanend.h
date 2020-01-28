@@ -32,10 +32,10 @@ typedef resource_t streaming_chanend_t;
  *
  *  \return     chanend (0 if none are available)
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline streaming_chanend_t s_chanend_alloc(void)
 {
-  return _s_chanend_alloc();
+  return __xcore_s_chanend_alloc();
 }
 
 /** \brief Deallocate a single streaming_chanend_t.
@@ -49,10 +49,10 @@ inline streaming_chanend_t s_chanend_alloc(void)
  *                                    or it has not received/sent a CT_END token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void s_chanend_free(streaming_chanend_t c)
 {
-  _s_chanend_free(c);
+  __xcore_s_chanend_free(c);
 }
 
 /** \brief Set the destination of a streaming_chanend_t
@@ -63,10 +63,10 @@ inline void s_chanend_free(streaming_chanend_t c)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated streaming_chanend_t.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
 */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void s_chanend_set_dest(streaming_chanend_t c, streaming_chanend_t dst)
 {
-  _s_chanend_set_dest(c, dst);
+  __xcore_s_chanend_set_dest(c, dst);
 }
 
 /** \brief Convert a chanend to a streaming_chanend_t.
@@ -76,7 +76,7 @@ inline void s_chanend_set_dest(streaming_chanend_t c, streaming_chanend_t dst)
  *  \param c    chanend to convert.
  *  \return     the streaming_chanend_t
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline streaming_chanend_t s_chanend_convert(chanend_t c)
 {
   return (streaming_chanend_t)c;
@@ -90,7 +90,7 @@ inline streaming_chanend_t s_chanend_convert(chanend_t c)
  *
  *  \return    Allocated chanend (0 if none are available)
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline chanend_t chanend_alloc()
 {
   return (chanend_t)s_chanend_alloc();
@@ -107,7 +107,7 @@ inline chanend_t chanend_alloc()
  *                                    or it has not received/sent a CT_END token.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chanend_free(chanend_t c)
 {
   s_chanend_free((streaming_chanend_t)c);
@@ -121,7 +121,7 @@ inline void chanend_free(chanend_t c)
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chanend.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
 */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline void chanend_set_dest(chanend_t c, chanend_t dst)
 {
   s_chanend_set_dest((streaming_chanend_t)c, (streaming_chanend_t)dst);
@@ -135,7 +135,7 @@ inline void chanend_set_dest(chanend_t c, chanend_t dst)
  *  \param c    streaming_chanend_t to convert.
  *  \return     the chanend
  */
-_XCORE_C_EXFUN
+_XCORE_EXFUN
 inline chanend_t chanend_convert(streaming_chanend_t c)
 {
   return (chanend_t)c;
