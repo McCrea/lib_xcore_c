@@ -20,7 +20,6 @@ int main(void)
  
 
   port_set_trigger_in_equal(button_port, !port_value);
-  port_enable_trigger(button_port);
   port_value = port_in(button_port);
   printf("Button port value: %u\n", port_value);
 
@@ -28,8 +27,6 @@ int main(void)
   port_set_trigger_value(button_port, !port_value);
   port_value = port_in(button_port);
   printf("Button port value: %u\n", port_value);
-
-  port_disable_trigger(button_port);
 
   port_disable(button_port);
 }

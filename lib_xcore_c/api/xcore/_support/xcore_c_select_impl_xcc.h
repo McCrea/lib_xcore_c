@@ -5,25 +5,33 @@
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_select_impl_common.h>
 
+
+_XCORE_EXFUN
+inline void __xcore_select_setup_int(resource_t r, uint32_t value)
+{
+  __xcore_resource_setup_callback(r, (void*)value, __xcore_select_non_callback, 0x2);
+}
+
+
 #define _XCORE_SELECT_RES_HANDLER_SETUP_I(RES, LABEL, ...) \
   do { \
-    __xcore_resource_setup_select(RES, __xcore_htable_idx); \
-    __xcore_resource_enable_trigger(RES); \
+    __xcore_select_setup_int(RES, __xcore_htable_idx); \
+    __xcore_resource_event_enable_unconditional(RES); \
     __xcore_htable_idx += 1; \
   } while(0);
 
 #define _XCORE_SELECT_RES_HANDLER_SETUP(PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_HANDLER_SETUP_I, PACK)
 
 
-#define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_NONE(RES, EXPR_) __xcore_select_event_enable_unconditional(RES);
+#define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_NONE(RES, EXPR_) __xcore_resource_event_enable_unconditional(RES);
 
 #define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_TRUE(...) /* None */
 #define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_FALSE(...) /* None */
 
 #define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_NONE(...) /* None */
 
-#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_TRUE(RES, COND) __xcore_select_event_enable_if_true(RES, COND);
-#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_FALSE(RES, COND) __xcore_select_event_enable_if_false(RES, COND);
+#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_TRUE(RES, COND) __xcore_resource_event_enable_if_true(RES, COND);
+#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_FALSE(RES, COND) __xcore_resource_event_enable_if_false(RES, COND);
 
 #define _XCORE_SELECT_RES_ENABLER_ONEOFF_NAME(GTYPE)  _XCORE_SELECT_RES_ENABLER_ONEOFF_ ## GTYPE
 #define _XCORE_SELECT_RES_ENABLER_ONEOFF_I(RES, LABEL_, GTYPE, EXPR) _XCORE_SELECT_RES_ENABLER_ONEOFF_NAME(GTYPE)(RES, EXPR)
@@ -134,7 +142,7 @@
 #define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_TRUE(RES, EXPR, TNAME, ...) \
   do { \
     register const int __xcore_enable_cond = EXPR; \
-    __xcore_select_event_enable_if_true(RES, __xcore_enable_cond); \
+    __xcore_resource_event_enable_if_true(RES, __xcore_enable_cond); \
     /*if (__xcore_enable_cond) { _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(__VA_ARGS__); } */\
     _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__); \
   } while (0);
@@ -142,13 +150,13 @@
 #define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_FALSE(RES, EXPR, TNAME, ...) \
   do { \
     register const int __xcore_enable_cond = EXPR; \
-    __xcore_select_event_enable_if_false(RES, __xcore_enable_cond); \
+    __xcore_resource_event_enable_if_false(RES, __xcore_enable_cond); \
     /* if (!__xcore_enable_cond) { _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(__VA_ARGS__); } */\
     _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__); \
   } while (0);
 
 #define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_NONE(RES, EXPR_, TNAME, ...) \
-  __xcore_select_event_enable_unconditional(RES); \
+  __xcore_resource_event_enable_unconditional(RES); \
   _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__);
 
 

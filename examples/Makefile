@@ -31,7 +31,8 @@ examples := \
 	timer_wait \
 	port_invert_peek \
 	port_condition \
-	assert
+	assert \
+	custom_select \
 
 
 

@@ -90,7 +90,7 @@ inline void thread_group_start(const threadgroup_t group)
 _XCORE_EXFUN
 inline void thread_group_free(const threadgroup_t group)
 {
-  __xcore_resource_free((resource_t)group);
+  __xcore_resource_free(group);
 }
 
 /** \brief Wait for all threads in a thread group to finish.

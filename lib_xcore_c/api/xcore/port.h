@@ -893,40 +893,6 @@ inline void port_setup_interrupt_callback(port_t p, void *data, interrupt_callba
   __xcore_port_clear_trigger_in(p);
 }
 
-/** \brief Enable select & interrupt events on a port.
- *
- *  Prior to enabling, port_setup_select(), port_setup_select_callback() or
- *  port_setup_interrupt_callback() must have been called.
- *  Events can be temporarily disabled and re-enabled using port_disable_trigger()
- *  and port_enable_trigger().
- *  When the event fires, the value must be read from the port to clear the event.
- *
- *  \param p  The port to enable events on
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the port.
- */
-_XCORE_EXFUN
-inline void port_enable_trigger(port_t p)
-{
-  __xcore_resource_enable_trigger(p);
-}
-
-/** \brief Disable select & interrupt events for a given port.
- *
- *  This prevents any further events being triggered by a given port.
- *
- *  \param p  The port to disable events on
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the port.
- */
-_XCORE_EXFUN
-inline void port_disable_trigger(port_t p)
-{
-  __xcore_resource_disable_trigger(p);
-}
-
 /** \brief Sets the trigger value for a port with a configured trigger.
  *
  *  Changes only the trigger value of a port which has already been configured

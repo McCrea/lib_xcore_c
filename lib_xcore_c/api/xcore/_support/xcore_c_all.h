@@ -14,3 +14,4 @@
 #include <xcore/port_protocol.h>
 #include <xcore/select.h>
 #include <xcore/thread.h>
+#include <xcore/triggerable.h>
