@@ -15,7 +15,7 @@ $(build_dir):
 
 .INTERMEDIATE: $(build_dir)/%.o
 $(build_dir)/%.o : %.c | $(build_dir)
-	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -ltime -D_clock_defined -isystem ../lib_xcore_c/api -target=$(TARGET)
+	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -D_clock_defined -isystem ../lib_xcore_c/api -target=$(TARGET)
 
 %.xe : $(build_dir)/%.o $(lib_xcore_c)
 	$(XCC) $^ -o $@ -target=$(TARGET) 
@@ -34,7 +34,8 @@ examples := \
 	assert \
 	custom_select \
 	interrupt \
-
+	\
+	internal_meta_macro \
 
 .PHONY: $(examples)
 $(examples) : % : %.xe
