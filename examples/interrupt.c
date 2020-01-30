@@ -3,6 +3,7 @@
 #include <xcore/triggerable.h>
 #include <xcore/port.h>
 #include <xcore/interrupt.h>
+#include <xcore/interrupt_wrappers.h>
 
 DEFINE_INTERRUPT_PERMITTED(interrupt_handlers, void, interruptable_task, void)
 {
