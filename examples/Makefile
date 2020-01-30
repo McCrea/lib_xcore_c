@@ -15,7 +15,7 @@ $(build_dir):
 
 .INTERMEDIATE: $(build_dir)/%.o
 $(build_dir)/%.o : %.c | $(build_dir)
-	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -isystem ../lib_xcore_c/api -target=$(TARGET)
+	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -ltime -D_clock_defined -isystem ../lib_xcore_c/api -target=$(TARGET)
 
 %.xe : $(build_dir)/%.o $(lib_xcore_c)
 	$(XCC) $^ -o $@ -target=$(TARGET) 
@@ -33,7 +33,7 @@ examples := \
 	port_condition \
 	assert \
 	custom_select \
-
+	interrupt \
 
 
 .PHONY: $(examples)

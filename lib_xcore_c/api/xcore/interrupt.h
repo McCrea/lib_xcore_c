@@ -11,16 +11,16 @@
 #include <xcore/_support/xcore_c_resource_impl.h>
 #include <xcore/_support/xcore_c_macros.h>
 
-#ifndef XCORE_C_KSTACK_WORDS
+#ifndef LIBXCORE_KSTACK_WORDS
 /** \brief Specify the minimum kernel stack size the interrupt permitting function should create.
  *
- *  The user may specify a minimum kstack size by setting the \ref XCORE_C_KSTACK_WORDS
+ *  The user may specify a minimum kstack size by setting the \ref LIBXCORE_KSTACK_WORDS
  *  define in their Makefile.
  *  This should be done when the kstack is being used by more than interrupt_callback_t functions.
  *
  *  \showinitializer
  */ 
-#define XCORE_C_KSTACK_WORDS 0
+#define LIBXCORE_KSTACK_WORDS 0
 #endif
 
 /** \brief Define a function that allows interrupts to occur within its scope
@@ -45,7 +45,7 @@
  *  \warning The kernel stack is not re-entrant so kernel mode must not be masked
  *  from within an interrupt_callback_t
  *
- *  The user may specify a larger kernel stack by defining XCORE_C_KSTACK_WORDS.
+ *  The user may specify a larger kernel stack by defining LIBXCORE_KSTACK_WORDS.
  *
  *  Example usage: \code
  *    DEFINE_INTERRUPT_PERMITTED(groupA, int, rootfunc, chanend c, int i)
@@ -62,7 +62,7 @@
  *  \hideinitializer
  */
 #define DEFINE_INTERRUPT_PERMITTED(group, ret, root_function, ...) \
-        _DEFINE_INTERRUPT_PERMITTED(group, ret, root_function, __VA_ARGS__)
+        _XCORE_DEFINE_INTERRUPT_PERMITTED(group, ret, root_function, __VA_ARGS__)
 
 /** \brief Declare an interrupt permitting function
  *
@@ -86,7 +86,7 @@
  *  \hideinitializer
  */
 #define DECLARE_INTERRUPT_PERMITTED(ret, root_function, ...) \
-        _DECLARE_INTERRUPT_PERMITTED(ret, root_function, __VA_ARGS__)
+        _XCORE_DECLARE_INTERRUPT_PERMITTED(ret, root_function, __VA_ARGS__)
 
 /** \brief The name of the defined interrupt permitting function
  *
@@ -96,7 +96,7 @@
  *  \return the name of the defined interrupt permitting function
 *   \hideinitializer
  */
-#define INTERRUPT_PERMITTED(root_function) _INTERRUPT_PERMITTED(root_function)
+#define INTERRUPT_PERMITTED(root_function) _XCORE_INTERRUPT_PERMITTED(root_function)
 
 /** \brief Mask all interrupts on this logical core.
  *
@@ -148,7 +148,7 @@ inline void interrupt_unmask_all(void)
  *  \hideinitializer
  */
 #define DEFINE_INTERRUPT_CALLBACK(group, intrpt, data) \
-        _DEFINE_INTERRUPT_CALLBACK(group, intrpt, data)
+        _XCORE_DEFINE_INTERRUPT_CALLBACK(group, intrpt, data)
 
 /** \brief Declare an interrupt handling function
  *
@@ -164,7 +164,7 @@ inline void interrupt_unmask_all(void)
  *  \hideinitializer
  */
 #define DECLARE_INTERRUPT_CALLBACK(intrpt, data) \
-        _DECLARE_INTERRUPT_CALLBACK(intrpt, data)
+        _XCORE_DECLARE_INTERRUPT_CALLBACK(intrpt, data)
 
 /** \brief The name of the defined \c interrupt_callback_t function
  *
@@ -174,4 +174,4 @@ inline void interrupt_unmask_all(void)
  *  \return the name of the defined interrupt_callback_t function
  *  \hideinitializer
  */
-#define INTERRUPT_CALLBACK(intrpt) _INTERRUPT_CALLBACK(intrpt)
+#define INTERRUPT_CALLBACK(intrpt) _XCORE_INTERRUPT_CALLBACK(intrpt)

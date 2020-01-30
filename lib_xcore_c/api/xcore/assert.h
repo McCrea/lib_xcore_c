@@ -20,6 +20,8 @@
  *      assertions will be implemented in terms of the C standard library \c assert.
  */
 
+#include <xcore/_support/xcore_c_hardware_assert.h>
+
 #define _XCORE_XASSERT_EMPTY
 #define _XCORE_XASSERT_HIDE(_X)
 
@@ -30,8 +32,6 @@
 #define _XCORE_XASSERT_NOT_AFTER(_C) ((void)0)
 
 #elif !defined(XCORE_C_XASSERT_IS_ASSERT)
-
-#include <xcore/_support/xcore_c_hardware_assert.h>
 
 #define _XCORE_XASSERT_TRUE(CONDITION) \
   do { \

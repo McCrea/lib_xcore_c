@@ -207,6 +207,6 @@ inline void hwtimer_delay(resource_t t, uint32_t period)
   uint32_t start = __xcore_hwtimer_get_time(t);
   uint32_t until = start + period;
   __xcore_hwtimer_set_trigger_time(t, until);
-  (void)_hwtimer_get_time(t);
+  (void)__xcore_hwtimer_get_time(t);
   __xcore_hwtimer_clear_trigger_time(t);
 }
