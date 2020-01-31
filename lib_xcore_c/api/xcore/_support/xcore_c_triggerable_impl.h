@@ -47,4 +47,8 @@
 
 #endif
 
-
+_XCORE_EXFUN
+inline void __triggerable_disable_all(void)
+{
+  asm volatile("clre");
+}

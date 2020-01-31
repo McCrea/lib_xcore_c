@@ -16,6 +16,8 @@ int main(void)
   port_set_trigger_in_not_equal(button1, port_in(button1));
   port_set_trigger_in_not_equal(button2, port_in(button2));
 
+
+  triggerable_disable_all();
   triggerable_enable_trigger(button1);
   triggerable_enable_trigger(button2);
 

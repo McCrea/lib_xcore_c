@@ -9,6 +9,7 @@
 #include <xcore/_support/xcore_c_common.h>
 #include <xcore/_support/xcore_c_hwtimer_impl.h>
 #include <xcore/_support/xcore_c_resource_impl.h>
+#include <xcore/_support/xcore_c_reference_time.h>
 
 /** brief Hardware timer handle type. */
 typedef resource_t hwtimer_t;
@@ -210,3 +211,17 @@ inline void hwtimer_delay(resource_t t, uint32_t period)
   (void)__xcore_hwtimer_get_time(t);
   __xcore_hwtimer_clear_trigger_time(t);
 }
+
+
+/** \brief get the chip reference time
+ *
+ *  Gets the current reference time without requiring an allocated timer.
+ *
+ *  \return The reference time
+ */
+_XCORE_EXFUN
+inline uint32_t get_reference_time(void)
+{
+  return __xcore_get_reference_time();
+}
+
