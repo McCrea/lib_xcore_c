@@ -26,6 +26,9 @@ inline void __xcore_ecallf(int value)
   __builtin_assume(value != 0);
 }
 
+#ifdef _XCORE_HAS_REFERENCE_CLOCK
+
+_XCORE_EXFUN
 inline _Bool __xcore_not_after_reference_time(uint32_t v)
 {
     const uint32_t r = __xcore_get_reference_time();
@@ -38,10 +41,8 @@ inline _Bool __xcore_not_after_reference_time(uint32_t v)
 _XCORE_EXFUN
 inline void __xcore_elate(uint32_t value)
 {
-#ifdef _XCORE_HAS_REFERENCE_CLOCK
   asm volatile("elate %[value]" : : [value] "r" (value));
-#else
-  __xcore_ecallf(__xcore_not_after_reference_time(value));
-#endif
 }
+
+#endif
 

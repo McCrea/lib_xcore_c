@@ -212,16 +212,27 @@ inline void hwtimer_delay(resource_t t, uint32_t period)
   __xcore_hwtimer_clear_trigger_time(t);
 }
 
+#ifdef _XCORE_HAS_REFERENCE_CLOCK
+#define LIBXCORE_HWTIMER_HAS_REFERENCE_TIME
+#endif
 
 /** \brief get the chip reference time
  *
- *  Gets the current reference time without requiring an allocated timer.
+ *  Gets the current reference time without requiring an allocated timer on chips where a
+ *  reference time is available.
+ *  This can be tested with \a LIBXCORE_HWTIMER_HAS_REFERENCE_TIME which will be defined
+ *  if and only if a refence time is available.
+ *  If no reference time is available then 0 is returned.
  *
  *  \return The reference time
  */
 _XCORE_EXFUN
 inline uint32_t get_reference_time(void)
 {
+#ifdef LIBXCORE_HWTIMER_HAS_REFERENCE_TIME
   return __xcore_get_reference_time();
+#else
+  return 0;
+#endif
 }
 

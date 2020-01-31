@@ -28,7 +28,7 @@ inline __xcore_thread_t __xcore_create_synchronised_thread(const resource_t sync
 }
 
 _XCORE_EXFUN
-inline void __xcore_set_thread_worker(const __xcore_thread_t thread, (* const func)(void *))
+inline void __xcore_set_thread_worker(const __xcore_thread_t thread, void(* const func)(void *))
 {
   asm volatile("init t[%[thread]]:pc, %[new_pc]" : : [thread] "r" (thread), [new_pc] "r" (func));
 }
