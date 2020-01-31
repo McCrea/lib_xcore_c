@@ -29,7 +29,7 @@ inline void __xcore_ecallf(int value)
 inline _Bool __xcore_not_after_reference_time(uint32_t v)
 {
     const uint32_t r = __xcore_get_reference_time();
-    const int tolerance = 1 << ((sizeof(int)*CHAR_BIT)-1);
+    const unsigned tolerance = 1 << ((sizeof(int)*CHAR_BIT)-1);
     return v >= tolerance
       ? (r <= v || r > v+tolerance)
       : (r <= v && r > v-tolerance); 

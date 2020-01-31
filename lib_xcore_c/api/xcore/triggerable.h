@@ -51,6 +51,9 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  * 
  *  \param resource  The resource to configure
  *  \param label     The label to jump to when an event is handled on \a resource
+ *
+ *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
+ *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 #define TRIGGERABLE_SETUP_EVENT_VECTOR(resource, label) \
   _XCORE_TRIGGERABLE_SETUP_EVENT_VECTOR(resource, label)
@@ -75,7 +78,6 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  *              where events are enabled. If no events are enabled then this can never complete.
  *
  *  \param labels...  The labels configured as event vectors for all events which may occur.
- *                    
  */
 #define TRIGGERABLE_WAIT_EVENT(labels...) \
   _XCORE_TRIGGERABLE_WAIT_EVENT(labels)
@@ -95,6 +97,9 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  *  This will allow the resource the generate events or interrupts when its trigger occurs.
  *
  *  \param res  Resource to enable the trigger of
+ *
+ *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
+ *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
 inline void triggerable_enable_trigger(resource_t res)
@@ -107,6 +112,9 @@ inline void triggerable_enable_trigger(resource_t res)
  *  This prevents the resource generating events or interrupts.
  *
  *  \param res  Resource to disable the trigger of
+ *
+ *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
+ *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
 inline void triggerable_disable_trigger(resource_t res)
@@ -122,6 +130,9 @@ inline void triggerable_disable_trigger(resource_t res)
  *
  *  \param res     The resource to enaable or disable the trigger of
  *  \param enabled State to set on the trigger - if true it is enabled, otherwise it is disabled
+ *
+ *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
+ *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
 inline void triggerable_set_trigger_enabled(resource_t res, _Bool enabled)
