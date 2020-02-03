@@ -2,7 +2,7 @@
 #pragma once
 
 /** \file
- *  \brief Provides assertions similar to those defined by the standard C assert.h.
+ *  \brief Provides assertions similar to those defined by the standard C %assert.h.
  * 
  *  Assertions provided by this header are intended by behave similarly to the C standard assert.
  *  However by default, when enabled, these macros will expand to 'hardware assisted' assertions

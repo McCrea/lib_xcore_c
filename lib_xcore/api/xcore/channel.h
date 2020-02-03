@@ -11,7 +11,7 @@
 #include <xcore/_support/xcore_chan_impl.h>
 #include <xcore/channel_streaming.h>
 
-/** \typedef clock_id_t
+/** \typedef channel_t
  *  \brief Helper type for passing around both ends of a channel.
  */
 typedef streaming_channel_t channel_t;

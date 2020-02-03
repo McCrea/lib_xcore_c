@@ -77,7 +77,7 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  *  \attention  The expansion of this macro will block until the trigger occurs on a resource
  *              where events are enabled. If no events are enabled then this can never complete.
  *
- *  \param labels...  The labels configured as event vectors for all events which may occur.
+ *  \param labels  The labels configured as event vectors for all events which may occur.
  */
 #define TRIGGERABLE_WAIT_EVENT(labels...) \
   _XCORE_TRIGGERABLE_WAIT_EVENT(labels)
@@ -87,7 +87,7 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  *  Has the same effect as TRIGGERABLE_WAIT_EVENT() except that if no event is waiting then
  *  this expansion does not block.
  *
- *  \param labels... Labels which may be jumped to if an event is ready
+ *  \param labels Labels which may be jumped to if an event is ready
  */
 #define TRIGGERABLE_TAKE_EVENT(labels...) \
   _XCORE_TRIGGERABLE_TAKE_EVENT(labels)
