@@ -11,15 +11,6 @@
 
 typedef resource_t __xcore_streaming_chanend_t;
 
-/** An opaque type for handling transactions
- *
- *  Users must not access its raw underlying type.
- */
-typedef struct transacting_chanend_t {
-  __xcore_streaming_chanend_t c;
-  unsigned last_out;
-} transacting_chanend_t;
-
 _XCORE_EXFUN
 inline __xcore_streaming_chanend_t __xcore_chanend_alloc(void)
 {
@@ -165,25 +156,4 @@ inline unsigned __xcore_channend_get_network(resource_t c)
   unsigned net;
   asm volatile("getn %[net], res[%[chanend]]" : [net] "=r" (net) : [chanend] "r" (c));
   return net;
-}
-
-// Manage direction changes.
-// As specified in the Tools Development Guide, the last_out state is managed
-// to control when CT_END tokens are sent or expected.
-_XCORE_EXFUN
-inline void __xcore_t_chan_change_to_input(transacting_chanend_t *tc)
-{
-  if (tc->last_out) {
-    __xcore_chanend_out_ct(tc->c, XS1_CT_END);
-    tc->last_out = 0;
-  }
-}
-
-_XCORE_EXFUN
-inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc)
-{
-  if (!tc->last_out) {
-    __xcore_chanend_check_ct(tc->c, XS1_CT_END);
-    tc->last_out = 1;
-  }
 }

@@ -10,6 +10,38 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_chan_impl.h>
 
+typedef struct {
+  __xcore_streaming_chanend_t __c;
+  unsigned __last_out;
+} __xcore_transacting_chanend_t;
+
+/** \brief An opaque type for handling transactions
+ *
+ *  Users must not access its raw underlying type.
+ */
+typedef __xcore_transacting_chanend_t transacting_chanend_t;
+
+// Manage direction changes.
+// As specified in the Tools Development Guide, the last_out state is managed
+// to control when CT_END tokens are sent or expected.
+_XCORE_EXFUN
+inline void __xcore_t_chan_change_to_input(transacting_chanend_t *tc)
+{
+  if (tc->__last_out) {
+    chanend_out_end_token(tc->__c);
+    tc->__last_out = 0;
+  }
+}
+
+_XCORE_EXFUN
+inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc)
+{
+  if (!tc->__last_out) {
+    _chanend_check_end_token(tc->__c);
+    tc->__last_out = 1;
+  }
+}
+
 /** \brief Start a transaction (master).
  *
  *  This initiates a transaction on a channel.
@@ -39,8 +71,8 @@ inline transacting_chanend_t chan_init_transaction_master(chanend_t c)
   chanend_out_end_token(c);
 
   transacting_chanend_t tc;
-  tc.last_out = 0;
-  tc.c = c;
+  tc.__last_out = 0;
+  tc.__c = c;
 
   return tc;
 }
@@ -67,8 +99,8 @@ inline transacting_chanend_t chan_init_transaction_slave(chanend_t c)
   chanend_check_end_token(c);
 
   transacting_chanend_t tc;
-  tc.last_out = 1;
-  tc.c = c;
+  tc.__last_out = 1;
+  tc.__c = c;
 
   return tc;
 }
@@ -95,18 +127,18 @@ inline transacting_chanend_t chan_init_transaction_slave(chanend_t c)
 _XCORE_EXFUN
 inline chanend_t chan_complete_transaction(transacting_chanend_t tc)
 {
-  if (tc.last_out)
+  if (tc.__last_out)
   {
-    chanend_out_end_token(tc.c);
-    chanend_check_end_token(tc.c);
+    chanend_out_end_token(tc.__c);
+    chanend_check_end_token(tc.__c);
   }
   else
   {
-    chanend_check_end_token(tc.c);
-    chanend_out_end_token(tc.c);
+    chanend_check_end_token(tc.__c);
+    chanend_out_end_token(tc.__c);
   }
 
-  return (chanend_t)tc.c;
+  return tc.__c;
 }
 
 /** \brief Output a word over a transacting chan-end.
@@ -124,7 +156,7 @@ _XCORE_EXFUN
 inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
 {
   __xcore_t_chan_change_to_output(tc);
-  chanend_out_word(tc->c, data);
+  chanend_out_word(tc->__c, data);
 }
 
 /** \brief Output an byte over a transacting chan-end.
@@ -142,7 +174,7 @@ _XCORE_EXFUN
 inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
 {
   __xcore_t_chan_change_to_output(tc);
-  chanend_out_byte(tc->c, data);
+  chanend_out_byte(tc->__c, data);
 }
 
 /** \brief Output a block of data over a transacting chan-end.
@@ -163,7 +195,7 @@ inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[],
   __xcore_t_chan_change_to_output(tc);
   for (size_t i = 0; i < n; i++)
   {
-    chanend_out_word(tc->c, buf[i]);
+    chanend_out_word(tc->__c, buf[i]);
   }
 }
 
@@ -185,7 +217,7 @@ inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], 
   __xcore_t_chan_change_to_output(tc);
   for (size_t i = 0; i < n; i++)
   {
-    chanend_out_byte(tc->c, buf[i]);
+    chanend_out_byte(tc->__c, buf[i]);
   }
 }
 
@@ -204,7 +236,7 @@ _XCORE_EXFUN
 inline uint32_t t_chan_in_word(transacting_chanend_t *tc)
 {
   __xcore_t_chan_change_to_input(tc);
-  return chanend_in_word(tc->c);
+  return chanend_in_word(tc->__c);
 }
 
 /** \brief Input a byte from a transacting chan-end.
@@ -222,7 +254,7 @@ _XCORE_EXFUN
 inline uint8_t t_chan_in_byte(transacting_chanend_t *tc)
 {
   __xcore_t_chan_change_to_input(tc);
-  return chanend_in_byte(tc->c);
+  return chanend_in_byte(tc->__c);
 }
 
 /** \brief Input a block of data from a transacting chan-end.
@@ -243,7 +275,7 @@ inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t
   __xcore_t_chan_change_to_input(tc);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = chanend_in_word(tc->c);
+    buf[i] = chanend_in_word(tc->__c);
   }
 }
 
@@ -265,7 +297,7 @@ inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t 
   __xcore_t_chan_change_to_input(tc);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = chanend_in_byte(tc->c);
+    buf[i] = chanend_in_byte(tc->__c);
   }
 }
 
