@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <xcore/_support/xcore_common.h>
-#include <xcore/_support/xcore_chan_impl.h>
+#include <xcore/chanend.h>
 #include <xcore/channel_streaming.h>
 
 /** \typedef channel_t
@@ -45,8 +45,8 @@ _XCORE_EXFUN
 inline void chan_free(channel_t c)
 {
   // Not implemented in terms of s_chan_free() as we have already hand-shook a CT_END.
-  __xcore_s_chanend_free(c.end_a);
-  __xcore_s_chanend_free(c.end_b);
+  chanend_free(c.end_a);
+  chanend_free(c.end_b);
 }
 
 /** \brief Output a word over a channel.
@@ -62,11 +62,11 @@ inline void chan_free(channel_t c)
 _XCORE_EXFUN
 inline void chan_out_word(chanend_t c, uint32_t data)
 {
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_word(c, data);
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
+  chanend_out_word(c, data);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
 }
 
 /** \brief Output a byte over a channel.
@@ -82,11 +82,11 @@ inline void chan_out_word(chanend_t c, uint32_t data)
 _XCORE_EXFUN
 inline void chan_out_byte(chanend_t c, uint8_t data)
 {
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_byte(c, data);
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
+  chanend_out_byte(c, data);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
 }
 
 /** \brief Output a block of data over a channel.
@@ -104,14 +104,14 @@ inline void chan_out_byte(chanend_t c, uint8_t data)
 _XCORE_EXFUN
 inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
 {
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
   for (size_t i = 0; i < n; i++)
   {
-    __xcore_s_chan_out_word(c, buf[i]);
+    chanend_out_word(c, buf[i]);
   }
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
 }
 
 /** \brief Output a block of data over a channel.
@@ -129,14 +129,14 @@ inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
 _XCORE_EXFUN
 inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
 {
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
   for (size_t i = 0; i < n; i++)
   {
-    __xcore_s_chan_out_byte(c, buf[i]);
+    chanend_out_byte(c, buf[i]);
   }
-  __xcore_s_chan_out_ct_end(c);
-  __xcore_s_chan_check_ct_end(c);
+  chanend_out_end_token(c);
+  chanend_check_end_token(c);
 }
 
 /** \brief Input a word from a channel.
@@ -152,11 +152,11 @@ inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
 _XCORE_EXFUN
 inline uint32_t chan_in_word(chanend_t c)
 {
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
-  uint32_t data = __xcore_s_chan_in_word(c);
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
+  uint32_t data = chanend_in_word(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
   return data;
 }
 
@@ -173,11 +173,11 @@ inline uint32_t chan_in_word(chanend_t c)
 _XCORE_EXFUN
 inline uint8_t chan_in_byte(chanend_t c)
 {
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
-  uint8_t data = __xcore_s_chan_in_byte(c);
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
+  uint8_t data = chanend_in_byte(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
   return data;
 }
 
@@ -195,14 +195,14 @@ inline uint8_t chan_in_byte(chanend_t c)
 _XCORE_EXFUN
 inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
 {
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = __xcore_s_chan_in_word(c);
+    buf[i] = chanend_in_word(c);
   }
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
 }
 
 /** \brief Input a block of data from a channel.
@@ -221,13 +221,13 @@ inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
 _XCORE_EXFUN
 inline void chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
 {
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = __xcore_s_chan_in_byte(c);
+    buf[i] = chanend_in_byte(c);
   }
-  __xcore_s_chan_check_ct_end(c);
-  __xcore_s_chan_out_ct_end(c);
+  chanend_check_end_token(c);
+  chanend_out_end_token(c);
 }
 

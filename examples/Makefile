@@ -3,10 +3,11 @@
 .PHONY: _default
 _default: all
 
-XCC ?= xcc
+COMPILER ?= xcc
+LINKER ?= xcc
 build_dir := ./.build
 TARGET ?= XR-USB-AUDIO
-lib_xcore_c := ../lib_xcore_c/libxcore_c.a
+lib_xcore_c := ../lib_xcore/libxcore.a
 
 include $(wildcard $(build_dir)/*.d)
 
@@ -15,10 +16,10 @@ $(build_dir):
 
 .INTERMEDIATE: $(build_dir)/%.o
 $(build_dir)/%.o : %.c | $(build_dir)
-	$(XCC) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -D_clock_defined -isystem ../lib_xcore_c/api -target=$(TARGET)
+	$(COMPILER) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -D_clock_defined  -isystem/usr/share/xmos/target/include/clang -isystem/usr/share/xmos/target/include -isystem ../lib_xcore/api --target=xcore #-target=$(TARGET)
 
 %.xe : $(build_dir)/%.o $(lib_xcore_c)
-	$(XCC) $^ -o $@ -target=$(TARGET) 
+	$(LINKER) $^ -o $@ -target=$(TARGET) 
 
 
 examples := \
@@ -34,6 +35,7 @@ examples := \
 	assert \
 	custom_select \
 	interrupt \
+	chanend_ct \
 	\
 	internal_meta_macro \
 

@@ -10,77 +10,13 @@
 #include <xcore/_support/xcore_chan_impl.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
-/** \typedef streaming_chanend_t
+/** \typedef chanend_t
  *  \brief Opaque channel end type for use in C/C++ code.
  *
  *  \attention Users must not access its raw underlying type.
  */
 typedef resource_t chanend_t;
 
-/** \typedef streaming_chanend_t
- *  \brief Opaque streaming channel end type for use in C/C++ code.
- *
- *  \attention Users must not access its raw underlying type.
- */
-typedef resource_t streaming_chanend_t;
-
-/** \brief Allocate a single streaming_chanend_t.
- * 
- *  If there are no channel ends available the function returns 0.
- *  \note When the channel end is no longer required, s_chanend_free() should be called
- *  to deallocate it.
- *
- *  \return     chanend (0 if none are available)
- */
-_XCORE_EXFUN
-inline streaming_chanend_t s_chanend_alloc(void)
-{
-  return __xcore_s_chanend_alloc();
-}
-
-/** \brief Deallocate a single streaming_chanend_t.
- *
- *  \attention The last transfer on the streaming_chanend_t must have been a CT_END token.
- *
- *  \param c    streaming_chanend_t to free.
- *
- *  \exception  ET_ILLEGAL_RESOURCE   \a c is not an allocated streaming_chanend_t,
- *                                    an input/output is pending,
- *                                    or it has not received/sent a CT_END token.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
- */
-_XCORE_EXFUN
-inline void s_chanend_free(streaming_chanend_t c)
-{
-  __xcore_s_chanend_free(c);
-}
-
-/** \brief Set the destination of a streaming_chanend_t
- *
- *  \param c    streaming_chanend_t to set.
- *  \param dst  Destination streaming_chanend_t.
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not an allocated streaming_chanend_t.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the streaming_chanend_t.
-*/
-_XCORE_EXFUN
-inline void s_chanend_set_dest(streaming_chanend_t c, streaming_chanend_t dst)
-{
-  __xcore_s_chanend_set_dest(c, dst);
-}
-
-/** \brief Convert a chanend to a streaming_chanend_t.
- *
- *  \note A chanend is always in a safe state for converting into a streaming_chanend_t.
- *
- *  \param c    chanend to convert.
- *  \return     the streaming_chanend_t
- */
-_XCORE_EXFUN
-inline streaming_chanend_t s_chanend_convert(chanend_t c)
-{
-  return (streaming_chanend_t)c;
-}
 
 /** \brief Allocate a single chanend.
  *
@@ -93,7 +29,7 @@ inline streaming_chanend_t s_chanend_convert(chanend_t c)
 _XCORE_EXFUN
 inline chanend_t chanend_alloc()
 {
-  return (chanend_t)s_chanend_alloc();
+  return __xcore_chanend_alloc();
 }
 
 /** \brief Deallocate a single chanend.
@@ -110,7 +46,7 @@ inline chanend_t chanend_alloc()
 _XCORE_EXFUN
 inline void chanend_free(chanend_t c)
 {
-  s_chanend_free((streaming_chanend_t)c);
+  __xcore_chanend_free(c);
 }
 
 /** \brief Set the destination of a chanend
@@ -124,19 +60,98 @@ inline void chanend_free(chanend_t c)
 _XCORE_EXFUN
 inline void chanend_set_dest(chanend_t c, chanend_t dst)
 {
-  s_chanend_set_dest((streaming_chanend_t)c, (streaming_chanend_t)dst);
+  __xcore_chanend_set_dest(c, dst);
 }
 
-/** \brief Convert a streaming_chanend_t to a chanend.
- * 
- *  \attention streaming_chanend_t must have completed any transaction with an end-token
- *  handshake before being converting into a chanend.
- *
- *  \param c    streaming_chanend_t to convert.
- *  \return     the chanend
- */
+// New
 _XCORE_EXFUN
-inline chanend_t chanend_convert(streaming_chanend_t c)
+inline chanend_t chanend_get_dest(chanend_t c)
 {
-  return (chanend_t)c;
+  return __xcore_chanend_get_dest(c);
 }
+
+_XCORE_EXFUN
+inline void chanend_out_byte(chanend_t c, char b)
+{
+  __xcore_chanend_out_byte(c, b);
+}
+
+_XCORE_EXFUN
+inline void chanend_out_word(chanend_t c, uint32_t w)
+{
+  __xcore_chanend_out_word(c, w);
+}
+
+_XCORE_EXFUN
+inline void chanend_out_control_token(chanend_t c, char ct)
+{
+  __xcore_chanend_out_ct(c, ct);
+}
+
+_XCORE_EXFUN
+inline char chanend_in_byte(chanend_t c)
+{
+  return __xcore_chanend_in_byte(c);
+}
+
+_XCORE_EXFUN
+inline uint32_t chanend_in_word(chanend_t c)
+{
+  return __xcore_chanend_in_word(c);
+}
+
+_XCORE_EXFUN
+inline char chanend_in_control_token(chanend_t c)
+{
+  return __xcore_chanend_in_ct(c);
+}
+
+_XCORE_EXFUN
+inline void chanend_check_control_token(chanend_t c, const char ct)
+{
+  __xcore_chanend_check_ct(c, ct);
+}
+
+_XCORE_EXFUN
+inline _Bool chanend_test_control_token_next_byte(chanend_t c)
+{
+  return __xcore_chanend_test_control_token(c);
+}
+
+_XCORE_EXFUN
+inline int chanend_test_control_token_next_word(chanend_t c)
+{
+  return __xcore_chanend_test_control_token_word(c);
+}
+
+_XCORE_EXFUN
+inline _Bool chanend_test_dest_local(chanend_t c)
+{
+  return __xcore_chanend_test_dest_local(c);
+}
+
+_XCORE_EXFUN
+inline void chanend_set_network(chanend_t c, uint32_t net)
+{
+  __xcore_channend_set_network(c, net);
+}
+
+_XCORE_EXFUN
+inline unsigned chanend_get_network(chanend_t c)
+{
+  return __xcore_channend_get_network(c);
+}
+
+_XCORE_EXFUN
+inline void chanend_out_end_token(resource_t c)
+{
+  __xcore_chanend_out_ct(c, XS1_CT_END);
+}
+
+_XCORE_EXFUN 
+inline void chanend_check_end_token(resource_t c)
+{
+  __xcore_chanend_check_ct(c, XS1_CT_END);
+}
+
+

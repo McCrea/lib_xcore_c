@@ -36,11 +36,11 @@
 _XCORE_EXFUN
 inline transacting_chanend_t chan_init_transaction_master(chanend_t c)
 {
-  __xcore_s_chan_out_ct_end(c);
+  chanend_out_end_token(c);
 
   transacting_chanend_t tc;
   tc.last_out = 0;
-  tc.c = (streaming_chanend_t)c;
+  tc.c = c;
 
   return tc;
 }
@@ -64,11 +64,11 @@ inline transacting_chanend_t chan_init_transaction_master(chanend_t c)
 _XCORE_EXFUN
 inline transacting_chanend_t chan_init_transaction_slave(chanend_t c)
 {
-  __xcore_s_chan_check_ct_end(c);
+  chanend_check_end_token(c);
 
   transacting_chanend_t tc;
   tc.last_out = 1;
-  tc.c = (streaming_chanend_t)c;
+  tc.c = c;
 
   return tc;
 }
@@ -97,13 +97,13 @@ inline chanend_t chan_complete_transaction(transacting_chanend_t tc)
 {
   if (tc.last_out)
   {
-    __xcore_s_chan_out_ct_end(tc.c);
-    __xcore_s_chan_check_ct_end(tc.c);
+    chanend_out_end_token(tc.c);
+    chanend_check_end_token(tc.c);
   }
   else
   {
-    __xcore_s_chan_check_ct_end(tc.c);
-    __xcore_s_chan_out_ct_end(tc.c);
+    chanend_check_end_token(tc.c);
+    chanend_out_end_token(tc.c);
   }
 
   return (chanend_t)tc.c;
@@ -124,7 +124,7 @@ _XCORE_EXFUN
 inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
 {
   __xcore_t_chan_change_to_output(tc);
-  __xcore_s_chan_out_word(tc->c, data);
+  chanend_out_word(tc->c, data);
 }
 
 /** \brief Output an byte over a transacting chan-end.
@@ -142,7 +142,7 @@ _XCORE_EXFUN
 inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
 {
   __xcore_t_chan_change_to_output(tc);
-  __xcore_s_chan_out_byte(tc->c, data);
+  chanend_out_byte(tc->c, data);
 }
 
 /** \brief Output a block of data over a transacting chan-end.
@@ -163,7 +163,7 @@ inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[],
   __xcore_t_chan_change_to_output(tc);
   for (size_t i = 0; i < n; i++)
   {
-    __xcore_s_chan_out_word(tc->c, buf[i]);
+    chanend_out_word(tc->c, buf[i]);
   }
 }
 
@@ -185,7 +185,7 @@ inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], 
   __xcore_t_chan_change_to_output(tc);
   for (size_t i = 0; i < n; i++)
   {
-    __xcore_s_chan_out_byte(tc->c, buf[i]);
+    chanend_out_byte(tc->c, buf[i]);
   }
 }
 
@@ -204,7 +204,7 @@ _XCORE_EXFUN
 inline uint32_t t_chan_in_word(transacting_chanend_t *tc)
 {
   __xcore_t_chan_change_to_input(tc);
-  return __xcore_s_chan_in_word(tc->c);
+  return chanend_in_word(tc->c);
 }
 
 /** \brief Input a byte from a transacting chan-end.
@@ -222,7 +222,7 @@ _XCORE_EXFUN
 inline uint8_t t_chan_in_byte(transacting_chanend_t *tc)
 {
   __xcore_t_chan_change_to_input(tc);
-  return __xcore_s_chan_in_byte(tc->c);
+  return chanend_in_byte(tc->c);
 }
 
 /** \brief Input a block of data from a transacting chan-end.
@@ -243,7 +243,7 @@ inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t
   __xcore_t_chan_change_to_input(tc);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = __xcore_s_chan_in_word(tc->c);
+    buf[i] = chanend_in_word(tc->c);
   }
 }
 
@@ -265,7 +265,7 @@ inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t 
   __xcore_t_chan_change_to_input(tc);
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = __xcore_s_chan_in_byte(tc->c);
+    buf[i] = chanend_in_byte(tc->c);
   }
 }
 

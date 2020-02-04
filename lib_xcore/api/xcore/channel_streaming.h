@@ -15,8 +15,8 @@
  *  \brief Helper type for passing around both ends of a streaming channel.
  */
 typedef struct streaming_channel_t {
-  streaming_chanend_t end_a;
-  streaming_chanend_t end_b;
+  chanend_t end_a;
+  chanend_t end_b;
 } streaming_channel_t;
 
 /** \brief Allocate a streaming channel by allocating two hardware chan-ends and joining them.
@@ -36,17 +36,17 @@ inline streaming_channel_t s_chan_alloc()
 {
   streaming_channel_t c;
 
-  if ((c.end_a = __xcore_s_chanend_alloc()))
+  if ((c.end_a = chanend_alloc()))
   {
-    if ((c.end_b = __xcore_s_chanend_alloc()))
+    if ((c.end_b = chanend_alloc()))
     {
       // exception safe calls to __xcore_s_chanend_set_dest()
-      __xcore_s_chanend_set_dest(c.end_a, c.end_b);
-      __xcore_s_chanend_set_dest(c.end_b, c.end_a);
+      chanend_set_dest(c.end_a, c.end_b);
+      chanend_set_dest(c.end_b, c.end_a);
     }
     else
     {
-      __xcore_s_chanend_free(c.end_a);
+      chanend_free(c.end_a);
       c.end_a = 0;
       c.end_b = 0;
     }
@@ -72,12 +72,12 @@ inline streaming_channel_t s_chan_alloc()
 _XCORE_EXFUN
 inline void s_chan_free(streaming_channel_t c)
 {
-  __xcore_s_chan_out_ct_end(c.end_a);
-  __xcore_s_chan_out_ct_end(c.end_b);
-  __xcore_s_chan_check_ct_end(c.end_a);
-  __xcore_s_chan_check_ct_end(c.end_b);
-  __xcore_s_chanend_free(c.end_a);
-  __xcore_s_chanend_free(c.end_b);
+  chanend_out_end_token(c.end_a);
+  chanend_out_end_token(c.end_b);
+  chanend_check_end_token(c.end_a);
+  chanend_check_end_token(c.end_b);
+  chanend_free(c.end_a);
+  chanend_free(c.end_b);
 }
 
 /** \brief Output a word over a streaming_channel_t.
@@ -90,9 +90,9 @@ inline void s_chan_free(streaming_channel_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void s_chan_out_word(streaming_chanend_t c, uint32_t data)
+inline void s_chan_out_word(chanend_t c, uint32_t data)
 {
-  __xcore_s_chan_out_word(c, data);
+  chanend_out_word(c, data);
 }
 
 /** \brief Output an byte over a streaming_channel_t.
@@ -105,9 +105,9 @@ inline void s_chan_out_word(streaming_chanend_t c, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void s_chan_out_byte(streaming_chanend_t c, uint8_t data)
+inline void s_chan_out_byte(chanend_t c, uint8_t data)
 {
-  __xcore_s_chan_out_byte(c, data);
+  chanend_out_byte(c, data);
 }
 
 /** \brief Output a block of data over a streaming_channel_t.
@@ -122,11 +122,11 @@ inline void s_chan_out_byte(streaming_chanend_t c, uint8_t data)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_out_buf_word(streaming_chanend_t c, const uint32_t buf[], size_t n)
+inline void s_chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
   {
-    __xcore_s_chan_out_word(c, buf[i]);
+    chanend_out_word(c, buf[i]);
   }
 }
 
@@ -142,11 +142,11 @@ inline void s_chan_out_buf_word(streaming_chanend_t c, const uint32_t buf[], siz
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_out_buf_byte(streaming_chanend_t c, const uint8_t buf[], size_t n)
+inline void s_chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
   {
-    __xcore_s_chan_out_byte(c, buf[i]);
+    chanend_out_byte(c, buf[i]);
   }
 }
 
@@ -160,9 +160,9 @@ inline void s_chan_out_buf_byte(streaming_chanend_t c, const uint8_t buf[], size
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline uint32_t s_chan_in_word(streaming_chanend_t c)
+inline uint32_t s_chan_in_word(chanend_t c)
 {
-  return __xcore_s_chan_in_word(c);
+  return chanend_in_word(c);
 }
 
 /** \brief Input a byte from a streaming_channel_t.
@@ -175,9 +175,9 @@ inline uint32_t s_chan_in_word(streaming_chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline uint8_t s_chan_in_byte(streaming_chanend_t c)
+inline uint8_t s_chan_in_byte(chanend_t c)
 {
-  return __xcore_s_chan_in_byte(c);
+  return chanend_in_byte(c);
 }
 
 /** \brief Input a block of data from a streaming_channel_t.
@@ -192,11 +192,11 @@ inline uint8_t s_chan_in_byte(streaming_chanend_t c)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_in_buf_word(streaming_chanend_t c, uint32_t buf[], size_t n)
+inline void s_chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = __xcore_s_chan_in_word(c);
+    buf[i] = chanend_in_word(c);
   }
 }
 
@@ -212,86 +212,11 @@ inline void s_chan_in_buf_word(streaming_chanend_t c, uint32_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_in_buf_byte(streaming_chanend_t c, uint8_t buf[], size_t n)
+inline void s_chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
 {
   for (size_t i = 0; i < n; i++)
   {
-    buf[i] = __xcore_s_chan_in_byte(c);
+    buf[i] = chanend_in_byte(c);
   }
-}
-
-/** \brief Output a control token onto a streaming_channel_t.
- *
- *  \param c    The streaming chan-end
- *  \param ct   Control token to be output. Legal control tokens that can be
- *              used are 0 or any value in the range 3..191 inclusive.
- *
- *  \exception  ET_LINK_ERROR         chan-end destination is not set
- *                                    or token is reserverd.
- *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
- */
-_XCORE_EXFUN
-inline void s_chan_out_ct(streaming_chanend_t c, uint8_t ct)
-{
-  __xcore_s_chan_out_ct(c, ct);
-}
-
-/** \brief Output a CT_END control token onto a streaming_channel_t.
- *
- *  Outputting a CT_END control token informs the communication network and the
- *  other chan-end that the current transaction has completed. Thus freeing the
- *  communication network for other channels to use.
- *
- *  \note The streaming_channel_t remains allocated, awaiting another transaction or
- *  deallocation.
- *
- *  \param c    The streaming chan-end
- *
- *  \exception  ET_LINK_ERROR         chan-end destination is not set.
- *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
- */
-_XCORE_EXFUN
-inline void s_chan_out_ct_end(streaming_chanend_t c)
-{
-  __xcore_s_chan_out_ct_end(c);
-}
-
-/** \brief Check that a specific control token on a streaming_channel_t.
- *
- *  This function blocks until a token is available on the \a c. If
- *  the available token is a control token and has the value \a ct, then the
- *  token is input and discarded. Otherwise an exception is raised.
- *
- *  \param c    The streaming chan-end
- *  \param ct   Control token that is expected on the streaming_channel_t.
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
- *                                    or does not contain expected token.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
- */
-_XCORE_EXFUN
-inline void s_chan_check_ct(streaming_chanend_t c, uint8_t ct)
-{
-  __xcore_s_chan_check_ct(c, ct);
-}
-
-/** \brief Check for a CT_END token on a streaming_channel_t.
- *
- *  This function blocks until a token is available on the \a c. If
- *  the available token is a CT_END token the token is input and discarded.
- *  Otherwise an exception is raised.
- *
- *  \param c    The streaming chan-end
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
- *                                    or does not contain CT_END token.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
- */
-_XCORE_EXFUN
-inline void s_chan_check_ct_end(streaming_chanend_t c)
-{
-  __xcore_s_chan_check_ct_end(c);
 }
 
