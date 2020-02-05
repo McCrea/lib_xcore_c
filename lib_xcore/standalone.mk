@@ -38,6 +38,10 @@ lib_path = $(config_dir)/$(lib_name)
 .PHONY: libxcore
 libxcore: $(lib_path)
 
+.PHONY: clean
+clean:
+	rm -rf $(build_dir)
+
 include $(wildcard $(build_dir)/*/*.d)
 
 objects := \
