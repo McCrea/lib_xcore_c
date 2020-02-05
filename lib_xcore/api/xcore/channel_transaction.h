@@ -37,7 +37,7 @@ _XCORE_EXFUN
 inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc)
 {
   if (!tc->__last_out) {
-    _chanend_check_end_token(tc->__c);
+    chanend_check_end_token(tc->__c);
     tc->__last_out = 1;
   }
 }
