@@ -10,7 +10,7 @@
 
 #define _XCORE_PAR_PRIME_II(FUNC, ARG, SSIZE, SNAME) \
   char SNAME[_XCORE_PAR_WSIZE * SSIZE] __attribute__ ((aligned(_XCORE_STACK_ALIGN_REQUIREMENT))); \
-  thread_group_add(__xcore_par_sync, FUNC, ARG, SNAME + _XCORE_PAR_WSIZE * (SSIZE - 1));
+  thread_group_add(__xcore_par_sync, FUNC, ARG, stack_base((SNAME), (SSIZE)));
 
 #define _XCORE_PAR_PRIME_I(FUNC, ARG, SSIZE, SNAME) _XCORE_PAR_PRIME_II((FUNC), (ARG), (SSIZE), SNAME)
 #define _XCORE_PAR_PRIME(PACK) _XCORE_PSHIM(_XCORE_PAR_PRIME_I, PACK, _XCORE_UNIQUE_LABEL(__substack))
@@ -92,7 +92,7 @@
 #define _XCORE_JPAR_DISPATCH_II(FUNC, ARGS, SSIZE, ANAME, SNAME) \
   struct _XCORE_PAR_ARG_STRUCT_NAME(FUNC) ANAME = {_XCORE_UNPACK(ARGS)}; \
   char SNAME[_XCORE_PAR_WSIZE * SSIZE] __attribute__ ((aligned(_XCORE_STACK_ALIGN_REQUIREMENT))); \
-  thread_group_add(__xcore_par_sync, (__xcore_ugs_shim_ ## FUNC), &ANAME, SNAME + _XCORE_PAR_WSIZE * (SSIZE - 1));
+  thread_group_add(__xcore_par_sync, (__xcore_ugs_shim_ ## FUNC), &ANAME, stack_base((SNAME), (SSIZE)));
 
 #define _XCORE_JPAR_DISPATCH_I(FUNC, ARG, ANAME, SNAME) _XCORE_JPAR_DISPATCH_II(FUNC, ARG, (__xcore_gsu_swords_ ## FUNC), ANAME, SNAME)
 #define _XCORE_JPAR_DISPATCH(PACK) _XCORE_PSHIM(_XCORE_JPAR_DISPATCH_I, PACK, _XCORE_UNIQUE_LABEL(__xcore_pargs), _XCORE_UNIQUE_LABEL(__xcore_substack))

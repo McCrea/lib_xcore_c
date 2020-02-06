@@ -6,6 +6,7 @@
  */
 
 #include <stddef.h>
+#include <xcore/_support/xcore_macros.h>
 #include <xcore/_support/xcore_thread_impl.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
@@ -224,5 +225,5 @@ inline void run_async(const thread_function_t func,
 _XCORE_EXFUN
 inline void *stack_base(void * const mem_base, size_t const words)
 {
-  return (void *)((char *)mem_base + sizeof(int)*(words-1));
+  return (void *)((char *)mem_base + (sizeof(int)*words) - _XCORE_STACK_ALIGN_REQUIREMENT);
 }
