@@ -3,12 +3,13 @@
 
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_meta_macro.h>
+#include <xcore/_support/xcore_macros.h>
 #include <xcore/thread.h>
 
 #define _XCORE_PAR_WSIZE 4
 
 #define _XCORE_PAR_PRIME_II(FUNC, ARG, SSIZE, SNAME) \
-  char SNAME[_XCORE_PAR_WSIZE * SSIZE] __attribute__ ((aligned(_XCORE_PAR_WSIZE))); \
+  char SNAME[_XCORE_PAR_WSIZE * SSIZE] __attribute__ ((aligned(_XCORE_STACK_ALIGN_REQUIREMENT))); \
   thread_group_add(__xcore_par_sync, FUNC, ARG, SNAME + _XCORE_PAR_WSIZE * (SSIZE - 1));
 
 #define _XCORE_PAR_PRIME_I(FUNC, ARG, SSIZE, SNAME) _XCORE_PAR_PRIME_II((FUNC), (ARG), (SSIZE), SNAME)
@@ -90,7 +91,7 @@
 
 #define _XCORE_JPAR_DISPATCH_II(FUNC, ARGS, SSIZE, ANAME, SNAME) \
   struct _XCORE_PAR_ARG_STRUCT_NAME(FUNC) ANAME = {_XCORE_UNPACK(ARGS)}; \
-  char SNAME[_XCORE_PAR_WSIZE * SSIZE] __attribute__ ((aligned(_XCORE_PAR_WSIZE))); \
+  char SNAME[_XCORE_PAR_WSIZE * SSIZE] __attribute__ ((aligned(_XCORE_STACK_ALIGN_REQUIREMENT))); \
   thread_group_add(__xcore_par_sync, (__xcore_ugs_shim_ ## FUNC), &ANAME, SNAME + _XCORE_PAR_WSIZE * (SSIZE - 1));
 
 #define _XCORE_JPAR_DISPATCH_I(FUNC, ARG, ANAME, SNAME) _XCORE_JPAR_DISPATCH_II(FUNC, ARG, (__xcore_gsu_swords_ ## FUNC), ANAME, SNAME)

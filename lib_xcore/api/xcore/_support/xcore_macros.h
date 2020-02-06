@@ -28,6 +28,12 @@
 #endif
 
 #ifdef _XCORE_HAS_DUAL_ISSUE
+#define _XCORE_STACK_ALIGN_REQUIREMENT 8
+#else
+#define _XCORE_STACK_ALIGN_REQUIREMENT 4
+#endif
+
+#ifdef _XCORE_HAS_DUAL_ISSUE
 #define _XCORE_SINGLE_ISSUE   nop; entsp 0
 #else
 #define _XCORE_SINGLE_ISSUE
