@@ -1,11 +1,14 @@
 // Copyright (c) 2020, XMOS Ltd, All rights reserved
+
+#include <xcore/_support/xcore_macros.h>
+
 .text
 
 .globl __xcore_unsynchronised_thread_end
 #ifdef __XS2A__
 .issue_mode single
 #endif
-.align 2
+.align _XCORE_CODE_ALIGNMENT
 .type  __xcore_unsynchronised_thread_end,@function
 .cc_top __xcore_unsynchronised_thread_end.function,__xcore_unsynchronised_thread_end
 __xcore_unsynchronised_thread_end:
@@ -28,7 +31,7 @@ __xcore_unsynchronised_thread_end:
 #ifdef __XS2A__
 .issue_mode single
 #endif
-.align 2
+.align _XCORE_CODE_ALIGNMENT
 .type  __xcore_synchronised_thread_end,@function
 .cc_top __xcore_synchronised_thread_end.function,__xcore_synchronised_thread_end
 __xcore_synchronised_thread_end:
