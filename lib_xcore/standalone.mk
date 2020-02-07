@@ -6,7 +6,7 @@ export GLOBAL_COMPILER_FLAGS ?=
 global_compiler_flags := $(GLOBAL_COMPILER_FLAGS)
 
 export XCC_C_INCLUDE_PATH ?= 
-system_include_dirs ?= $(subst :, ,$(XCC_C_INCLUDE_PATH)) /mnt/share/libs/lib_xcore/lib_xcore/api
+system_include_dirs ?= ./api
 
 #SECONDARY: %.o
 #.o : %.c
