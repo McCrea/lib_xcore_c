@@ -21,8 +21,13 @@ int main(void)
   triggerable_enable_trigger(button1);
   triggerable_enable_trigger(button2);
 
+  int count = 0;
+
   while(1)
   {
+    count += 1;
+    if (count > 10) { break; }
+
     TRIGGERABLE_WAIT_EVENT(button1_label, button2_label);
 
     button1_label:

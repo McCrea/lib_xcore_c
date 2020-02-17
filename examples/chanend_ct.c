@@ -3,7 +3,7 @@
 #include <xcore/parallel.h>
 #include <xcore/assert.h>
 
-DECLARE_JOB(thread0, (chanend_t), 512)
+DECLARE_JOB(thread0, (chanend_t))
 void thread0(chanend_t c)
 {
   chanend_out_control_token(c, XS1_CT_END);
@@ -18,7 +18,7 @@ void thread0(chanend_t c)
   puts("0: Done!");
 }
 
-DECLARE_JOB(thread1, (chanend_t), 512)
+DECLARE_JOB(thread1, (chanend_t))
 void thread1(chanend_t c)
 {
   chanend_check_control_token(c, XS1_CT_END);

@@ -20,24 +20,23 @@
  * \param ...  Functions to call, each the result of expanding \c PFUNC
  *
  * Example: \code
- * PAR_FUNCS(PFUNC(my_print_function, "Hello 1", 256),
- *           PFUNC(my_print_function, "Hello 2", 256));
+ * PAR_FUNCS(PFUNC(my_print_function, "Hello 1"),
+ *           PFUNC(my_print_function, "Hello 2"));
  * \endcode
  * \see PFUNC
  * \hideinitializer
  */
-#define PAR_FUNCS(...) _XCORE_PAR_FUNCS_I(__VA_ARGS__)
+#define PAR_FUNCS(...) _XCORE_PAR_FUNCS_I(_XCORE_UNIQUE_LABEL(_Par), __VA_ARGS__)
 
 /** \brief Specifies a parallelised function call
  *
  * Expands to a function call desciption which can be used as an argument to PAR_FUNCS.
  *  \param FUNCTION    a function with siganture <tt>void (void *)</tt>
  *  \param ARGUMENT    the argument to pass to \a FUNCTION - must be implicitly convertible to <tt>void *</tt>
- *  \param STACK_SIZE  stack size requirement of \a FUNCTION in words
  * \see PAR_FUNCS
  * \hideinitializer
  */
-#define PFUNC(FUNCTION, ARGUMENT, STACK_SIZE) (FUNCTION, ARGUMENT, STACK_SIZE)
+#define PFUNC(FUNCTION, ARGUMENT) (FUNCTION, ARGUMENT)
 
 /** \brief Declare a \c void function with arbitrary functions which can be dispatched in another thread
  *
@@ -46,10 +45,9 @@
  * \param NAME            Name of function to declare
  * \param ARG_TYPES_PACK  A pack of types which form the parameter part of the function 
                           signature (must not include names)
- * \param SSIZE           The stack size requirement of the function in words
  * 
  * Example: \code
- * DECLARE_JOB(thread_sum, (const unsigned *, size_t, unsigned long *), 128);
+ * DECLARE_JOB(thread_sum, (const unsigned *, size_t, unsigned long *));
  * void thread_sum(const unsigned * const ints, const size_t number, unsigned long * const result) {
  *   unsigned long sum = 0;
  *   for (size_t i = 0; i < number; i += 1) { sum += ints[i]; }
@@ -59,12 +57,11 @@
  * \see \li PJOB \li PAR_JOBS
  * \hideinitializer
  */
-#define DECLARE_JOB(NAME, ARG_TYPES_PACK, SSIZE) \
+#define DECLARE_JOB(NAME, ARG_TYPES_PACK) \
   DECLARE_JOB_I(NAME, \
                 _XCORE_PAR_ARG_STRUCT_NAME(NAME), \
                 _XCORE_PAR_ARG_PACK_PREPARE(ARG_TYPES_PACK), \
-                ARG_TYPES_PACK, \
-                SSIZE)
+                ARG_TYPES_PACK)
 
 /** \brief Calls a list of functions declared using DECLARE_JOB in parallel
  *
@@ -88,7 +85,7 @@
  * \see \li PJOB \li DECLARE_JOB
  * \hideinitializer
  */
-#define PAR_JOBS(...) _XCORE_JPAR_JOBS_I(__VA_ARGS__)
+#define PAR_JOBS(...) _XCORE_JPAR_JOBS_I(_XCORE_UNIQUE_LABEL(_Par), __VA_ARGS__)
 
 /** \brief Specifies a parallelised call of a function declared with DECLARE_JOB
  *

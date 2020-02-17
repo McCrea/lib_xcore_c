@@ -5,12 +5,14 @@
 #include <xcore/interrupt.h>
 #include <xcore/interrupt_wrappers.h>
 
+static int interrupt_count = 0;
+
 DEFINE_INTERRUPT_PERMITTED(interrupt_handlers, void, interruptable_task, void)
 {
   hwtimer_t timer = hwtimer_alloc();
 
   interrupt_unmask_all();
-  for (;;)
+  while (interrupt_count < 10)
   {
     puts("I'm still running.");
     hwtimer_delay(timer, 100000000);
@@ -23,6 +25,7 @@ DEFINE_INTERRUPT_PERMITTED(interrupt_handlers, void, interruptable_task, void)
 DEFINE_INTERRUPT_CALLBACK(interrupt_handlers, interrupt_task, button)
 {
   port_set_trigger_in_not_equal(*(port_t *)button, 1);
+  interrupt_count += 1;
   printf("(%x) caused an interrupt\n", *(port_t *)button);
 }
 

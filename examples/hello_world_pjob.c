@@ -1,7 +1,7 @@
 #include <xcore/parallel.h>
 #include <stdio.h>
 
-DECLARE_JOB(say_hello, (void), 256);
+DECLARE_JOB(say_hello, (void));
 void say_hello(void)
 {
   puts("Hello world!");

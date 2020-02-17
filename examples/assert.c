@@ -23,8 +23,6 @@ int main(void)
     puts("I'm true!");
   }
 
-  puts("sdjkdf");
-
   while(1)
   {
     time = hwtimer_get_time(timer);

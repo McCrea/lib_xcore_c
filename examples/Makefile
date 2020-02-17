@@ -16,7 +16,7 @@ $(build_dir):
 
 .INTERMEDIATE: $(build_dir)/%.o
 $(build_dir)/%.o : %.c | $(build_dir)
-	$(COMPILER) -c $< -o $@ -O3 -MD -MF $|/$*.d $(CFLAGS) -D_clock_defined  -isystem/usr/share/xmos/target/include/clang -isystem/usr/share/xmos/target/include -isystem ../lib_xcore/api --target=xcore #-target=$(TARGET)
+	$(COMPILER) -c $< -O3 -o $@ -MD -MF $|/$*.d $(CFLAGS) -D_clock_defined  -isystem/usr/share/xmos/target/include/clang -isystem/usr/share/xmos/target/include -isystem ../lib_xcore/api --target=xcore #-target=$(TARGET)
 
 %.xe : $(build_dir)/%.o $(lib_xcore_c)
 	$(LINKER) $^ -o $@ -target=$(TARGET) 
@@ -36,7 +36,10 @@ examples := \
 	custom_select \
 	interrupt \
 	chanend_ct \
+	nested_pjobs \
 	\
+	internal_stack_size_pfunc \
+	internal_stack_size \
 	internal_meta_macro \
 
 .PHONY: $(examples)

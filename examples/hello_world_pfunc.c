@@ -9,7 +9,7 @@ void say_hello(void *unused)
 int main(void)
 {
   PAR_FUNCS(
-    PFUNC(say_hello, NULL, 256),
-    PFUNC(say_hello, NULL, 256));
+    PFUNC(say_hello, NULL),
+    PFUNC(say_hello, NULL));
 }
 
