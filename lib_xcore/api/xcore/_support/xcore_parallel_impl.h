@@ -11,13 +11,30 @@
 #define _XCORE_PAR_PFUNC_FUNC(PACK) _XCORE_PSHIM(_XCORE_PAR_PFUNC_FUNC_I, PACK)
 
 #define _XCORE_PAR_FUNC_STACK_ENTRY_I(FN, _ARGS) \
-  ".add_to_set .LPar%=sg," _XCORE_STRINGIFY(FN) ".nstackwords \n\t" \
+  ".add_to_set .LPar%=sg,(" _XCORE_STRINGIFY(FN) ".nstackwords + " _XCORE_STRINGIFY(_XCORE_STACK_ALIGN_REQUIREMENT_WORDS) ") \n\t" \
   ".add_to_set .LPar%=cg," _XCORE_STRINGIFY(FN) ".maxcores \n\t" \
   ".add_to_set .LPar%=tg," _XCORE_STRINGIFY(FN) ".maxtimers \n\t" \
   ".add_to_set .LPar%=eg," _XCORE_STRINGIFY(FN) ".maxchanends \n\t"
 #define _XCORE_PAR_FUNC_STACK_ENTRY(PACK) _XCORE_PSHIM(_XCORE_PAR_FUNC_STACK_ENTRY_I, PACK)
 
-#define _XCORE_PAR_STACK_ENTRY_I(PAR_NAME, ...) \
+
+#define _XCORE_PAR_MASTER_STACK_SYMBOLS_I(FN_STR, PAR_NAME_STR) \
+  ".set .L" PAR_NAME_STR "ms,( " \
+    FN_STR ".nstackwords " \
+    "$M thread_group_add.nstackwords " \
+    "$M __xcore_substack_advance.nstackwords " \
+    "$M thread_group_start.nstackwords " \
+    "$M __xcore_dynamically_false.nstackwords " \
+    "$M thread_group_wait_and_free.nstackwords ) \n\t" \
+  ".add_to_set .LPar%=sg,.L" PAR_NAME_STR "ms \n\t" \
+  ".add_to_set .LPar%=cg," FN_STR ".maxcores \n\t" \
+  ".add_to_set .LPar%=tg," FN_STR ".maxtimers \n\t" \
+  ".add_to_set .LPar%=eg," FN_STR ".maxchanends \n\t"
+
+#define _XCORE_PAR_MASTER_STACK_SYMBOLS(FN, PAR_NAME) \
+  _XCORE_PAR_MASTER_STACK_SYMBOLS_I(_XCORE_STRINGIFY(FN), _XCORE_STRINGIFY(PAR_NAME))
+
+#define _XCORE_PAR_STACK_ENTRY_I(PAR_NAME, FIRST, ...) \
   ".local _fptrgroup." _XCORE_STRINGIFY(PAR_NAME) ".nstackwords \n\t" \
   ".local _fptrgroup." _XCORE_STRINGIFY(PAR_NAME) ".nstackwords.group \n\t" \
   ".set .LPar%=sg,0 \n\t" \
@@ -31,6 +48,7 @@
   ".local _fptrgroup." _XCORE_STRINGIFY(PAR_NAME) ".maxchanends.group \n\t" \
   ".set .LPar%=eg,0 \n\t" \
   _XCORE_APPLY_NOSEP(_XCORE_PAR_FUNC_STACK_ENTRY, __VA_ARGS__) \
+  _XCORE_PAR_MASTER_STACK_SYMBOLS(_XCORE_PAR_PFUNC_FUNC(FIRST), PAR_NAME) \
   ".sum_reduce .LPar%=sm,.LPar%=sg,0 \n\t" \
   ".add_to_set _fptrgroup." _XCORE_STRINGIFY(PAR_NAME) ".nstackwords.group,.LPar%=sm \n\t" \
   ".sum_reduce .LPar%=cm,.LPar%=cg,0 \n\t" \
@@ -41,7 +59,7 @@
   ".add_to_set _fptrgroup." _XCORE_STRINGIFY(PAR_NAME) ".maxchanends.group,.LPar%=em \n" 
 
 #define _XCORE_PAR_STACK_ENTRY(PAR_NAME, ...) \
-  asm(_XCORE_PAR_STACK_ENTRY_I(PAR_NAME, __VA_ARGS__) : /* No outputs but we want to use extended ASM so have an empty list */)
+  asm(_XCORE_PAR_STACK_ENTRY_I(PAR_NAME,  __VA_ARGS__) : /* No outputs but we want to use extended ASM so have an empty list */)
 
 #define _XCORE_PAR_LOAD_STACKWORDS_ASM(DEST, NAME) \
    asm("ldc %[dest], " _XCORE_STRINGIFY(NAME) ".nstackwords" : [dest] "=r" (DEST))
@@ -66,7 +84,8 @@
     register void *__xcore_stackbase; \
     do { \
       register unsigned __xcore_stackwords_parent; \
-      _XCORE_PAR_LOAD_STACKWORDS_ASM(__xcore_stackwords_parent, _XCORE_PAR_PFUNC_FUNC(FIRST)); \
+      asm("ldc %[dest],.L" _XCORE_STRINGIFY(GROUP_NAME) "ms \n" \
+          : [dest] "=r" (__xcore_stackwords_parent)); \
       register void *__xcore_sp; \
       asm volatile("ldaw %[sp], sp[0]" : [sp] "=r" (__xcore_sp)); \
       __xcore_stackbase = __xcore_substack_advance(__xcore_sp, __xcore_stackwords_parent); \
@@ -156,7 +175,7 @@ inline void *__xcore_substack_advance(void * const base, const unsigned headroom
   asm("ldaw %[result], %[base][-%[words]]"
       : [result] "=r" (result)
       : [base] "r" (base)
-      , [words] "r" (headroom_words));
+      , [words] "r" (headroom_words + _XCORE_STACK_ALIGN_REQUIREMENT_WORDS));
   return result;
   //return ((char *)base) - sizeof(int)*headroom_words; 
 }
@@ -191,11 +210,28 @@ inline int __xcore_dynamically_false(void)
 #define _XCORE_JPAR_PJOB_FUNC(PACK) _XCORE_PSHIM(_XCORE_JPAR_PJOB_FUNC_I, PACK)
 
 #define _XCORE_JPAR_FUNC_STACK_ENTRY(FN) \
-  ".add_to_set .LPar%=sg," _XCORE_STRINGIFY(FN) ".nstackwords \n\t" \
+  ".add_to_set .LPar%=sg,(" _XCORE_STRINGIFY(FN) ".nstackwords + " _XCORE_STRINGIFY(_XCORE_STACK_ALIGN_REQUIREMENT_WORDS) ") \n\t" \
   ".add_to_set .LPar%=cg," _XCORE_STRINGIFY(FN) ".maxcores \n\t" \
   ".add_to_set .LPar%=tg," _XCORE_STRINGIFY(FN) ".maxtimers \n\t" \
   ".add_to_set .LPar%=eg," _XCORE_STRINGIFY(FN) ".maxchanends \n\t"
 
+					
+#define _XCORE_JPAR_MASTER_STACK_SYMBOLS_I(FN_STR, PAR_NAME_STR) \
+  ".set .L" PAR_NAME_STR "ms,( " \
+    FN_STR ".nstackwords " \
+    "$M thread_group_add.nstackwords " \
+    "$M __xcore_substack_advance.nstackwords " \
+    "$M thread_group_start.nstackwords " \
+    "$M __xcore_dynamically_false.nstackwords " \
+    "$M thread_group_wait_and_free.nstackwords ) \n\t" \
+  ".add_to_set .LPar%=sg,.L" PAR_NAME_STR "ms \n\t" \
+  ".add_to_set .LPar%=cg," FN_STR ".maxcores \n\t" \
+  ".add_to_set .LPar%=tg," FN_STR ".maxtimers \n\t" \
+  ".add_to_set .LPar%=eg," FN_STR ".maxchanends \n\t"
+
+
+#define _XCORE_JPAR_MASTER_STACK_SYMBOLS(FN, PAR_NAME) \
+  _XCORE_JPAR_MASTER_STACK_SYMBOLS_I(_XCORE_STRINGIFY(FN), _XCORE_STRINGIFY(PAR_NAME))
 
 #define _XCORE_JPAR_FUNC_SHIM_STACK_ENTRY_I(FN, _ARGS) _XCORE_JPAR_FUNC_STACK_ENTRY(__xcore_ugs_shim_ ## FN)
 #define _XCORE_JPAR_FUNC_SHIM_STACK_ENTRY(PACK) _XCORE_PSHIM(_XCORE_JPAR_FUNC_SHIM_STACK_ENTRY_I, PACK)
@@ -214,7 +250,7 @@ inline int __xcore_dynamically_false(void)
   ".local _fptrgroup." _XCORE_STRINGIFY(PAR_NAME) ".maxchanends.group \n\t" \
   ".set .LPar%=eg,0 \n\t" \
   _XCORE_APPLY_NOSEP(_XCORE_JPAR_FUNC_SHIM_STACK_ENTRY, __VA_ARGS__) \
-  _XCORE_JPAR_FUNC_STACK_ENTRY(_XCORE_JPAR_PJOB_FUNC(FIRST)) \
+  _XCORE_JPAR_MASTER_STACK_SYMBOLS(_XCORE_JPAR_PJOB_FUNC(FIRST), PAR_NAME) \
   ".sum_reduce .LPar%=sm,.LPar%=sg,0 \n\t" \
   ".add_to_set _fptrgroup." _XCORE_STRINGIFY(PAR_NAME) ".nstackwords.group,.LPar%=sm \n\t" \
   ".sum_reduce .LPar%=cm,.LPar%=cg,0 \n\t" \
@@ -236,7 +272,8 @@ inline int __xcore_dynamically_false(void)
     register void *__xcore_stackbase; \
     do { \
       register unsigned __xcore_stackwords_parent; \
-      _XCORE_JPAR_LOAD_STACKWORDS_ASM(__xcore_stackwords_parent, _XCORE_JPAR_PJOB_FUNC(FIRST)); \
+      asm("ldc %[dest],.L" _XCORE_STRINGIFY(GROUP_NAME) "ms \n" \
+	  : [dest] "=r" (__xcore_stackwords_parent)); \
       register void *__xcore_sp; \
       asm volatile("ldaw %[sp], sp[0]" : [sp] "=r" (__xcore_sp)); \
       __xcore_stackbase = __xcore_substack_advance(__xcore_sp, __xcore_stackwords_parent); \
