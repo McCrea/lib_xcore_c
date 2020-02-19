@@ -13,7 +13,7 @@
  *  The behaviour of the (expansion of) macros defined in this header varies depending on
  *  the macros defined at the point it is first included. Specifically:
  *  \li If \c NDEBUG is defined all assertions will expand to <tt>((void)0)</tt>;
- *  \li Otherwise, if \c LIBXCORE_C_XASSERT_IS_ASSERT is \b not defined then the assertions 
+ *  \li Otherwise, if \c LIBXCORE_XASSERT_IS_ASSERT is \b not defined then the assertions 
  *      will be 'hardware assisted' and will trap on failure without printing any
  *      diagnostic information;
  *  \li Otherwise (i.e. \c LIBXCORE_XASSERT_IS_ASSERT is defined and \c NDEBUG is not) the
@@ -46,7 +46,7 @@
 #define _XCORE_XASSERT_NOT_AFTER(_C) ((void)0)
 #endif
 
-#elif !defined(LIBXCORE_C_XASSERT_IS_ASSERT)
+#elif !defined(LIBXCORE_XASSERT_IS_ASSERT)
 
 #define _XCORE_XASSERT_TRUE(CONDITION) \
   do { \
