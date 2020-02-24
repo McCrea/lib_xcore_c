@@ -1,0 +1,23 @@
+ports:
+  led_port: XS1_PORT_32A
+  button_port: XS1_PORT_1J
+
+channels: { led_chan, button_chan }
+
+tasks:
+  main_pipe:
+    stackwords: auto
+    resources:
+     - led_chan
+     - button_chan
+  main_button:
+    stackwords: auto
+    resources:
+     - button_chan
+     - button_port
+  main_led:
+    stackwords: auto
+    resources:
+     - led_chan
+     - led_port
+
