@@ -10,6 +10,10 @@
 #include <xcore/_support/xcore_thread_impl.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Handle for a single joinable thread. */
 typedef resource_t xthread_t;
 
@@ -227,3 +231,8 @@ inline void *stack_base(void * const mem_base, size_t const words)
 {
   return (void *)((char *)mem_base + (sizeof(int)*words) - _XCORE_STACK_ALIGN_REQUIREMENT);
 }
+
+#ifdef __cplusplus
+}
+#endif
+

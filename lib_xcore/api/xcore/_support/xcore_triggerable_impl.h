@@ -2,6 +2,11 @@
 
 #include <xs1.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #if defined(XCC_VERSION_MAJOR) || defined(NO_XCLANG_ADDITIONS)
 
 #include <xcore/_support/xcore_resource_impl.h>
@@ -52,3 +57,8 @@ inline void __triggerable_disable_all(void)
 {
   asm volatile("clre");
 }
+
+#ifdef __cplusplus
+}
+#endif
+

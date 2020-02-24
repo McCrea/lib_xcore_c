@@ -10,6 +10,10 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_chan_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
   __xcore_streaming_chanend_t __c;
   unsigned __last_out;
@@ -300,4 +304,8 @@ inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t 
     buf[i] = chanend_in_byte(tc->__c);
   }
 }
+
+#ifdef __cplusplus
+}
+#endif
 

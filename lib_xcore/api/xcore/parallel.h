@@ -9,6 +9,10 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_parallel_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Calls a list of <tt>void (void*)</tt> functions with each utilising a different hardware thread
  *
  * Expands to a block which evaluates each of the given function call descriptions such that each
@@ -98,3 +102,8 @@
  * \hideinitializer
  */
 #define PJOB(FUNCTION, ARGPACK) (FUNCTION, ARGPACK)
+
+#ifdef __cplusplus
+}
+#endif
+

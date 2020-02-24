@@ -6,6 +6,11 @@
 #include <xcore/_support/xcore_select_impl_common.h>
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 _XCORE_EXFUN
 inline void __xcore_select_setup_int(resource_t r, uint32_t value)
 {
@@ -201,4 +206,8 @@ inline void __xcore_select_setup_int(resource_t r, uint32_t value)
 
 #define _XCORE_CASE_RES(...) (_XCORE_SEL_RES, (__VA_ARGS__))
 #define _XCORE_CASE_DEFAULT(...) (_XCORE_SEL_DEFAULT, (__VA_ARGS__))
+
+#ifdef __cplusplus
+}
+#endif
 

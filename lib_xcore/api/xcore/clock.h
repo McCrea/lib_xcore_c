@@ -10,6 +10,10 @@
 #include <xcore/_support/xcore_clock_impl.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Clock handle type. */
 typedef resource_t xclock_t;
 
@@ -168,4 +172,8 @@ inline void clock_set_ready_src(xclock_t clk, resource_t ready_source)
 {
   __xcore_clock_set_ready_src(clk, ready_source);
 }
+
+#ifdef __cplusplus
+}
+#endif
 

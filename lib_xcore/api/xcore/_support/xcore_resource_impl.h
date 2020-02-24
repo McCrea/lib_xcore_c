@@ -9,6 +9,10 @@
 #include <xcore/_support/xcore_macros.h>
 #include <xcore/assert.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** wrapped interrupt callback function
  *
  *  This is an opaque type returned by the INTERRUPT_CALLBACK() macro.
@@ -217,4 +221,8 @@ inline void __xcore_resource_register_event_vector(const resource_t resource, vo
     :
     : [res] "r"(resource), [target] "r"(vector_reg));
 }
+
+#ifdef __cplusplus
+}
+#endif
 

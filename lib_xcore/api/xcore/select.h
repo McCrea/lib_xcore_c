@@ -123,6 +123,10 @@
 #include <xcore/_support/xcore_select_impl_xclang.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Repeatedly wait for an event on an arbitrary set of resources.
  *
  *  Selects on one or more resources with an optional default. If more than one event is available then it is
@@ -261,3 +265,8 @@
  *  \hideinitializer
  */
 #define DEFAULT_NGUARD_THEN(GUARD_EXPR, LABEL) _XCORE_CASE_DEFAULT(LABEL, _XCORE_GUARD_FALSE(GUARD_EXPR))
+
+#ifdef __cplusplus
+}
+#endif
+

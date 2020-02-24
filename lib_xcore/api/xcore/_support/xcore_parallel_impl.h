@@ -7,6 +7,11 @@
 #include <xcore/thread.h>
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define _XCORE_PAR_PFUNC_FUNC_I(FN, ARG_) FN
 #define _XCORE_PAR_PFUNC_FUNC(PACK) _XCORE_PSHIM(_XCORE_PAR_PFUNC_FUNC_I, PACK)
 
@@ -290,3 +295,8 @@ inline int __xcore_dynamically_false(void)
     } \
     thread_group_wait_and_free(__xcore_par_sync); \
   } while (0)
+
+#ifdef __cplusplus
+}
+#endif
+

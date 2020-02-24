@@ -5,6 +5,11 @@
 
 #include <xcore/_support/xcore_common.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 _XCORE_EXFUN
 inline void __xcore_clock_set_ready_src(resource_t clk, resource_t ready_source)
 {
@@ -34,3 +39,8 @@ inline void __xcore_clock_set_divide(resource_t clk, uint8_t divide)
 {
   asm volatile("setd res[%0], %1" :: "r" (clk), "r" (divide));
 }
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -3,6 +3,11 @@
 
 #include <xcore/_support/xcore_feature_test_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
@@ -39,5 +44,9 @@
 #define _XCORE_SINGLE_ISSUE   nop; entsp 0
 #else
 #define _XCORE_SINGLE_ISSUE
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 

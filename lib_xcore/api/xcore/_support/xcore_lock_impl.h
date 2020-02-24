@@ -7,6 +7,11 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 _XCORE_EXFUN
 inline resource_t __xcore_lock_alloc(void)
 {
@@ -27,3 +32,8 @@ inline void __xcore_lock_release(resource_t l)
 {
   asm volatile("out res[%0], %0" :: "r" (l) : "memory");
 }
+
+#ifdef __cplusplus
+}
+#endif
+

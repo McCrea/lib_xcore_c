@@ -10,6 +10,11 @@
 #include <xcore/_support/xcore_meta_macro.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 _XCORE_EXFUN
 inline void __xcore_select_disable_trigger_all(void)
 {
@@ -20,4 +25,8 @@ inline void __xcore_select_disable_trigger_all(void)
 #define _XCORE_GUARD_NONE _XCORE_GTYPE_NONE, /* Guard expression should never be used */
 #define _XCORE_GUARD_TRUE(EXPR) _XCORE_GTYPE_TRUE, EXPR
 #define _XCORE_GUARD_FALSE(EXPR) _XCORE_GTYPE_FALSE, EXPR
+
+#ifdef __cplusplus
+}
+#endif
 

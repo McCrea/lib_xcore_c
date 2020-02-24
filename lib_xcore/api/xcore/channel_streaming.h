@@ -11,6 +11,10 @@
 #include <xcore/_support/xcore_chan_impl.h>
 #include <xcore/chanend.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \typedef streaming_channel_t
  *  \brief Helper type for passing around both ends of a streaming channel.
  */
@@ -219,4 +223,8 @@ inline void s_chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
     buf[i] = chanend_in_byte(c);
   }
 }
+
+#ifdef __cplusplus
+}
+#endif
 

@@ -10,6 +10,10 @@
 #include <xcore/_support/xcore_chan_impl.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \typedef chanend_t
  *  \brief Opaque channel end type for use in C/C++ code.
  *
@@ -154,4 +158,7 @@ inline void chanend_check_end_token(resource_t c)
   __xcore_chanend_check_ct(c, XS1_CT_END);
 }
 
+#ifdef __cplusplus
+}
+#endif
 

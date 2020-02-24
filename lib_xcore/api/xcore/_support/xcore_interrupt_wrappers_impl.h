@@ -7,6 +7,12 @@
 #include <xcore/_support/xcore_macros.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 // The user may define a larger kstack for their own worse case use.
 #ifndef LIBXCORE_KSTACK_WORDS
 #define LIBXCORE_KSTACK_WORDS 0
@@ -91,4 +97,9 @@
 #define _XCORE_DEFINE_INTERRUPT_CALLBACK(grp, intrpt, data) \
     asm(_XCORE_STR(_XCORE_DEFINE_INTERRUPT_CALLBACK_DEF(grp, intrpt))); \
     _XCORE_DECLARE_INTERRUPT_CALLBACK(intrpt, data)
+
+
+#ifdef __cplusplus
+}
+#endif
 

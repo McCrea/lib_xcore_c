@@ -8,6 +8,10 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_lock_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Hardware lock handle type. */
 typedef resource_t lock_t;
 
@@ -78,4 +82,8 @@ inline void lock_release(lock_t l)
 {
   __xcore_lock_release(l);
 }
+
+#ifdef __cplusplus
+}
+#endif
 

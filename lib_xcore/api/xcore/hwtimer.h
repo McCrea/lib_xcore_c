@@ -11,6 +11,10 @@
 #include <xcore/_support/xcore_resource_impl.h>
 #include <xcore/_support/xcore_reference_time.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** brief Hardware timer handle type. */
 typedef resource_t hwtimer_t;
 
@@ -235,4 +239,8 @@ inline uint32_t get_reference_time(void)
   return 0;
 #endif
 }
+
+#ifdef __cplusplus
+}
+#endif
 

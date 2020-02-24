@@ -4,6 +4,11 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_select_impl_common.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define _XCORE_SELECT_RES_HANDLER_SETUP_I(RES, LABEL, ...) __xcore_resource_register_event_vector(RES, &&LABEL);
 
 #define _XCORE_SELECT_RES_HANDLER_SETUP(PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_HANDLER_SETUP_I, PACK)
@@ -187,3 +192,9 @@
 
 #define _XCORE_CASE_RES(...) (_XCORE_SEL_RES, (__VA_ARGS__))
 #define _XCORE_CASE_DEFAULT(...) (_XCORE_SEL_DEFAULT, (__VA_ARGS__))
+
+
+#ifdef __cplusplus
+}
+#endif
+

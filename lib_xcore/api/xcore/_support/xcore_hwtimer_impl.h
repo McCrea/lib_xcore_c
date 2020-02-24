@@ -10,6 +10,10 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 _XCORE_EXFUN
 inline void __xcore_hwtimer_realloc_xc_timer(void)
 {
@@ -79,3 +83,8 @@ inline void __xcore_hwtimer_clear_trigger_time(resource_t t)
   _RESOURCE_SETCI(t, XS1_SETC_COND_NONE);
   // hwtimer_get_time() will respond immediately
 }
+
+#ifdef __cplusplus
+}
+#endif
+

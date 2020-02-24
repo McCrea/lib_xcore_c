@@ -9,6 +9,10 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_interrupt_wrappers_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef LIBXCORE_KSTACK_WORDS
 /** \brief Specify the minimum kernel stack size the interrupt permitting function should create.
  *
@@ -148,3 +152,8 @@
  *  \hideinitializer
  */
 #define INTERRUPT_CALLBACK(intrpt) _XCORE_INTERRUPT_CALLBACK(intrpt)
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -20,6 +20,9 @@
 #include <xcore/_support/xcore_triggerable_impl.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** \brief Setup interrupt event on a resource.
  *
@@ -150,3 +153,8 @@ inline void triggerable_disable_all(void)
 {
   __triggerable_disable_all();
 } 
+
+#ifdef __cplusplus
+}
+#endif
+

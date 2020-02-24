@@ -12,6 +12,10 @@
 #include <xcore/_support/xcore_resource_impl.h>
 #include <xcore/clock.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Enumeration to declare how the port was set up */
 typedef enum {
   PORT_UNBUFFERED = 0,
@@ -909,3 +913,8 @@ inline void port_set_trigger_value(port_t p, uint32_t value)
 {
   __xcore_port_set_trigger_value(p, value);
 }
+
+#ifdef __cplusplus
+}
+#endif
+

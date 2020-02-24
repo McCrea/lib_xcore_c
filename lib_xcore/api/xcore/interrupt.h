@@ -8,6 +8,10 @@
 #include <xs1.h>
 #include <xcore/_support/xcore_common.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Mask all interrupts on this logical core.
  *
  *  Prevent any enabled triggerable_setup_interrupt_callback() functions
@@ -32,4 +36,8 @@ inline void interrupt_unmask_all(void)
 {
   asm volatile("setsr" _XCORE_STR(XS1_SR_IEBLE_MASK));
 }
+
+#ifdef __cplusplus
+}
+#endif
 

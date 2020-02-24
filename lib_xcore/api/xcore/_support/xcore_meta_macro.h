@@ -1,6 +1,10 @@
 // Copyright (c) 2019-2020, XMOS Ltd, All rights reserved
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define _XCORE_SHIM(FLM, ...) FLM(__VA_ARGS__)
 #define _XCORE_UNIQUE_LABEL_I(BNAME, CNT) BNAME ## CNT
 #define _XCORE_UNIQUE_LABEL(BNAME) _XCORE_SHIM(_XCORE_UNIQUE_LABEL_I, BNAME, __COUNTER__)
@@ -128,3 +132,8 @@
     29, 28, 27, 26, 25, 24, 23, 22, 21, 20, \
     19, 18, 17, 16, 15, 14, 13, 12, 11, 10, \
     9,  8,  7,  6,  5,  4,  3,  2,  1,  0)
+
+#ifdef __cplusplus
+}
+#endif
+

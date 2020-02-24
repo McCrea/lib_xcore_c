@@ -10,6 +10,12 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 _XCORE_EXFUN
 inline void __xcore_port_set_transfer_width(resource_t p, size_t width)
 {
@@ -222,4 +228,8 @@ inline void __xcore_port_clear_buffer(resource_t p)
 {
   _RESOURCE_SETCI(p, XS1_SETC_RUN_CLRBUF);
 }
+
+#ifdef __cplusplus
+}
+#endif
 

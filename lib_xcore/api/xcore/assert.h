@@ -23,6 +23,10 @@
 #include <xcore/_support/xcore_feature_test_impl.h>
 #include <xcore/_support/xcore_hardware_assert.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define _XCORE_XASSERT_EMPTY
 #define _XCORE_XASSERT_HIDE(_X)
 
@@ -120,4 +124,8 @@
  *  \param timestamp  The timestamp which is expected not to be in the past
  */
 #define xassert_not_after(timestamp) _XCORE_XASSERT_NOT_AFTER(timestamp) _XCORE_XASSERT_HIDE(#timestamp)
+
+#ifdef __cplusplus
+}
+#endif
 

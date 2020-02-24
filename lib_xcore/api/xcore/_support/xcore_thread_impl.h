@@ -4,6 +4,10 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef resource_t __xcore_thread_t;
 
 void __xcore_synchronised_thread_end(void);
@@ -85,4 +89,8 @@ inline void __xcore_unsynronised_thread_start(const __xcore_thread_t thread)
                : /* No outputs */
                : [thread] "r" (thread) : "memory"); // Other thread may use our variables.
 }
+
+#ifdef __cplusplus
+}
+#endif
 

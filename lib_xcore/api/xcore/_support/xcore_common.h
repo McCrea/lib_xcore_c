@@ -7,4 +7,13 @@
 #define _XCORE_EXFUN
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef unsigned resource_t;
+
+#ifdef __cplusplus
+}
+#endif
+

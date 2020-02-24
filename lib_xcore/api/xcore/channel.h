@@ -11,6 +11,10 @@
 #include <xcore/chanend.h>
 #include <xcore/channel_streaming.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \typedef channel_t
  *  \brief Helper type for passing around both ends of a channel.
  */
@@ -230,4 +234,8 @@ inline void chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
   chanend_check_end_token(c);
   chanend_out_end_token(c);
 }
+
+#ifdef __cplusplus
+}
+#endif
 

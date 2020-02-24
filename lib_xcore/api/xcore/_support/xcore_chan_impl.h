@@ -9,6 +9,11 @@
 #include <xcore/_support/xcore_resource_impl.h>
 #include <xcore/_support/xcore_meta_macro.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef resource_t __xcore_streaming_chanend_t;
 
 _XCORE_EXFUN
@@ -157,3 +162,8 @@ inline unsigned __xcore_channend_get_network(resource_t c)
   asm volatile("getn %[net], res[%[chanend]]" : [net] "=r" (net) : [chanend] "r" (c));
   return net;
 }
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -12,6 +12,10 @@
 #include <xcore/clock.h>
 #include <xcore/port.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Configure a port to be a clocked input port in handshake mode.
  *
  *  If the ready-in or ready-out ports are not 1-bit ports, an exception is raised.
@@ -233,3 +237,8 @@ inline void port_protocol_out_strobed_slave(port_t p, port_t readyin, xclock_t c
   __xcore_port_set_ready_strobed(p);
   __xcore_port_set_slave(p);
 }
+
+#ifdef __cplusplus
+}
+#endif
+

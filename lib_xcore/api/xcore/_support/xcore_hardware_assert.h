@@ -6,6 +6,11 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_reference_time.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 _XCORE_EXFUN
 inline void __xcore_ecallt(int value)
 {
@@ -44,5 +49,9 @@ inline void __xcore_elate(uint32_t value)
   asm volatile("elate %[value]" : : [value] "r" (value));
 }
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
