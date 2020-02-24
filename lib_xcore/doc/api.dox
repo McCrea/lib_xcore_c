@@ -291,221 +291,10 @@ Using hardware locks
 
 */
 
-Using select events
-...................
-
-The library provides the ability to re-create the equivalent of the xC ``select``
-statement.
-
-Example
-~~~~~~~
-
-As an example, take a function which receives data from two channels and handles
-whichever one is ready.
-
-The function needs to have an *enum* containing an entry per resource that is
-part of the ``select``::
-
-  typedef enum {
-    EVENT_CHAN_C = ENUM_ID_BASE,
-    EVENT_CHAN_D
-  } event_choice_t;
-
-The function then starts by clearing all existing select triggers on resources
-owned by this core to ensure that they cannot trigger events::
-
-  void channel_example(chanend c, chanend d)
-  {
-    select_disable_trigger_all();
-
-The resources are each configured to trigger events and return a value from the
-*enum* specified above::
-
-    chanend_setup_select(c, EVENT_CHAN_C);
-    chanend_enable_trigger(c);
-    chanend_setup_select(d, EVENT_CHAN_D);
-    chanend_enable_trigger(d);
-
-And then the rest of the function can simply use the ``select_wait()`` function
-to wait for events to be triggered by either resource::
-
-    while (1) {
-      event_choice_t choice = select_wait();
-      uint32_t x;
-      switch (choice) {
-        case EVENT_CHAN_C: {
-          // Read value to clear the trigger
-          chan_in_word(c, &x);
-          ...
-          break;
-        }
-        case EVENT_CHAN_D: {
-          // Read value to clear the trigger
-          chan_in_word(d, &x);
-          ...
-          break;
-        }
-      }
-    }
-
-Select event handling with a default
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In xC a ``select`` can have a ``default`` case which is executed if no events
-have triggered. This library provides the user with the ability to do this by
-using the ``select_no_wait()`` function. For example, the above example
-could be changed to add to the ``enum`` a no-event value::
-
-  typedef enum {
-    EVENT_CHAN_C = ENUM_ID_BASE,
-    EVENT_CHAN_D,
-    EVENT_NONE
-  } event_choice_t;
-
-And then to test for triggers but perform some background task if there is no data
-available on either channel::
-
-    while (1) {
-      event_choice_t choice = select_no_wait(EVENT_NONE);
-      uint32_t x;
-      switch (choice) {
-        case EVENT_CHAN_C: {
-          // Read value and clear event
-          chan_in_word(c, &x);
-          ...
-          break;
-        }
-        case EVENT_CHAN_D: {
-          // Read value and clear event
-          chan_in_word(d, &x);
-          ...
-          break;
-        }
-        case EVENT_NONE: {
-          // Run background task
-          ...
-          break;
-        }
-      }
-    }
-
-The argument that is passed to ``select_no_wait()`` is the value that will
-be returned if no events are ready.
-
-Select event callback functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This library also supports the ability to install select event callback functions. This
-allows the user to write code where events are not all handled within one
-``switch`` statement. It makes it possible to write libraries which are completely
-self-contained.
-
-For example, if the user writes a library to perform a real-time task based on
-a timer event the library initialisation would install a callback::
-
-  void lib_init(void *data)
-  {
-    hwtimer_t tmr;
-    hwtimer_alloc(&tmr);
-    uint32_t time;
-    hwtimer_get_time(tmr, &time);
-    hwtimer_setup_select_callback(tmr, time + period,
-                                  data, SELECT_CALLBACK(hwtimer_callback_func));
-    hwtimer_enable_trigger(tmr);
-  }
-
-This code allocates a hardware timer and then gets the current time before
-registering callback function. The call to ``hwtimer_setup_select_callback()`` takes
-four arguments.
-
-  1. The timer to configure
-  2. The time at which the next event should fire
-  3. A ``void*`` which is user data that is passed to the handler
-  4. The macro generated select_callback_t function called when events are triggered by the timer
-
-*Note*: There are similar functions for ports (``port_setup_select_callback()``)
-and channel ends (``chanend_setup_select_callback()``).
-
-The callback function is passed the user data registered with that resource::
-
-  void hwtimer_callback_func(void *data);
-
-However, we also need to generate a wrapping function, so we use the API's marcro
-to declare both at the same time::
-
-  DECLARE_SELECT_CALLBACK(hwtimer_callback_func, data);
-
-``data`` will usually be the resource's ID so that the callback can access the resource.
-If additional information is required, data may be a pointer to a struct::
-
-  typedef struct data_t {hwtimer_t tmr; uint32_t period;} data_t;
-
-  DEFINE_SELECT_CALLBACK(hwtimer_callback_func, data) {
-    data_t *d = (data_t *)data;
-    uint32_t time;
-    hwtimer_get_time(d->tmr, &time);
-    hwtimer_change_trigger_time(d->tmr, time + d->period);
-
-When using select callback functions, the ``select_disable_trigger_all()`` function
-should not be called, otherwise any registered callback functions will be disabled.
-Instead, users should now clear any triggers it enables::
-
-  void handle_events(chanend c, chanend d)
-  {
-    // Setup the channels to generate select events
-    chanend_setup_select(c, EVENT_CHAN_C);
-    chanend_enable_trigger(c);
-    chanend_setup_select(d, EVENT_CHAN_D);
-    chanend_enable_trigger(d);
-
-    // Handle select events using select_wait() / select_no_wait()
-    ...
-
-    // Disable select events local to this function
-    chanend_disable_trigger(c);
-    chanend_disable_trigger(d);
-    // The chanends keep their setup should you wish to re-enable their triggering.
-  }
-
-After the ``handle_events()`` function has completed another equivalent function
-can be called in which the timer callback will continue to be called periodically.
-
-When the timer select callbacks are no longer required then they can be disabled
- using the ``hwtimer_disable_trigger()`` function (or equivalent port/chanend functions)::
-
-  hwtimer_disable_trigger(tmr);
-
-Ordered select events
-~~~~~~~~~~~~~~~~~~~~~
-
-The xCORE hardware has implicit ordering enforced. Ports are highest priority,
-then timers, then channels. If there are multiple resources of the same type
-that are ready then the resource with the highest priority (lowest resource ID)
-will be selected.
-
-If the user wants to enforce a different ordering from that provided by the
-hardware then they can use ``select_wait_ordered()`` (or the no wait equivalent
-``select_no_wait_ordered()``).
-
-Events are set up as detailed above and a list is created with all the active
-resources. For example, if using two channels (``c``, ``d``) and a timer (``tmr``)
-then a null-terminated list can be defined to ensure the channels are handled
-before the timer if they are ready::
-
-  resource_t ids[4] = {c, d, tmr, 0};
-
-And then the core of the select event handling loop would be changed to pass this list
-of resource IDs to define the order in which events are enabled::
-
-  while (1) {
-    event_choice_t choice = select_wait_ordered(ids);
-    switch (choice) {
-    ...
-    }
-  }
-
 Using interrupts
 ................
+
+/** \file api/xcore/interrup_wrappers.h
 
 The library provides support for hardware interrupts from xCORE resources.
 
@@ -522,7 +311,7 @@ requirements which must be adhered to ensure safe operation:
   #. The core must have interrupts masked when disabling interrupts for a
      resource.
 
-Example
+\b Example
 ~~~~~~~
 
 As an example, take a function which receives data from two channels and handles
@@ -531,8 +320,8 @@ whichever one is ready.
 We start by declaring the scope in which interrupts may occur - 'the hosting function'.
 The hosting function will make space on its stack for a temporary kernel stack which
 will be used by the interrupts.
-Our ordinary 'void test(chanend,chanend)' is turned into a hosting function by
-wrapping it in the 'DECLARE_INTERRUPT_PERMITTED' function macro::
+Our ordinary <tt>void test(chanend,chanend)</tt> is turned into a hosting function by
+wrapping it in the \c DECLARE_INTERRUPT_PERMITTED function macro: \code
 
   // xc top level file creating our logical cores.
   DECLARE_INTERRUPT_PERMITTED(void, test, chanend c1, chanend c2);
@@ -557,28 +346,28 @@ wrapping it in the 'DECLARE_INTERRUPT_PERMITTED' function macro::
     }
     return 0;
   }
+\endcode
 
-and likewise the definition (see below for implementation)::
-
+and likewise the definition (see below for implementation): \code
   DEFINE_INTERRUPT_PERMITTED(my_group, void, test, chanend c1, chanend c2)
   {
     ...
   }
+\endcode
 
-The identifier 'my_group' tells the hosting function which interrupts it will
+The identifier \c my_group tells the hosting function which interrupts it will
 be hosting, so it can calculate the stack requirements.
 
-One piece of user data will be sent to the callback as a 'void*' argument.
-We will register a pointer to a structure::
-
+One piece of user data will be sent to the callback as a \c void* argument.
+We will register a pointer to a structure: \code
   typedef struct {
     chanend c;    // The resource that caused the interrupt.
     const char *message;
   } chan_data_t;
+\endcode
 
 We now define/declare the interrupt callback function, wrapping it in function
-macros and placing it in the same group::
-
+macros and placing it in the same group: \code
   volatile size_t received = 0;  // For the host to monitor events.
 
   DEFINE_INTERRUPT_CALLBACK(my_group, my_handler, data)
@@ -589,9 +378,9 @@ macros and placing it in the same group::
     debug_printf("%s received %d\n", cd->message, x);
     received++;
   }
+\endcode
 
-And finally we can set up the interrupt and enable them::
-
+And finally we can set up the interrupt and enable them: \code
   DEFINE_INTERRUPT_PERMITTED(my_group, void, test, chanend c1, chanend c2)
   {
     // Set up interrupt.
@@ -606,9 +395,9 @@ And finally we can set up the interrupt and enable them::
     chanend_enable_trigger(cd1.c);
     chanend_enable_trigger(cd2.c);
     interrupt_unmask_all();
+\endcode
 
-And when we have finished, disable them::
-
+And when we have finished, disable them: \code
     while (received < 4);
 
     // Disable interrupts.
@@ -616,408 +405,5 @@ And when we have finished, disable them::
     chanend_disable_trigger(cd1.c);
     chanend_disable_trigger(cd2.c);
   }
-
-
-API
----
-
-Opaque types used by the library
-................................
-
-.. doxygentypedef:: resource_t
-
-.. doxygentypedef:: chanend
-
-.. doxygentypedef:: streaming_chanend_t
-
-.. doxygenstruct:: transacting_chanend_t
-
-.. doxygentypedef:: clock
-
-.. doxygentypedef:: lock_t
-
-.. doxygentypedef:: port
-
-.. doxygentypedef:: hwtimer_t
-
-.. doxygentypedef:: select_callback_t
-
-.. doxygentypedef:: interrupt_callback_t
-
-|newpage|
-
-Errors and exception
-....................
-
-.. doxygenenum:: xcore_c_error_t
-
-.. doxygendefine:: XCORE_C_NO_EXCEPTION
-
-|newpage|
-
-Chanends
-........
-
-.. doxygenfunction:: s_chanend_alloc
-
-.. doxygenfunction:: s_chanend_free
-
-.. doxygenfunction:: s_chanend_set_dest
-
-.. doxygenfunction:: s_chanend_convert
-
-.. doxygenfunction:: chanend_alloc
-
-.. doxygenfunction:: chanend_free
-
-.. doxygenfunction:: chanend_set_dest
-
-.. doxygenfunction:: chanend_convert
-
-.. doxygenfunction:: chanend_setup_select
-
-.. doxygenfunction:: chanend_setup_select_callback
-
-.. doxygenfunction:: chanend_setup_interrupt_callback
-
-.. doxygenfunction:: chanend_enable_trigger
-
-.. doxygenfunction:: chanend_disable_trigger
-
-|newpage|
-
-Channels
-........
-
-.. doxygentypedef:: channel_t
-
-.. doxygenfunction:: chan_alloc
-
-.. doxygenfunction:: chan_free
-
-.. doxygenfunction:: chan_out_word
-
-.. doxygenfunction:: chan_out_byte
-
-.. doxygenfunction:: chan_out_buf_word
-
-.. doxygenfunction:: chan_out_buf_byte
-
-.. doxygenfunction:: chan_in_word
-
-.. doxygenfunction:: chan_in_byte
-
-.. doxygenfunction:: chan_in_buf_word
-
-.. doxygenfunction:: chan_in_buf_byte
-
-|newpage|
-
-Streaming channels
-..................
-
-.. doxygenstruct:: streaming_channel_t
-
-.. doxygenfunction:: s_chan_alloc
-
-.. doxygenfunction:: s_chan_free
-
-.. doxygenfunction:: s_chan_out_word
-
-.. doxygenfunction:: s_chan_out_byte
-
-.. doxygenfunction:: s_chan_out_buf_word
-
-.. doxygenfunction:: s_chan_out_buf_byte
-
-.. doxygenfunction:: s_chan_in_word
-
-.. doxygenfunction:: s_chan_in_byte
-
-.. doxygenfunction:: s_chan_in_buf_word
-
-.. doxygenfunction:: s_chan_in_buf_byte
-
-.. doxygenfunction:: s_chan_out_ct
-
-.. doxygenfunction:: s_chan_out_ct_end
-
-.. doxygenfunction:: s_chan_check_ct
-
-.. doxygenfunction:: s_chan_check_ct_end
-
-|newpage|
-
-Channels with transactions
-..........................
-
-.. doxygenfunction:: chan_init_transaction_master
-
-.. doxygenfunction:: chan_init_transaction_slave
-
-.. doxygenfunction:: chan_complete_transaction
-
-.. doxygenfunction:: t_chan_out_word
-
-.. doxygenfunction:: t_chan_out_byte
-
-.. doxygenfunction:: t_chan_out_buf_word
-
-.. doxygenfunction:: t_chan_out_buf_byte
-
-.. doxygenfunction:: t_chan_in_word
-
-.. doxygenfunction:: t_chan_in_byte
-
-.. doxygenfunction:: t_chan_in_buf_word
-
-.. doxygenfunction:: t_chan_in_buf_byte
-
-|newpage|
-
-Clock blocks
-............
-
-.. doxygenenum:: clock_id_t
-
-.. doxygenfunction:: clock_alloc
-
-.. doxygenfunction:: clock_free
-
-.. doxygenfunction:: clock_start
-
-.. doxygenfunction:: clock_stop
-
-.. doxygenfunction:: clock_set_source_port
-
-.. doxygenfunction:: clock_set_source_clk_ref
-
-.. doxygenfunction:: clock_set_source_clk_xcore
-
-.. doxygenfunction:: clock_set_divide
-
-.. doxygenfunction:: clock_set_ready_src
-
-|newpage|
-
-Locks
-.....
-
-.. doxygenfunction:: lock_alloc
-
-.. doxygenfunction:: lock_free
-
-.. doxygenfunction:: lock_acquire
-
-.. doxygenfunction:: lock_release
-
-|newpage|
-
-Ports
-.....
-
-.. doxygenenum:: port_id_t
-
-.. doxygenenum:: port_type_t
-
-.. doxygenfunction:: port_alloc
-
-.. doxygenfunction:: port_reset
-
-.. doxygenfunction:: port_alloc_buffered
-
-.. doxygenfunction:: port_free
-
-.. doxygenfunction:: port_set_transfer_width
-
-.. doxygenfunction:: port_set_buffered
-
-.. doxygenfunction:: port_set_unbuffered
-
-.. doxygenfunction:: port_set_clock
-
-.. doxygenfunction:: port_set_inout_data
-
-.. doxygenfunction:: port_set_out_clock
-
-.. doxygenfunction:: port_set_out_ready
-
-.. doxygenfunction:: port_set_invert
-
-.. doxygenfunction:: port_set_no_invert
-
-.. doxygenfunction:: port_set_sample_falling_edge
-
-.. doxygenfunction:: port_set_sample_rising_edge
-
-.. doxygenfunction:: port_set_master
-
-.. doxygenfunction:: port_set_slave
-
-.. doxygenfunction:: port_set_no_ready
-
-.. doxygenfunction:: port_set_ready_strobed
-
-.. doxygenfunction:: port_set_ready_handshake
-
-.. doxygenfunction:: port_get_trigger_time
-
-.. doxygenfunction:: port_set_trigger_time
-
-.. doxygenfunction:: port_clear_trigger_time
-
-.. doxygenfunction:: port_set_trigger_in_equal
-
-.. doxygenfunction:: port_set_trigger_in_not_equal
-
-.. doxygenfunction:: port_clear_trigger_in
-
-.. doxygenfunction:: port_peek
-
-.. doxygenfunction:: port_out
-
-.. doxygenfunction:: port_in
-
-.. doxygenfunction:: port_out_shift_right
-
-.. doxygenfunction:: port_in_shift_right
-
-.. doxygenfunction:: port_out_at_time
-
-.. doxygenfunction:: port_in_at_time
-
-.. doxygenfunction:: port_out_shift_right_at_time
-
-.. doxygenfunction:: port_in_shift_right_at_time
-
-.. doxygenfunction:: port_in_when_pinseq
-
-.. doxygenfunction:: port_in_when_pinsneq
-
-.. doxygenfunction:: port_in_shift_right_when_pinseq
-
-.. doxygenfunction:: port_in_shift_right_when_pinsneq
-
-.. doxygenfunction:: port_clear_buffer
-
-.. doxygenfunction:: port_endin
-
-.. doxygenfunction:: port_force_input
-
-.. doxygenfunction:: port_setup_select
-
-.. doxygenfunction:: port_setup_select_callback
-
-.. doxygenfunction:: port_setup_interrupt_callback
-
-.. doxygenfunction:: port_enable_trigger
-
-.. doxygenfunction:: port_disable_trigger
-
-|newpage|
-
-Port protocol helpers
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. doxygenfunction:: port_protocol_in_handshake
-
-.. doxygenfunction:: port_protocol_out_handshake
-
-.. doxygenfunction:: port_protocol_in_strobed_master
-
-.. doxygenfunction:: port_protocol_out_strobed_master
-
-.. doxygenfunction:: port_protocol_in_strobed_slave
-
-.. doxygenfunction:: port_protocol_out_strobed_slave
-
-|newpage|
-
-Timers
-......
-
-.. doxygenfunction:: hwtimer_free_xc_timer
-
-.. doxygenfunction:: hwtimer_realloc_xc_timer
-
-.. doxygenfunction:: hwtimer_alloc
-
-.. doxygenfunction:: hwtimer_free
-
-.. doxygenfunction:: hwtimer_get_time
-
-.. doxygenfunction:: hwtimer_set_trigger_time
-
-.. doxygenfunction:: hwtimer_change_trigger_time
-
-.. doxygenfunction:: hwtimer_clear_trigger_time
-
-.. doxygenfunction:: hwtimer_wait_until
-
-.. doxygenfunction:: hwtimer_delay
-
-.. doxygenfunction:: hwtimer_setup_select
-
-.. doxygenfunction:: hwtimer_setup_select_callback
-
-.. doxygenfunction:: hwtimer_setup_interrupt_callback
-
-.. doxygenfunction:: hwtimer_enable_trigger
-
-.. doxygenfunction:: hwtimer_disable_trigger
-
-|newpage|
-
-Select events
-.............
-
-.. doxygendefine:: ENUM_ID_BASE
-
-.. doxygenfunction:: select_disable_trigger_all
-
-.. doxygenfunction:: select_wait
-
-.. doxygenfunction:: select_no_wait
-
-.. doxygenfunction:: select_wait_ordered
-
-.. doxygenfunction:: select_no_wait_ordered
-
-.. doxygendefine:: DEFINE_SELECT_CALLBACK
-
-.. doxygendefine:: DECLARE_SELECT_CALLBACK
-
-.. doxygendefine:: SELECT_CALLBACK
-
-|newpage|
-
-Interrupt events
-................
-
-.. doxygendefine:: XCORE_C_KSTACK_WORDS
-
-.. doxygendefine:: DEFINE_INTERRUPT_PERMITTED
-
-.. doxygendefine:: DECLARE_INTERRUPT_PERMITTED
-
-.. doxygendefine:: INTERRUPT_PERMITTED
-
-.. doxygenfunction:: interrupt_mask_all
-
-.. doxygenfunction:: interrupt_unmask_all
-
-.. doxygendefine:: DEFINE_INTERRUPT_CALLBACK
-
-.. doxygendefine:: DECLARE_INTERRUPT_CALLBACK
-
-.. doxygendefine:: INTERRUPT_CALLBACK
-
-|appendix|
-
-Known Issues
-------------
-
-No known issues.
-
-.. include:: ../../../CHANGELOG.rst
+\endcode
 

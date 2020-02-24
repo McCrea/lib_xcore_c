@@ -41,7 +41,7 @@ inline threadgroup_t thread_group_alloc(void)
  *  and with its stack pointer initialised to \a stack_base.
  *  \a stack_base must be word aligned and point to the last word of a block of memory sufficient 
  *  to satisfy <tt>func</tt>'s stack requirements.
- *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base)</tt> 
+ *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base]</tt> 
  *  will be  used as the thread's stack and will be clobbered.
  *  
  *  \param group           Thread group handle as returned by thread_group_alloc().
@@ -131,7 +131,7 @@ inline void thread_group_wait_and_free(const threadgroup_t group)
  *  and with its stack pointer initialised to \a stack_base.
  *  \a stack_base must be word aligned and point to the last word of a block of memory sufficient
  *  to satisfy <tt>func</tt>'s stack requirements.
- *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base)</tt> 
+ *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base]</tt> 
  *  will be  used as the thread's stack and will be clobbered.
  *
  *  \note The thread will begin execution immediately and this function will return.
@@ -177,7 +177,7 @@ inline void xthread_wait_and_free(const xthread_t thread)
  *  and with its stack pointer initialised to \a stack_base.
  *  \a stack_base must be word aligned and point to the last word of a block of memory sufficient
  *  to satisfy <tt>func</tt>'s stack requirements.
- *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base)</tt> 
+ *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base]</tt> 
  *  will be  used as the thread's stack and will be clobbered.
  *
  *  \note The associated hardware thread will be freed once \a func returns, but it is not trivially
