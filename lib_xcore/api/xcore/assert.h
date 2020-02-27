@@ -55,13 +55,13 @@ extern "C" {
 #define _XCORE_XASSERT_TRUE(CONDITION) \
   do { \
     __xcore_ecallf((CONDITION)); \
-    __builtin_assume((CONDITION)); \
+    /*__builtin_assume((CONDITION));*/ \
   } while (0)
 
 #define _XCORE_XASSERT_FALSE(CONDITION) \
   do { \
     __xcore_ecallt((CONDITION)); \
-    __builtin_assume(!(CONDITION)); \
+    /*__builtin_assume(!(CONDITION));*/ \
   } while(0)
 
 #ifdef _XCORE_HAS_REFERENCE_CLOCK

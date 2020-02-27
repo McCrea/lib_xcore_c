@@ -117,7 +117,7 @@ inline void chanend_check_control_token(chanend_t c, const char ct)
 }
 
 _XCORE_EXFUN
-inline _Bool chanend_test_control_token_next_byte(chanend_t c)
+inline int chanend_test_control_token_next_byte(chanend_t c)
 {
   return __xcore_chanend_test_control_token(c);
 }
@@ -129,7 +129,7 @@ inline int chanend_test_control_token_next_word(chanend_t c)
 }
 
 _XCORE_EXFUN
-inline _Bool chanend_test_dest_local(chanend_t c)
+inline int chanend_test_dest_local(chanend_t c)
 {
   return __xcore_chanend_test_dest_local(c);
 }

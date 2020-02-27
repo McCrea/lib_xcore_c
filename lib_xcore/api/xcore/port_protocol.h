@@ -2,7 +2,7 @@
 #pragma once
 
 /** \file
- *  \brief Helper functinos for port usage patterns
+ *  \brief Helper functions for port usage patterns
  */
 
 #include <stdint.h>

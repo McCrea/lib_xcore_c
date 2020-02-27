@@ -12,6 +12,17 @@ extern "C" {
 #endif
 
 
+#ifdef __cplusplus
+#define _XCORE_VOID_PTR_CAST(PTR, TYPE) static_cast<TYPE>(PTR)
+#define _XCORE_CFUNC_EXCEPT_SPEC noexcept
+#define _XCORE_CFUNCDECL(DECL) extern "C" { DECL; }
+#else
+#define _XCORE_VOID_PTR_CAST(PTR, TYPE) PTR
+#define _XCORE_CFUNC_EXCEPT_SPEC
+#define _XCORE_CFUNCDECL(DECL) DECL;
+#endif
+
+
 #define _XCORE_PAR_PFUNC_FUNC_I(FN, ARG_) FN
 #define _XCORE_PAR_PFUNC_FUNC(PACK) _XCORE_PSHIM(_XCORE_PAR_PFUNC_FUNC_I, PACK)
 
@@ -136,15 +147,17 @@ extern "C" {
 #define _XCORE_PAR_ARG_PACK_EXTRACT_PACK(...) _XCORE_APPLY(_XCORE_PAR_ARG_PACK_EXTRACT_ARG,  __VA_ARGS__)
 
 #define DECLARE_JOB_I(FNAME, STRUCT_NAME, ARG_PACKS, ARG_TYPES) \
-  void FNAME ARG_TYPES; \
+  void FNAME ARG_TYPES _XCORE_CFUNC_EXCEPT_SPEC asm(_XCORE_STRINGIFY(FNAME)); \
   struct STRUCT_NAME { \
     _XCORE_IF_VOID_PACK(ARG_TYPES, ,_XCORE_PSHIM(_XCORE_PAR_ARG_PACK_STRUCT_ENTRIES, ARG_PACKS)); \
   }; \
   /* TODO: Factor out names! */ \
+  _XCORE_CFUNCDECL(static void __xcore_ugs_shim_ ## FNAME  (void *) _XCORE_CFUNC_EXCEPT_SPEC) \
   __attribute__((unused)) \
-  static void __xcore_ugs_shim_ ## FNAME  (void *__xcore_pargs_) \
+  static void __xcore_ugs_shim_ ## FNAME  (void *__xcore_pargs_) _XCORE_CFUNC_EXCEPT_SPEC \
   { \
-    const struct STRUCT_NAME * const __xcore_pargs __attribute__((unused)) = __xcore_pargs_; \
+    const struct STRUCT_NAME * const __xcore_pargs __attribute__((unused)) = \
+      _XCORE_VOID_PTR_CAST(__xcore_pargs_, const struct STRUCT_NAME *); \
     FNAME(_XCORE_PSHIM(_XCORE_PAR_ARG_PACK_EXTRACT_PACK, ARG_PACKS)); \
     asm volatile("" : : : "memory"); \
   } /*\
@@ -221,7 +234,7 @@ inline int __xcore_dynamically_false(void)
   ".add_to_set .LPar%=eg," _XCORE_STRINGIFY(FN) ".maxchanends \n\t"
 
 					
-#define _XCORE_JPAR_MASTER_STACK_SYMBOLS_I(FN_STR, PAR_NAME_STR) \
+#define _XCORE_JPAR_MASTER_STACK_SYMBOLS_II(FN_STR, PAR_NAME_STR) \
   ".set .L" PAR_NAME_STR "ms,( " \
     FN_STR ".nstackwords " \
     "$M thread_group_add.nstackwords " \
@@ -234,9 +247,11 @@ inline int __xcore_dynamically_false(void)
   ".add_to_set .LPar%=tg," FN_STR ".maxtimers \n\t" \
   ".add_to_set .LPar%=eg," FN_STR ".maxchanends \n\t"
 
+#define _XCORE_JPAR_MASTER_STACK_SYMBOLS_I(FN, PAR_NAME_STR) \
+  _XCORE_JPAR_MASTER_STACK_SYMBOLS_II(_XCORE_STRINGIFY(FN), PAR_NAME_STR)
 
 #define _XCORE_JPAR_MASTER_STACK_SYMBOLS(FN, PAR_NAME) \
-  _XCORE_JPAR_MASTER_STACK_SYMBOLS_I(_XCORE_STRINGIFY(FN), _XCORE_STRINGIFY(PAR_NAME))
+  _XCORE_JPAR_MASTER_STACK_SYMBOLS_I(FN, _XCORE_STRINGIFY(PAR_NAME))
 
 #define _XCORE_JPAR_FUNC_SHIM_STACK_ENTRY_I(FN, _ARGS) _XCORE_JPAR_FUNC_STACK_ENTRY(__xcore_ugs_shim_ ## FN)
 #define _XCORE_JPAR_FUNC_SHIM_STACK_ENTRY(PACK) _XCORE_PSHIM(_XCORE_JPAR_FUNC_SHIM_STACK_ENTRY_I, PACK)

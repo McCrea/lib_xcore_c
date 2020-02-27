@@ -125,7 +125,7 @@ inline void __xcore_chanend_check_ct(resource_t c, const uint8_t ct)
 }
 
 _XCORE_EXFUN
-inline _Bool __xcore_chanend_test_control_token(resource_t c)
+inline int __xcore_chanend_test_control_token(resource_t c)
 {
   unsigned res;
   asm volatile("testct %[res], res[%[chanend]]" : [res] "=r" (res) : [chanend] "r" (c));
@@ -142,7 +142,7 @@ inline unsigned __xcore_chanend_test_control_token_word(resource_t c)
 }
 
 _XCORE_EXFUN
-inline _Bool __xcore_chanend_test_dest_local(resource_t c)
+inline int __xcore_chanend_test_dest_local(resource_t c)
 {
   unsigned res;
   asm volatile("testlcl %[res], res[%[chanend]]" : [res] "=r" (res) : [chanend] "r" (c));
