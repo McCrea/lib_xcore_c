@@ -14,12 +14,12 @@ extern "C" {
 
 #ifdef __cplusplus
 #define _XCORE_VOID_PTR_CAST(PTR, TYPE) static_cast<TYPE>(PTR)
-#define _XCORE_CFUNC_EXCEPT_SPEC noexcept
-#define _XCORE_CFUNCDECL(DECL) extern "C" { DECL; }
+#define _XCORE_CLINKAGE_BEGIN extern "C" {
+#define _XCORE_CLINKAGE_END }
 #else
 #define _XCORE_VOID_PTR_CAST(PTR, TYPE) PTR
-#define _XCORE_CFUNC_EXCEPT_SPEC
-#define _XCORE_CFUNCDECL(DECL) DECL;
+#define _XCORE_CLINKAGE_BEGIN
+#define _XCORE_CLINKAGE_END
 #endif
 
 
@@ -152,9 +152,9 @@ extern "C" {
     _XCORE_IF_VOID_PACK(ARG_TYPES, ,_XCORE_PSHIM(_XCORE_PAR_ARG_PACK_STRUCT_ENTRIES, ARG_PACKS)); \
   }; \
   /* TODO: Factor out names! */ \
-  _XCORE_CFUNCDECL(static void __xcore_ugs_shim_ ## FNAME  (void *) _XCORE_CFUNC_EXCEPT_SPEC) \
+  static void __xcore_ugs_shim_ ## FNAME  (void *__xcore_pargs_) _XCORE_NOTHROW asm(_XCORE_STRINGIFY(__xcore_ugs_shim_ ## FNAME)); \
   __attribute__((unused)) \
-  static void __xcore_ugs_shim_ ## FNAME  (void *__xcore_pargs_) _XCORE_CFUNC_EXCEPT_SPEC \
+  static void __xcore_ugs_shim_ ## FNAME  (void *__xcore_pargs_) _XCORE_NOTHROW \
   { \
     const struct STRUCT_NAME * const __xcore_pargs __attribute__((unused)) = \
       _XCORE_VOID_PTR_CAST(__xcore_pargs_, const struct STRUCT_NAME *); \
@@ -286,6 +286,14 @@ inline int __xcore_dynamically_false(void)
 #define _XCORE_JPAR_SYNCEXEC_I(FUNC, ARG_PACK) do { (FUNC) ARG_PACK; } while (0)
 #define _XCORE_JPAR_SYNCEXEC(PACK) _XCORE_PSHIM(_XCORE_JPAR_SYNCEXEC_I, PACK)
 
+#ifdef __cplusplus
+#define _XCORE_NOTHROW_SITE_START []() __attribute__((noinline)) noexcept {
+#define _XCORE_NOTHROW_SITE_END }();
+#else
+#define _XCORE_NOTHROW_SITE_START
+#define _XCORE_NOTHROW_SITE_END
+#endif
+
 #define _XCORE_JPAR_JOBS_I(GROUP_NAME, FIRST, ...) \
   do { \
     _XCORE_JPAR_STACK_ENTRY(GROUP_NAME, FIRST, __VA_ARGS__); \
@@ -304,8 +312,10 @@ inline int __xcore_dynamically_false(void)
     _XCORE_JPAR_SYNCEXEC(FIRST); \
     if (__builtin_expect(__xcore_dynamically_false(), 0)) \
     { \
+      _XCORE_NOTHROW_SITE_START \
       __attribute__(( fptrgroup(_XCORE_STRINGIFY(GROUP_NAME)) )) void (* volatile __xcore_f)(void) = 0; \
       __xcore_f(); \
+      _XCORE_NOTHROW_SITE_END \
       __builtin_unreachable(); \
     } \
     thread_group_wait_and_free(__xcore_par_sync); \

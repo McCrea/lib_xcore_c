@@ -53,7 +53,7 @@ extern "C" {
 #endif
 
 _XCORE_EXFUN
-inline void __triggerable_disable_all(void)
+inline void __triggerable_disable_all(void) _XCORE_NOTHROW
 {
   asm volatile("clre");
 }

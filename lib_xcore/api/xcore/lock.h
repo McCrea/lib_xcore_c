@@ -25,7 +25,7 @@ typedef resource_t lock_t;
  *  \return  handle for the allocated lock, 0 is no locks were available
  */
 _XCORE_EXFUN
-inline lock_t lock_alloc()
+inline lock_t lock_alloc() _XCORE_NOTHROW
 {
   return __xcore_lock_alloc();
 }
@@ -42,7 +42,7 @@ inline lock_t lock_alloc()
  *  \exception  ET_LOAD_STORE        invalid \a l argument.
  */
 _XCORE_EXFUN
-inline void lock_free(lock_t l)
+inline void lock_free(lock_t l) _XCORE_NOTHROW
 {
   __xcore_resource_free((resource_t)l);
 }
@@ -60,7 +60,7 @@ inline void lock_free(lock_t l)
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the lock.
  */
 _XCORE_EXFUN
-inline void lock_acquire(lock_t l)
+inline void lock_acquire(lock_t l) _XCORE_NOTHROW
 {
   __xcore_lock_acquire(l);
 }
@@ -78,7 +78,7 @@ inline void lock_acquire(lock_t l)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the lock.
  */
 _XCORE_EXFUN
-inline void lock_release(lock_t l)
+inline void lock_release(lock_t l) _XCORE_NOTHROW
 {
   __xcore_lock_release(l);
 }

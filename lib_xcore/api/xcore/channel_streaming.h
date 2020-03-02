@@ -36,7 +36,7 @@ typedef struct streaming_channel_t {
  *             joined chan-ends or 0s.
  */
 _XCORE_EXFUN
-inline streaming_channel_t s_chan_alloc()
+inline streaming_channel_t s_chan_alloc() _XCORE_NOTHROW
 {
   streaming_channel_t c;
 
@@ -74,7 +74,7 @@ inline streaming_channel_t s_chan_alloc()
  *  \exception  ET_RESOURCE_DEP       another core is actively using the channel.
  */
 _XCORE_EXFUN
-inline void s_chan_free(streaming_channel_t c)
+inline void s_chan_free(streaming_channel_t c) _XCORE_NOTHROW
 {
   chanend_out_end_token(c.end_a);
   chanend_out_end_token(c.end_b);
@@ -94,7 +94,7 @@ inline void s_chan_free(streaming_channel_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void s_chan_out_word(chanend_t c, uint32_t data)
+inline void s_chan_out_word(chanend_t c, uint32_t data) _XCORE_NOTHROW
 {
   chanend_out_word(c, data);
 }
@@ -109,7 +109,7 @@ inline void s_chan_out_word(chanend_t c, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void s_chan_out_byte(chanend_t c, uint8_t data)
+inline void s_chan_out_byte(chanend_t c, uint8_t data) _XCORE_NOTHROW
 {
   chanend_out_byte(c, data);
 }
@@ -126,7 +126,7 @@ inline void s_chan_out_byte(chanend_t c, uint8_t data)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
+inline void s_chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n) _XCORE_NOTHROW
 {
   for (size_t i = 0; i < n; i++)
   {
@@ -146,7 +146,7 @@ inline void s_chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
+inline void s_chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n) _XCORE_NOTHROW
 {
   for (size_t i = 0; i < n; i++)
   {
@@ -164,7 +164,7 @@ inline void s_chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline uint32_t s_chan_in_word(chanend_t c)
+inline uint32_t s_chan_in_word(chanend_t c) _XCORE_NOTHROW
 {
   return chanend_in_word(c);
 }
@@ -179,7 +179,7 @@ inline uint32_t s_chan_in_word(chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline uint8_t s_chan_in_byte(chanend_t c)
+inline uint8_t s_chan_in_byte(chanend_t c) _XCORE_NOTHROW
 {
   return chanend_in_byte(c);
 }
@@ -196,7 +196,7 @@ inline uint8_t s_chan_in_byte(chanend_t c)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
+inline void s_chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n) _XCORE_NOTHROW
 {
   for (size_t i = 0; i < n; i++)
   {
@@ -216,7 +216,7 @@ inline void s_chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
+inline void s_chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n) _XCORE_NOTHROW
 {
   for (size_t i = 0; i < n; i++)
   {

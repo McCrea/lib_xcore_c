@@ -12,7 +12,7 @@ extern "C" {
 
 
 _XCORE_EXFUN
-inline void __xcore_select_setup_int(resource_t r, uint32_t value)
+inline void __xcore_select_setup_int(resource_t r, uint32_t value)  _XCORE_NOTHROW
 {
   __xcore_resource_setup_callback(r, (void*)value, __xcore_select_non_callback, 0x2);
 }

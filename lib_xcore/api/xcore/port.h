@@ -41,7 +41,7 @@ typedef resource_t port_t;
  * \see port_enable_buffered
  */
 _XCORE_EXFUN
-inline void port_enable(port_t p)
+inline void port_enable(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_enable(p);
 }
@@ -56,7 +56,7 @@ inline void port_enable(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_reset(port_t p)
+inline void port_reset(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_reset(p);
 }
@@ -78,7 +78,7 @@ inline void port_reset(port_t p)
  *  \see port_enable
  */
 _XCORE_EXFUN
-inline void port_start_buffered(port_t p, size_t transfer_width)
+inline void port_start_buffered(port_t p, size_t transfer_width) _XCORE_NOTHROW
 {
   __xcore_port_enable(p);
   __xcore_port_set_buffered(p);
@@ -94,7 +94,7 @@ inline void port_start_buffered(port_t p, size_t transfer_width)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_disable(port_t p)
+inline void port_disable(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_free(p);
 }
@@ -117,7 +117,7 @@ inline void port_disable(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_transfer_width(port_t p, size_t transfer_width)
+inline void port_set_transfer_width(port_t p, size_t transfer_width) _XCORE_NOTHROW
 {
   __xcore_port_set_transfer_width(p, transfer_width);
 }
@@ -133,7 +133,7 @@ inline void port_set_transfer_width(port_t p, size_t transfer_width)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_buffered(port_t p)
+inline void port_set_buffered(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_buffered(p);
 }
@@ -150,7 +150,7 @@ inline void port_set_buffered(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_unbuffered(port_t p)
+inline void port_set_unbuffered(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_unbuffered(p);
 }
@@ -167,7 +167,7 @@ inline void port_set_unbuffered(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_clock(port_t p, xclock_t clk)
+inline void port_set_clock(port_t p, xclock_t clk) _XCORE_NOTHROW
 {
   __xcore_port_set_clock(p, clk);
 }
@@ -180,7 +180,7 @@ inline void port_set_clock(port_t p, xclock_t clk)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_inout_data(port_t p)
+inline void port_set_inout_data(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_inout_data(p);
 }
@@ -197,7 +197,7 @@ inline void port_set_inout_data(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_out_clock(port_t p)
+inline void port_set_out_clock(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_out_clock(p);
 }
@@ -215,7 +215,7 @@ inline void port_set_out_clock(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_out_ready(port_t p, port_t ready_source)
+inline void port_set_out_ready(port_t p, port_t ready_source) _XCORE_NOTHROW
 {
   __xcore_port_set_out_ready(p, ready_source);
 }
@@ -232,7 +232,7 @@ inline void port_set_out_ready(port_t p, port_t ready_source)
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_invert(port_t p)
+inline void port_set_invert(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_invert(p);
 }
@@ -247,7 +247,7 @@ inline void port_set_invert(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_no_invert(port_t p)
+inline void port_set_no_invert(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_no_invert(p);
 }
@@ -264,7 +264,7 @@ inline void port_set_no_invert(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_sample_falling_edge(port_t p)
+inline void port_set_sample_falling_edge(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_sample_falling_edge(p);
 }
@@ -279,7 +279,7 @@ inline void port_set_sample_falling_edge(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_sample_rising_edge(port_t p)
+inline void port_set_sample_rising_edge(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_sample_rising_edge(p);
 }
@@ -299,7 +299,7 @@ inline void port_set_sample_rising_edge(port_t p)
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_master(port_t p)
+inline void port_set_master(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_master(p);
 }
@@ -322,7 +322,7 @@ inline void port_set_master(port_t p)
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_slave(port_t p)
+inline void port_set_slave(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_slave(p);
 }
@@ -346,7 +346,7 @@ inline void port_set_slave(port_t p)
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_no_ready(port_t p)
+inline void port_set_no_ready(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_no_ready(p);
 }
@@ -370,7 +370,7 @@ inline void port_set_no_ready(port_t p)
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_ready_strobed(port_t p)
+inline void port_set_ready_strobed(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_ready_strobed(p);
 }
@@ -393,7 +393,7 @@ inline void port_set_ready_strobed(port_t p)
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_ready_handshake(port_t p)
+inline void port_set_ready_handshake(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_set_ready_handshake(p);
 }
@@ -407,7 +407,7 @@ inline void port_set_ready_handshake(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline int16_t port_get_trigger_time(port_t p)
+inline int16_t port_get_trigger_time(port_t p) _XCORE_NOTHROW
 {
   return __xcore_port_get_trigger_time(p);
 }
@@ -427,7 +427,7 @@ inline int16_t port_get_trigger_time(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_time(port_t p, int16_t t)
+inline void port_set_trigger_time(port_t p, int16_t t) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_time(p, t);
 }
@@ -444,7 +444,7 @@ inline void port_set_trigger_time(port_t p, int16_t t)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_clear_trigger_time(port_t p)
+inline void port_clear_trigger_time(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_clear_trigger_time(p);
 }
@@ -463,7 +463,7 @@ inline void port_clear_trigger_time(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_in_equal(port_t p, uint32_t v)
+inline void port_set_trigger_in_equal(port_t p, uint32_t v) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_in_equal(p, v);
 }
@@ -482,7 +482,7 @@ inline void port_set_trigger_in_equal(port_t p, uint32_t v)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_in_not_equal(port_t p, uint32_t v)
+inline void port_set_trigger_in_not_equal(port_t p, uint32_t v) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_in_not_equal(p, v);
 }
@@ -499,7 +499,7 @@ inline void port_set_trigger_in_not_equal(port_t p, uint32_t v)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_clear_trigger_in(port_t p)
+inline void port_clear_trigger_in(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_clear_trigger_in(p);
 }
@@ -516,7 +516,7 @@ inline void port_clear_trigger_in(port_t p)
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  */
 _XCORE_EXFUN
-inline uint32_t port_peek(port_t p)
+inline uint32_t port_peek(port_t p) _XCORE_NOTHROW
 {
   return __xcore_port_peek(p);
 }
@@ -537,7 +537,7 @@ inline uint32_t port_peek(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_out(port_t p, uint32_t data)
+inline void port_out(port_t p, uint32_t data) _XCORE_NOTHROW
 {
   __xcore_port_out(p, data);
 }
@@ -557,7 +557,7 @@ inline void port_out(port_t p, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in(port_t p)
+inline uint32_t port_in(port_t p) _XCORE_NOTHROW
 {
   return __xcore_port_in(p);
 }
@@ -580,7 +580,7 @@ inline uint32_t port_in(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_out_shift_right(port_t p, uint32_t data)
+inline uint32_t port_out_shift_right(port_t p, uint32_t data) _XCORE_NOTHROW
 {
   return __xcore_port_out_shift_right(p, data);
 }
@@ -602,7 +602,7 @@ inline uint32_t port_out_shift_right(port_t p, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right(port_t p, uint32_t data)
+inline uint32_t port_in_shift_right(port_t p, uint32_t data) _XCORE_NOTHROW
 {
   return __xcore_port_in_shift_right(p, data);
 }
@@ -622,7 +622,7 @@ inline uint32_t port_in_shift_right(port_t p, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_out_at_time(port_t p, int16_t t, uint32_t data)
+inline void port_out_at_time(port_t p, int16_t t, uint32_t data) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_time(p, t);
   __xcore_port_out(p, data);
@@ -643,7 +643,7 @@ inline void port_out_at_time(port_t p, int16_t t, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_at_time(port_t p, int16_t t)
+inline uint32_t port_in_at_time(port_t p, int16_t t) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_time(p, t);
   return __xcore_port_in(p);
@@ -666,7 +666,7 @@ inline uint32_t port_in_at_time(port_t p, int16_t t)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_out_shift_right_at_time(port_t p, int16_t t, uint32_t data)
+inline uint32_t port_out_shift_right_at_time(port_t p, int16_t t, uint32_t data) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_time(p, t);
   return __xcore_port_out_shift_right(p, data);
@@ -689,7 +689,7 @@ inline uint32_t port_out_shift_right_at_time(port_t p, int16_t t, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right_at_time(port_t p, int16_t t, uint32_t data)
+inline uint32_t port_in_shift_right_at_time(port_t p, int16_t t, uint32_t data) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_time(p, t);
   return __xcore_port_in_shift_right(p, data);
@@ -712,7 +712,7 @@ inline uint32_t port_in_shift_right_at_time(port_t p, int16_t t, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_when_pinseq(port_t p, port_type_t pt, uint32_t value)
+inline uint32_t port_in_when_pinseq(port_t p, port_type_t pt, uint32_t value) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_in_equal(p , value);
   uint32_t data = __xcore_port_in(p);
@@ -739,7 +739,7 @@ inline uint32_t port_in_when_pinseq(port_t p, port_type_t pt, uint32_t value)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_when_pinsneq(port_t p, port_type_t pt, uint32_t value)
+inline uint32_t port_in_when_pinsneq(port_t p, port_type_t pt, uint32_t value) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_in_not_equal(p , value);
   uint32_t data = __xcore_port_in(p);
@@ -769,7 +769,7 @@ inline uint32_t port_in_when_pinsneq(port_t p, port_type_t pt, uint32_t value)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right_when_pinseq(port_t p, port_type_t pt, uint32_t value, uint32_t data)
+inline uint32_t port_in_shift_right_when_pinseq(port_t p, port_type_t pt, uint32_t value, uint32_t data) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_in_equal(p , value);
   uint32_t new_data = __xcore_port_in_shift_right(p, data);
@@ -798,7 +798,7 @@ inline uint32_t port_in_shift_right_when_pinseq(port_t p, port_type_t pt, uint32
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right_when_pinsneq(port_t p, port_type_t pt, uint32_t value, uint32_t data)
+inline uint32_t port_in_shift_right_when_pinsneq(port_t p, port_type_t pt, uint32_t value, uint32_t data) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_in_not_equal(p, value);
   uint32_t new_data = __xcore_port_in_shift_right(p, data);
@@ -826,7 +826,7 @@ inline uint32_t port_in_shift_right_when_pinsneq(port_t p, port_type_t pt, uint3
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_clear_buffer(port_t p)
+inline void port_clear_buffer(port_t p) _XCORE_NOTHROW
 {
   __xcore_port_clear_buffer(p);
 }
@@ -849,7 +849,7 @@ inline void port_clear_buffer(port_t p)
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline size_t port_endin(port_t p)
+inline size_t port_endin(port_t p) _XCORE_NOTHROW
 {
   return __xcore_port_endin(p);
 }
@@ -868,7 +868,7 @@ inline size_t port_endin(port_t p)
  *  \exception  ET_LOAD_STORE         invalid \a data argument.
  */
 _XCORE_EXFUN
-inline size_t port_force_input(port_t p, uint32_t *data)
+inline size_t port_force_input(port_t p, uint32_t *data) _XCORE_NOTHROW
 {
   size_t num = __xcore_port_endin(p);
   *data = __xcore_port_in(p);
@@ -891,7 +891,7 @@ inline size_t port_force_input(port_t p, uint32_t *data)
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in data.
  */
 _XCORE_EXFUN
-inline void port_setup_interrupt_callback(port_t p, void *data, interrupt_callback_t func)
+inline void port_setup_interrupt_callback(port_t p, void *data, interrupt_callback_t func) _XCORE_NOTHROW
 {
   __xcore_resource_setup_interrupt_callback(p, data, func);
   __xcore_port_clear_trigger_in(p);
@@ -909,7 +909,7 @@ inline void port_setup_interrupt_callback(port_t p, void *data, interrupt_callba
  *  \exception  ET_RESOURCE_DEP       another core is actively using the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_value(port_t p, uint32_t value)
+inline void port_set_trigger_value(port_t p, uint32_t value) _XCORE_NOTHROW
 {
   __xcore_port_set_trigger_value(p, value);
 }

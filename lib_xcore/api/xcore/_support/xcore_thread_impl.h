@@ -14,7 +14,7 @@ void __xcore_synchronised_thread_end(void);
 void __xcore_unsynchronised_thread_end(void);
 
 _XCORE_EXFUN
-inline resource_t __xcore_allocate_thread_group(void)
+inline resource_t __xcore_allocate_thread_group(void) _XCORE_NOTHROW
 {
   resource_t res;
   asm volatile("getr %[res], %[type]" 
@@ -24,7 +24,7 @@ inline resource_t __xcore_allocate_thread_group(void)
 }
 
 _XCORE_EXFUN
-inline __xcore_thread_t __xcore_create_synchronised_thread(const resource_t sync)
+inline __xcore_thread_t __xcore_create_synchronised_thread(const resource_t sync) _XCORE_NOTHROW
 {
   __xcore_thread_t thread;
   asm volatile("getst %[thread], res[%[sync]]" : [thread] "=r" (thread) : [sync] "r" (sync));
@@ -32,31 +32,31 @@ inline __xcore_thread_t __xcore_create_synchronised_thread(const resource_t sync
 }
 
 _XCORE_EXFUN
-inline void __xcore_set_thread_worker(const __xcore_thread_t thread, void(* const func)(void *))
+inline void __xcore_set_thread_worker(const __xcore_thread_t thread, void(* const func)(void *)) _XCORE_NOTHROW
 {
   asm volatile("init t[%[thread]]:pc, %[new_pc]" : : [thread] "r" (thread), [new_pc] "r" (func));
 }
 
 _XCORE_EXFUN
-inline void __xcore_set_thread_stack(const __xcore_thread_t thread, void * const stack_base)
+inline void __xcore_set_thread_stack(const __xcore_thread_t thread, void * const stack_base) _XCORE_NOTHROW
 {
   asm volatile("init t[%[thread]]:sp, %[new_sp]" : : [thread] "r" (thread), [new_sp] "r" (stack_base));
 }
 
 _XCORE_EXFUN
-inline void __xcore_set_thread_parameter0(const __xcore_thread_t thread, void * const parameter)
+inline void __xcore_set_thread_parameter0(const __xcore_thread_t thread, void * const parameter) _XCORE_NOTHROW
 {
   asm volatile("set t[%[thread]]:r0, %[arg]" : : [thread] "r" (thread), [arg] "r" (parameter));
 }
 
 _XCORE_EXFUN
-inline void __xcore_set_thread_terminator(const __xcore_thread_t thread, void(* const terminator)(void))
+inline void __xcore_set_thread_terminator(const __xcore_thread_t thread, void(* const terminator)(void)) _XCORE_NOTHROW
 {
   asm volatile("init t[%[thread]]:lr, %[new_lr]" : : [thread] "r" (thread), [new_lr] "r" (terminator));
 }
 
 _XCORE_EXFUN
-inline __xcore_thread_t __xcore_allocate_unsynchronised_thread(void)
+inline __xcore_thread_t __xcore_allocate_unsynchronised_thread(void) _XCORE_NOTHROW
 {
   __xcore_thread_t res;
   asm volatile("getr %[res], %[type]" 
@@ -66,7 +66,7 @@ inline __xcore_thread_t __xcore_allocate_unsynchronised_thread(void)
 }
 
 _XCORE_EXFUN
-inline void __xcore_thread_group_sync(const resource_t group)
+inline void __xcore_thread_group_sync(const resource_t group) _XCORE_NOTHROW
 {
   asm volatile("msync res[%[sync]]" 
                : /* No outputs */
@@ -74,7 +74,7 @@ inline void __xcore_thread_group_sync(const resource_t group)
 }
 
 _XCORE_EXFUN
-inline void __xcore_thread_group_join(const resource_t group)
+inline void __xcore_thread_group_join(const resource_t group) _XCORE_NOTHROW
 {
   asm volatile("mjoin res[%[sync]]" 
                : /* No outputs */
@@ -83,7 +83,7 @@ inline void __xcore_thread_group_join(const resource_t group)
 }
 
 _XCORE_EXFUN
-inline void __xcore_unsynronised_thread_start(const __xcore_thread_t thread)
+inline void __xcore_unsynronised_thread_start(const __xcore_thread_t thread) _XCORE_NOTHROW
 {
   asm volatile("start t[%[thread]]" 
                : /* No outputs */

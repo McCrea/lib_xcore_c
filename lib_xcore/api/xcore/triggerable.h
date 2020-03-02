@@ -105,7 +105,7 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
-inline void triggerable_enable_trigger(resource_t res)
+inline void triggerable_enable_trigger(resource_t res) _XCORE_NOTHROW
 {
   __xcore_resource_event_enable_unconditional(res);
 }
@@ -120,7 +120,7 @@ inline void triggerable_enable_trigger(resource_t res)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
-inline void triggerable_disable_trigger(resource_t res)
+inline void triggerable_disable_trigger(resource_t res) _XCORE_NOTHROW
 {
   __xcore_resource_event_disable_unconditional(res);
 }
@@ -138,7 +138,7 @@ inline void triggerable_disable_trigger(resource_t res)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
-inline void triggerable_set_trigger_enabled(resource_t res, _Bool enabled)
+inline void triggerable_set_trigger_enabled(resource_t res, _Bool enabled) _XCORE_NOTHROW
 {
   __xcore_resource_event_enable_if_true(res, enabled);
 }
@@ -149,7 +149,7 @@ inline void triggerable_set_trigger_enabled(resource_t res, _Bool enabled)
  *  interrupts as if with interrupt_mask_all().
  */
 _XCORE_EXFUN
-inline void triggerable_disable_all(void)
+inline void triggerable_disable_all(void) _XCORE_NOTHROW
 {
   __triggerable_disable_all();
 } 

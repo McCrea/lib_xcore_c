@@ -25,7 +25,7 @@ typedef void(*select_callback_t)(void);
 extern void __xcore_select_non_callback(void);  // Implemented in xcore_c_select.S
 
 _XCORE_EXFUN
-inline void __xcore_resource_setup_callback(resource_t r, void *data, void(*func)(void), uint32_t type)
+inline void __xcore_resource_setup_callback(resource_t r, void *data, void(*func)(void), uint32_t type) _XCORE_NOTHROW
 {
 #if !defined(__XS2A__)
   xassert( ((uint32_t)data >> 16) == 0x1 ); // && msg("On XS1 bit 16 will always be set in the data returned from an event"));
@@ -39,7 +39,7 @@ inline void __xcore_resource_setup_callback(resource_t r, void *data, void(*func
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_setup_interrupt_callback(resource_t r, void *data, interrupt_callback_t intrpt)
+inline void __xcore_resource_setup_interrupt_callback(resource_t r, void *data, interrupt_callback_t intrpt) _XCORE_NOTHROW
 {
   __xcore_resource_setup_callback(r, data, intrpt, 0xA);  // Raise interrupts instead of events
 }
@@ -47,7 +47,7 @@ inline void __xcore_resource_setup_interrupt_callback(resource_t r, void *data, 
 #define _RESOURCE_ALLOC(res, id) asm volatile( "getr %0, %1" : "=r" (res) : "n" (id))
 
 _XCORE_EXFUN
-inline void __xcore_resource_free(resource_t r)
+inline void __xcore_resource_free(resource_t r) _XCORE_NOTHROW
 {
   asm volatile("freer res[%0]" :: "r" (r));
 }
@@ -78,7 +78,7 @@ inline void __xcore_resource_free(resource_t r)
  *
  *  \returns  The enum_id registered with the resource when events were enabled
  */
-uint32_t select_wait(void);
+uint32_t select_wait(void) _XCORE_NOTHROW;
 
 /** Check whether any select events have triggered, otherwise return.
  *
@@ -94,7 +94,7 @@ uint32_t select_wait(void);
  *  \returns  The enum_id registered with the resource which triggered an event
  *            or the no_wait_id passed in if no event fired
  */
-uint32_t select_no_wait(uint32_t no_wait_id);
+uint32_t select_no_wait(uint32_t no_wait_id) _XCORE_NOTHROW;
 
 /** Wait for an select event from a list of resources using an ordered enable sequence
  *
@@ -113,7 +113,7 @@ uint32_t select_no_wait(uint32_t no_wait_id);
  *
  *  \exception  ET_LOAD_STORE         invalid *ids[]* argument.
  */
-uint32_t select_wait_ordered(const resource_t ids[]);
+uint32_t select_wait_ordered(const resource_t ids[]) _XCORE_NOTHROW;
 
 /** Wait for a select event from a list of resources using an ordered enable sequence
  *
@@ -130,14 +130,14 @@ uint32_t select_wait_ordered(const resource_t ids[]);
  *
  *  \exception  ET_LOAD_STORE         invalid *ids[]* argument.
  */
-uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]);
+uint32_t select_no_wait_ordered(uint32_t no_wait_id, const resource_t ids[]) _XCORE_NOTHROW;
 
 
 
 // Start of support for new style
 
 _XCORE_EXFUN
-inline void __xcore_resource_event_enable_unconditional(const resource_t resource)
+inline void __xcore_resource_event_enable_unconditional(const resource_t resource) _XCORE_NOTHROW
 {
   asm volatile(
     "eeu res[%[res]] \n"
@@ -146,7 +146,7 @@ inline void __xcore_resource_event_enable_unconditional(const resource_t resourc
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_event_disable_unconditional(const resource_t resource)
+inline void __xcore_resource_event_disable_unconditional(const resource_t resource) _XCORE_NOTHROW
 {
   asm volatile(
     "edu res[%[res]] \n"
@@ -155,7 +155,7 @@ inline void __xcore_resource_event_disable_unconditional(const resource_t resour
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_event_set_enable(const resource_t resource, const int condition)
+inline void __xcore_resource_event_set_enable(const resource_t resource, const int condition) _XCORE_NOTHROW
 {
   asm volatile(
     "eet %[cond], res[%[res]] \n"
@@ -164,7 +164,7 @@ inline void __xcore_resource_event_set_enable(const resource_t resource, const i
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_event_set_enable_inv(const resource_t resource, const int condition)
+inline void __xcore_resource_event_set_enable_inv(const resource_t resource, const int condition) _XCORE_NOTHROW
 {
   asm volatile(
     "eef %[cond], res[%[res]] \n"
@@ -173,7 +173,7 @@ inline void __xcore_resource_event_set_enable_inv(const resource_t resource, con
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_event_enable_if_true(const resource_t resource, const int condition)
+inline void __xcore_resource_event_enable_if_true(const resource_t resource, const int condition) _XCORE_NOTHROW
 {
   if (__builtin_constant_p(condition))
   {
@@ -193,7 +193,7 @@ inline void __xcore_resource_event_enable_if_true(const resource_t resource, con
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_event_enable_if_false(const resource_t resource, const int condition)
+inline void __xcore_resource_event_enable_if_false(const resource_t resource, const int condition) _XCORE_NOTHROW
 {
   if (__builtin_constant_p(condition))
   {
@@ -213,7 +213,7 @@ inline void __xcore_resource_event_enable_if_false(const resource_t resource, co
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_register_event_vector(const resource_t resource, void * const vector)
+inline void __xcore_resource_register_event_vector(const resource_t resource, void * const vector) _XCORE_NOTHROW
 {
   register void * const vector_reg asm("r11") = vector; 
   asm volatile (

@@ -32,7 +32,7 @@ typedef streaming_channel_t channel_t;
  *  \return     The channel_t (both fields will be 0 if allocation was not possible)
  */
 _XCORE_EXFUN
-inline channel_t chan_alloc()
+inline channel_t chan_alloc() _XCORE_NOTHROW
 {
   return (channel_t)s_chan_alloc();
 }
@@ -46,7 +46,7 @@ inline channel_t chan_alloc()
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  */
 _XCORE_EXFUN
-inline void chan_free(channel_t c)
+inline void chan_free(channel_t c) _XCORE_NOTHROW
 {
   // Not implemented in terms of s_chan_free() as we have already hand-shook a CT_END.
   chanend_free(c.end_a);
@@ -64,7 +64,7 @@ inline void chan_free(channel_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void chan_out_word(chanend_t c, uint32_t data)
+inline void chan_out_word(chanend_t c, uint32_t data) _XCORE_NOTHROW
 {
   chanend_out_end_token(c);
   chanend_check_end_token(c);
@@ -84,7 +84,7 @@ inline void chan_out_word(chanend_t c, uint32_t data)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void chan_out_byte(chanend_t c, uint8_t data)
+inline void chan_out_byte(chanend_t c, uint8_t data) _XCORE_NOTHROW
 {
   chanend_out_end_token(c);
   chanend_check_end_token(c);
@@ -106,7 +106,7 @@ inline void chan_out_byte(chanend_t c, uint8_t data)
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
+inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n) _XCORE_NOTHROW
 {
   chanend_out_end_token(c);
   chanend_check_end_token(c);
@@ -131,7 +131,7 @@ inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
+inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n) _XCORE_NOTHROW
 {
   chanend_out_end_token(c);
   chanend_check_end_token(c);
@@ -154,7 +154,7 @@ inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
 _XCORE_EXFUN
-inline uint32_t chan_in_word(chanend_t c)
+inline uint32_t chan_in_word(chanend_t c) _XCORE_NOTHROW
 {
   chanend_check_end_token(c);
   chanend_out_end_token(c);
@@ -175,7 +175,7 @@ inline uint32_t chan_in_word(chanend_t c)
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
 _XCORE_EXFUN
-inline uint8_t chan_in_byte(chanend_t c)
+inline uint8_t chan_in_byte(chanend_t c) _XCORE_NOTHROW
 {
   chanend_check_end_token(c);
   chanend_out_end_token(c);
@@ -197,7 +197,7 @@ inline uint8_t chan_in_byte(chanend_t c)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
+inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n) _XCORE_NOTHROW
 {
   chanend_check_end_token(c);
   chanend_out_end_token(c);
@@ -223,7 +223,7 @@ inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n)
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n)
+inline void chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n) _XCORE_NOTHROW
 {
   chanend_check_end_token(c);
   chanend_out_end_token(c);

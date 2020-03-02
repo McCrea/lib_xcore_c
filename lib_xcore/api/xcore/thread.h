@@ -33,7 +33,7 @@ typedef void (*thread_function_t)(void *);
  *  \return A thread group handle, or 0 if none were available.
  */
 _XCORE_EXFUN
-inline threadgroup_t thread_group_alloc(void)
+inline threadgroup_t thread_group_alloc(void) _XCORE_NOTHROW
 {
   return __xcore_allocate_thread_group();
 }
@@ -60,7 +60,7 @@ _XCORE_EXFUN
 inline void thread_group_add(const threadgroup_t group, 
                              const thread_function_t func, 
                              void * const argument, 
-                             void * const stack_base)
+                             void * const stack_base) _XCORE_NOTHROW
 {
   const __xcore_thread_t thread = __xcore_create_synchronised_thread(group);
   __xcore_set_thread_worker(thread, func);
@@ -78,7 +78,7 @@ inline void thread_group_add(const threadgroup_t group,
  *  \param group  The thread group to start.
  */
 _XCORE_EXFUN
-inline void thread_group_start(const threadgroup_t group)
+inline void thread_group_start(const threadgroup_t group) _XCORE_NOTHROW
 {
   __xcore_thread_group_sync(group);
 }
@@ -93,7 +93,7 @@ inline void thread_group_start(const threadgroup_t group)
  *  \param group  The group to free. 
  */
 _XCORE_EXFUN
-inline void thread_group_free(const threadgroup_t group)
+inline void thread_group_free(const threadgroup_t group) _XCORE_NOTHROW
 {
   __xcore_resource_free(group);
 }
@@ -110,7 +110,7 @@ inline void thread_group_free(const threadgroup_t group)
  *  \param group  The group to wait for completion.
  */
 _XCORE_EXFUN
-inline void thread_group_wait(const threadgroup_t group)
+inline void thread_group_wait(const threadgroup_t group) _XCORE_NOTHROW
 {
   __xcore_thread_group_join(group);
 }
@@ -123,7 +123,7 @@ inline void thread_group_wait(const threadgroup_t group)
  * \b Calls \li thread_group_wait() \li thread_group_free()
  */
 _XCORE_EXFUN
-inline void thread_group_wait_and_free(const threadgroup_t group)
+inline void thread_group_wait_and_free(const threadgroup_t group) _XCORE_NOTHROW
 {
   thread_group_wait(group);
   thread_group_free(group);
@@ -151,7 +151,7 @@ inline void thread_group_wait_and_free(const threadgroup_t group)
 _XCORE_EXFUN
 inline xthread_t xthread_alloc_and_start(const thread_function_t func, 
                                          void * const argument,
-                                         void * const stack_base)
+                                         void * const stack_base) _XCORE_NOTHROW
 {
   const __xcore_thread_t group = thread_group_alloc();
   thread_group_add(group, func, argument, stack_base);
@@ -169,7 +169,7 @@ inline xthread_t xthread_alloc_and_start(const thread_function_t func,
  *  \param thread  The thread to wait on, as returned by xthread_alloc_and_start().
  */
 _XCORE_EXFUN
-inline void xthread_wait_and_free(const xthread_t thread)
+inline void xthread_wait_and_free(const xthread_t thread) _XCORE_NOTHROW
 {
   thread_group_wait_and_free(thread);
 }
@@ -197,7 +197,7 @@ inline void xthread_wait_and_free(const xthread_t thread)
 _XCORE_EXFUN
 inline void run_async(const thread_function_t func,
                       void * const argument,
-                      void * const stack_base)
+                      void * const stack_base) _XCORE_NOTHROW
 {
   const __xcore_thread_t thread = __xcore_allocate_unsynchronised_thread();
   __xcore_set_thread_worker(thread, func);
@@ -227,7 +227,7 @@ inline void run_async(const thread_function_t func,
  *   \return              The stack pointer.
  */
 _XCORE_EXFUN
-inline void *stack_base(void * const mem_base, size_t const words)
+inline void *stack_base(void * const mem_base, size_t const words) _XCORE_NOTHROW
 {
   return (void *)((char *)mem_base + (sizeof(int)*words) - _XCORE_STACK_ALIGN_REQUIREMENT);
 }

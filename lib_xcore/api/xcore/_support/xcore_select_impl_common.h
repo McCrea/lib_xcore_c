@@ -16,7 +16,7 @@ extern "C" {
 
 
 _XCORE_EXFUN
-inline void __xcore_select_disable_trigger_all(void)
+inline void __xcore_select_disable_trigger_all(void) _XCORE_NOTHROW
 {
   asm volatile("clre");
 }

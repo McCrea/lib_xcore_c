@@ -29,7 +29,7 @@ typedef __xcore_transacting_chanend_t transacting_chanend_t;
 // As specified in the Tools Development Guide, the last_out state is managed
 // to control when CT_END tokens are sent or expected.
 _XCORE_EXFUN
-inline void __xcore_t_chan_change_to_input(transacting_chanend_t *tc)
+inline void __xcore_t_chan_change_to_input(transacting_chanend_t *tc) _XCORE_NOTHROW
 {
   if (tc->__last_out) {
     chanend_out_end_token(tc->__c);
@@ -38,7 +38,7 @@ inline void __xcore_t_chan_change_to_input(transacting_chanend_t *tc)
 }
 
 _XCORE_EXFUN
-inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc)
+inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc) _XCORE_NOTHROW
 {
   if (!tc->__last_out) {
     chanend_check_end_token(tc->__c);
@@ -70,7 +70,7 @@ inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline transacting_chanend_t chan_init_transaction_master(chanend_t c)
+inline transacting_chanend_t chan_init_transaction_master(chanend_t c) _XCORE_NOTHROW
 {
   chanend_out_end_token(c);
 
@@ -98,7 +98,7 @@ inline transacting_chanend_t chan_init_transaction_master(chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline transacting_chanend_t chan_init_transaction_slave(chanend_t c)
+inline transacting_chanend_t chan_init_transaction_slave(chanend_t c) _XCORE_NOTHROW
 {
   chanend_check_end_token(c);
 
@@ -129,7 +129,7 @@ inline transacting_chanend_t chan_init_transaction_slave(chanend_t c)
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline chanend_t chan_complete_transaction(transacting_chanend_t tc)
+inline chanend_t chan_complete_transaction(transacting_chanend_t tc) _XCORE_NOTHROW
 {
   if (tc.__last_out)
   {
@@ -157,7 +157,7 @@ inline chanend_t chan_complete_transaction(transacting_chanend_t tc)
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
+inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_output(tc);
   chanend_out_word(tc->__c, data);
@@ -175,7 +175,7 @@ inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data)
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
+inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_output(tc);
   chanend_out_byte(tc->__c, data);
@@ -194,7 +194,7 @@ inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data)
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[], size_t n)
+inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[], size_t n) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_output(tc);
   for (size_t i = 0; i < n; i++)
@@ -216,7 +216,7 @@ inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[],
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], size_t n)
+inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], size_t n) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_output(tc);
   for (size_t i = 0; i < n; i++)
@@ -237,7 +237,7 @@ inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], 
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
 _XCORE_EXFUN
-inline uint32_t t_chan_in_word(transacting_chanend_t *tc)
+inline uint32_t t_chan_in_word(transacting_chanend_t *tc) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_input(tc);
   return chanend_in_word(tc->__c);
@@ -255,7 +255,7 @@ inline uint32_t t_chan_in_word(transacting_chanend_t *tc)
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a data argument.
  */
 _XCORE_EXFUN
-inline uint8_t t_chan_in_byte(transacting_chanend_t *tc)
+inline uint8_t t_chan_in_byte(transacting_chanend_t *tc) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_input(tc);
   return chanend_in_byte(tc->__c);
@@ -274,7 +274,7 @@ inline uint8_t t_chan_in_byte(transacting_chanend_t *tc)
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t n)
+inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t n) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_input(tc);
   for (size_t i = 0; i < n; i++)
@@ -296,7 +296,7 @@ inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t n)
+inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t n) _XCORE_NOTHROW
 {
   __xcore_t_chan_change_to_input(tc);
   for (size_t i = 0; i < n; i++)

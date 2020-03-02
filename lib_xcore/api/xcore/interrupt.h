@@ -20,7 +20,7 @@ extern "C" {
  *  They can be restored by using interrupt_unmask_all().
  */
 _XCORE_EXFUN
-inline void interrupt_mask_all(void)
+inline void interrupt_mask_all(void) _XCORE_NOTHROW
 {
   asm volatile("clrsr" _XCORE_STR(XS1_SR_IEBLE_MASK));
 }
@@ -32,7 +32,7 @@ inline void interrupt_mask_all(void)
  *  \hideinitializer
  */
 _XCORE_EXFUN
-inline void interrupt_unmask_all(void)
+inline void interrupt_unmask_all(void) _XCORE_NOTHROW
 {
   asm volatile("setsr" _XCORE_STR(XS1_SR_IEBLE_MASK));
 }
