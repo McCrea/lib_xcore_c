@@ -56,15 +56,15 @@ extern "C" {
  *    }
  *  \endcode
  *
- *  \param group          this is the group of interrupt_callback_t function
- *                        that may be safely enabled - see DEFINE_INTERRUPT_CALLBACK()
- *  \param ret            the return type of the ordinary function
- *  \param root_function  the name of the ordinary function
- *  \param ...            the arguments of the ordinary function
+ *  \param __group          this is the group of interrupt_callback_t function
+ *                          that may be safely enabled - see DEFINE_INTERRUPT_CALLBACK()
+ *  \param __ret            the return type of the ordinary function
+ *  \param __root_function  the name of the ordinary function
+ *  \param ...              the arguments of the ordinary function
  *  \hideinitializer
  */
-#define DEFINE_INTERRUPT_PERMITTED(group, ret, root_function, ...) \
-        _XCORE_DEFINE_INTERRUPT_PERMITTED(group, ret, root_function, __VA_ARGS__)
+#define DEFINE_INTERRUPT_PERMITTED(__group, __ret, __root_function, ...) \
+        _XCORE_DEFINE_INTERRUPT_PERMITTED(__group, __ret, __root_function, __VA_ARGS__)
 
 /** \brief Declare an interrupt permitting function
  *
@@ -82,13 +82,13 @@ extern "C" {
  *          INTERRUPT_PERMITTED(anotherfunc)();  // kstack for groupB.
  *  \endcode
  *
- *  \param ret            the return type of the ordinary function
- *  \param root_function  the name of the ordinary function
- *  \param ...            the arguments of the ordinary function
+ *  \param __ret            the return type of the ordinary function
+ *  \param __root_function  the name of the ordinary function
+ *  \param ...              the arguments of the ordinary function
  *  \hideinitializer
  */
-#define DECLARE_INTERRUPT_PERMITTED(ret, root_function, ...) \
-        _XCORE_DECLARE_INTERRUPT_PERMITTED(ret, root_function, __VA_ARGS__)
+#define DECLARE_INTERRUPT_PERMITTED(__ret, __root_function, ...) \
+        _XCORE_DECLARE_INTERRUPT_PERMITTED(__ret, __root_function, __VA_ARGS__)
 
 /** \brief The name of the defined interrupt permitting function
  *
@@ -98,7 +98,7 @@ extern "C" {
  *  \return the name of the defined interrupt permitting function
 *   \hideinitializer
  */
-#define INTERRUPT_PERMITTED(root_function) _XCORE_INTERRUPT_PERMITTED(root_function)
+#define INTERRUPT_PERMITTED(__root_function) _XCORE_INTERRUPT_PERMITTED(__root_function)
 
 /** \brief Define an interrupt handling function
  *
@@ -118,14 +118,14 @@ extern "C" {
  *    }
  *  \endcode
  *
- *  \param group   the group of interrupt_callback_t function we belong to
- *                 see DEFINE_INTERRUPT_PERMITTED()
- *  \param intrpt  this is the name of the ordinary function
- *  \param data    the name to use for the void* argument
+ *  \param __group   the group of interrupt_callback_t function we belong to
+ *                   see DEFINE_INTERRUPT_PERMITTED()
+ *  \param __intrpt  this is the name of the ordinary function
+ *  \param __data    the name to use for the void* argument
  *  \hideinitializer
  */
-#define DEFINE_INTERRUPT_CALLBACK(group, intrpt, data) \
-        _XCORE_DEFINE_INTERRUPT_CALLBACK(group, intrpt, data)
+#define DEFINE_INTERRUPT_CALLBACK(__group, __intrpt, __data) \
+        _XCORE_DEFINE_INTERRUPT_CALLBACK(__group, __intrpt, __data)
 
 /** \brief Declare an interrupt handling function
  *
@@ -140,8 +140,8 @@ extern "C" {
  *  \param data    the name to use for the void* argument
  *  \hideinitializer
  */
-#define DECLARE_INTERRUPT_CALLBACK(intrpt, data) \
-        _XCORE_DECLARE_INTERRUPT_CALLBACK(intrpt, data)
+#define DECLARE_INTERRUPT_CALLBACK(__intrpt, __data) \
+        _XCORE_DECLARE_INTERRUPT_CALLBACK(__intrpt, __data)
 
 /** \brief The name of the defined \c interrupt_callback_t function
  *
@@ -151,7 +151,7 @@ extern "C" {
  *  \return the name of the defined interrupt_callback_t function
  *  \hideinitializer
  */
-#define INTERRUPT_CALLBACK(intrpt) _XCORE_INTERRUPT_CALLBACK(intrpt)
+#define INTERRUPT_CALLBACK(__intrpt) _XCORE_INTERRUPT_CALLBACK(__intrpt)
 
 #ifdef __cplusplus
 }

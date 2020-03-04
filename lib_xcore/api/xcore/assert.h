@@ -43,40 +43,42 @@ extern "C" {
 
 #if defined(NDEBUG) 
 
-#define _XCORE_XASSERT_TRUE(_C) ((void)0)
-#define _XCORE_XASSERT_FALSE(_C) ((void)0)
+#define _XCORE_XASSERT_TRUE(_C_) ((void)0)
+#define _XCORE_XASSERT_FALSE(_C_) ((void)0)
 
 #ifdef _XCORE_HAS_REFERENCE_CLOCK
-#define _XCORE_XASSERT_NOT_AFTER(_C) ((void)0)
+#define _XCORE_XASSERT_NOT_AFTER(_C_) ((void)0)
 #endif
 
 #elif !defined(LIBXCORE_XASSERT_IS_ASSERT)
 
-#define _XCORE_XASSERT_TRUE(CONDITION) \
+#define _XCORE_XASSERT_TRUE(_CONDITION) \
   do { \
-    __xcore_ecallf((CONDITION)); \
-    /*__builtin_assume((CONDITION));*/ \
+    register int __xcore_assert_cond = (int)(_CONDITION); \
+    __xcore_ecallf(__xcore_assert_cond); \
+    __builtin_assume(__xcore_assert_cond); \
   } while (0)
 
-#define _XCORE_XASSERT_FALSE(CONDITION) \
+#define _XCORE_XASSERT_FALSE(_CONDITION) \
   do { \
-    __xcore_ecallt((CONDITION)); \
-    /*__builtin_assume(!(CONDITION));*/ \
+    register int __xcore_assert_cond = (int)(_CONDITION); \
+    __xcore_ecallt(__xcore_assert_cond); \
+    __builtin_assume(!__xcore_assert_cond); \
   } while(0)
 
 #ifdef _XCORE_HAS_REFERENCE_CLOCK
-#define _XCORE_XASSERT_NOT_AFTER(CONDITION) \
-  do { __xcore_elate((CONDITION)); } while(0)
+#define _XCORE_XASSERT_NOT_AFTER(_CONDITION) \
+  do { __xcore_elate((_CONDITION)); } while(0)
 #endif
 
 #else // xassert is assert
 #include <assert.h>
 
-#define _XCORE_XASSERT_TRUE(CONDITION) assert((CONDITION)) _XCORE_XASSERT_HIDE(#CONDITION)
-#define _XCORE_XASSERT_FALSE(CONDITION) assert(!(CONDITION)) _XCORE_XASSERT_HIDE(#CONDITION)
+#define _XCORE_XASSERT_TRUE(_CONDITION) assert(_CONDITION) _XCORE_XASSERT_HIDE(#_CONDITION)
+#define _XCORE_XASSERT_FALSE(_CONDITION) assert(!(_CONDITION)) _XCORE_XASSERT_HIDE(#_CONDITION)
 
 #ifdef _XCORE_HAS_REFERENCE_CLOCK
-#define _XCORE_XASSERT_NOT_AFTER(CONDITION) assert(__xcore_not_after_reference_time(condition)) _XCORE_XASSERT_HIDE(#CONDITION)
+#define _XCORE_XASSERT_NOT_AFTER(_CONDITION) assert(__xcore_not_after_reference_time(_CONDITION)) _XCORE_XASSERT_HIDE(#_CONDITION)
 #endif
 
 #endif
@@ -90,9 +92,9 @@ extern "C" {
  *  \attention \a condition should not have side effects as these will not be executed when
  *             assertions are ineffective.
  *
- *  \param condition  The expression which is expected to evaluate true
+ *  \param __condition  The expression which is expected to evaluate true
  */
-#define xassert(condition) _XCORE_XASSERT_TRUE(condition) _XCORE_XASSERT_HIDE(#condition)
+#define xassert(__condition) _XCORE_XASSERT_TRUE(__condition) _XCORE_XASSERT_HIDE(#__condition)
 
 /** \brief Assert that a given expression evaluates false
  * 
@@ -102,9 +104,9 @@ extern "C" {
  *  \attention \a condition should not have side effects as these will not be executed when
  *             assertions are ineffective.
  *
- *  \param condition  The expression which is expected to evaluate true
+ *  \param __condition  The expression which is expected to evaluate true
  */
-#define xassert_not(condition) _XCORE_XASSERT_FALSE(condition) _XCORE_XASSERT_HIDE(#condition)
+#define xassert_not(__condition) _XCORE_XASSERT_FALSE(__condition) _XCORE_XASSERT_HIDE(#__condition)
 
 /** \brief Assert that the given timestamp is not in the past.
  *
@@ -121,9 +123,9 @@ extern "C" {
  *             on the current platform).
  *  \warning On XS1 devices this assertion will have no effect.
  *  
- *  \param timestamp  The timestamp which is expected not to be in the past
+ *  \param __timestamp  The timestamp which is expected not to be in the past
  */
-#define xassert_not_after(timestamp) _XCORE_XASSERT_NOT_AFTER(timestamp) _XCORE_XASSERT_HIDE(#timestamp)
+#define xassert_not_after(__timestamp) _XCORE_XASSERT_NOT_AFTER(__timestamp) _XCORE_XASSERT_HIDE(#__timestamp)
 
 #ifdef __cplusplus
 }

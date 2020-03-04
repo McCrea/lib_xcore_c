@@ -29,20 +29,20 @@ typedef __xcore_transacting_chanend_t transacting_chanend_t;
 // As specified in the Tools Development Guide, the last_out state is managed
 // to control when CT_END tokens are sent or expected.
 _XCORE_EXFUN
-inline void __xcore_t_chan_change_to_input(transacting_chanend_t *tc) _XCORE_NOTHROW
+inline void __xcore_t_chan_change_to_input(transacting_chanend_t *__tc) _XCORE_NOTHROW
 {
-  if (tc->__last_out) {
-    chanend_out_end_token(tc->__c);
-    tc->__last_out = 0;
+  if (__tc->__last_out) {
+    chanend_out_end_token(__tc->__c);
+    __tc->__last_out = 0;
   }
 }
 
 _XCORE_EXFUN
-inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc) _XCORE_NOTHROW
+inline void __xcore_t_chan_change_to_output(transacting_chanend_t *__tc) _XCORE_NOTHROW
 {
-  if (!tc->__last_out) {
-    chanend_check_end_token(tc->__c);
-    tc->__last_out = 1;
+  if (!__tc->__last_out) {
+    chanend_check_end_token(__tc->__c);
+    __tc->__last_out = 1;
   }
 }
 
@@ -70,15 +70,15 @@ inline void __xcore_t_chan_change_to_output(transacting_chanend_t *tc) _XCORE_NO
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline transacting_chanend_t chan_init_transaction_master(chanend_t c) _XCORE_NOTHROW
+inline transacting_chanend_t chan_init_transaction_master(chanend_t __c) _XCORE_NOTHROW
 {
-  chanend_out_end_token(c);
+  chanend_out_end_token(__c);
 
-  transacting_chanend_t tc;
-  tc.__last_out = 0;
-  tc.__c = c;
+  transacting_chanend_t __tc;
+  __tc.__last_out = 0;
+  __tc.__c = __c;
 
-  return tc;
+  return __tc;
 }
 
 /** \brief Start a transaction (slave).
@@ -98,15 +98,15 @@ inline transacting_chanend_t chan_init_transaction_master(chanend_t c) _XCORE_NO
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline transacting_chanend_t chan_init_transaction_slave(chanend_t c) _XCORE_NOTHROW
+inline transacting_chanend_t chan_init_transaction_slave(chanend_t __c) _XCORE_NOTHROW
 {
-  chanend_check_end_token(c);
+  chanend_check_end_token(__c);
 
-  transacting_chanend_t tc;
-  tc.__last_out = 1;
-  tc.__c = c;
+  transacting_chanend_t __tc;
+  __tc.__last_out = 1;
+  __tc.__c = __c;
 
-  return tc;
+  return __tc;
 }
 
 /** \brief Completes a transaction. 
@@ -129,26 +129,26 @@ inline transacting_chanend_t chan_init_transaction_slave(chanend_t c) _XCORE_NOT
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline chanend_t chan_complete_transaction(transacting_chanend_t tc) _XCORE_NOTHROW
+inline chanend_t chan_complete_transaction(transacting_chanend_t __tc) _XCORE_NOTHROW
 {
-  if (tc.__last_out)
+  if (__tc.__last_out)
   {
-    chanend_out_end_token(tc.__c);
-    chanend_check_end_token(tc.__c);
+    chanend_out_end_token(__tc.__c);
+    chanend_check_end_token(__tc.__c);
   }
   else
   {
-    chanend_check_end_token(tc.__c);
-    chanend_out_end_token(tc.__c);
+    chanend_check_end_token(__tc.__c);
+    chanend_out_end_token(__tc.__c);
   }
 
-  return tc.__c;
+  return __tc.__c;
 }
 
 /** \brief Output a word over a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
- *  \param              data Word to be output
+ *  \param[in,out] __tc   Transacting chan-end
+ *  \param __data         Word to be output
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -157,16 +157,16 @@ inline chanend_t chan_complete_transaction(transacting_chanend_t tc) _XCORE_NOTH
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data) _XCORE_NOTHROW
+inline void t_chan_out_word(transacting_chanend_t *__tc, uint32_t __data) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_output(tc);
-  chanend_out_word(tc->__c, data);
+  __xcore_t_chan_change_to_output(__tc);
+  chanend_out_word(__tc->__c, __data);
 }
 
 /** \brief Output an byte over a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
- *  \param data         Byte to be output
+ *  \param[in,out] __tc   Transacting chan-end
+ *  \param __data         Byte to be output
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -175,17 +175,17 @@ inline void t_chan_out_word(transacting_chanend_t *tc, uint32_t data) _XCORE_NOT
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data) _XCORE_NOTHROW
+inline void t_chan_out_byte(transacting_chanend_t *__tc, uint8_t __data) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_output(tc);
-  chanend_out_byte(tc->__c, data);
+  __xcore_t_chan_change_to_output(__tc);
+  chanend_out_byte(__tc->__c, __data);
 }
 
 /** \brief Output a block of data over a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
- *  \param[in] buf      Pointer to the buffer containing the data to send
- *  \param n            Number of words to send
+ *  \param[in,out] __tc   Transacting chan-end
+ *  \param[in] __buf      Pointer to the buffer containing the data to send
+ *  \param __n            Number of words to send
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -194,20 +194,20 @@ inline void t_chan_out_byte(transacting_chanend_t *tc, uint8_t data) _XCORE_NOTH
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[], size_t n) _XCORE_NOTHROW
+inline void t_chan_out_buf_word(transacting_chanend_t *__tc, const uint32_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_output(tc);
-  for (size_t i = 0; i < n; i++)
+  __xcore_t_chan_change_to_output(__tc);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    chanend_out_word(tc->__c, buf[i]);
+    chanend_out_word(__tc->__c, __buf[__i]);
   }
 }
 
 /** \brief Output a block of data over a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
- *  \param[in] buf      Pointer to the buffer containing the data to send
- *  \param n            Number of bytes to send
+ *  \param[in,out] __tc   Transacting chan-end
+ *  \param[in] __buf      Pointer to the buffer containing the data to send
+ *  \param __n            Number of bytes to send
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -216,18 +216,18 @@ inline void t_chan_out_buf_word(transacting_chanend_t *tc, const uint32_t buf[],
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], size_t n) _XCORE_NOTHROW
+inline void t_chan_out_buf_byte(transacting_chanend_t *__tc, const uint8_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_output(tc);
-  for (size_t i = 0; i < n; i++)
+  __xcore_t_chan_change_to_output(__tc);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    chanend_out_byte(tc->__c, buf[i]);
+    chanend_out_byte(__tc->__c, __buf[__i]);
   }
 }
 
 /** \brief Input a word from a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
+ *  \param[in,out] __tc   Transacting chan-end
  *  \return Word read from \a tc
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
@@ -237,15 +237,15 @@ inline void t_chan_out_buf_byte(transacting_chanend_t *tc, const uint8_t buf[], 
  *  \exception  ET_LOAD_STORE         invalid \a tc argument.
  */
 _XCORE_EXFUN
-inline uint32_t t_chan_in_word(transacting_chanend_t *tc) _XCORE_NOTHROW
+inline uint32_t t_chan_in_word(transacting_chanend_t *__tc) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_input(tc);
-  return chanend_in_word(tc->__c);
+  __xcore_t_chan_change_to_input(__tc);
+  return chanend_in_word(__tc->__c);
 }
 
 /** \brief Input a byte from a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
+ *  \param[in,out] __tc   Transacting chan-end
  *  \return Byte read from \a tc
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
@@ -255,17 +255,17 @@ inline uint32_t t_chan_in_word(transacting_chanend_t *tc) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a data argument.
  */
 _XCORE_EXFUN
-inline uint8_t t_chan_in_byte(transacting_chanend_t *tc) _XCORE_NOTHROW
+inline uint8_t t_chan_in_byte(transacting_chanend_t *__tc) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_input(tc);
-  return chanend_in_byte(tc->__c);
+  __xcore_t_chan_change_to_input(__tc);
+  return chanend_in_byte(__tc->__c);
 }
 
 /** \brief Input a block of data from a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
- *  \param[in] buf      Pointer to the memory region to fill
- *  \param n            The number of words to receive
+ *  \param[in,out] __tc   Transacting chan-end
+ *  \param[in] __buf      Pointer to the memory region to fill
+ *  \param __n            The number of words to receive
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -274,20 +274,20 @@ inline uint8_t t_chan_in_byte(transacting_chanend_t *tc) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t n) _XCORE_NOTHROW
+inline void t_chan_in_buf_word(transacting_chanend_t *__tc, uint32_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_input(tc);
-  for (size_t i = 0; i < n; i++)
+  __xcore_t_chan_change_to_input(__tc);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    buf[i] = chanend_in_word(tc->__c);
+    __buf[__i] = chanend_in_word(__tc->__c);
   }
 }
 
 /** \brief Input a block of data from a transacting chan-end.
  *
- *  \param[in,out] tc   Transacting chan-end
- *  \param[in] buf      Pointer to the memory region to fill
- *  \param n            The number of bytes to receive
+ *  \param[in,out] __tc   Transacting chan-end
+ *  \param[in] __buf      Pointer to the memory region to fill
+ *  \param __n            The number of bytes to receive
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -296,12 +296,12 @@ inline void t_chan_in_buf_word(transacting_chanend_t *tc, uint32_t buf[], size_t
  *  \exception  ET_LOAD_STORE         invalid \a tc or \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void t_chan_in_buf_byte(transacting_chanend_t *tc, uint8_t buf[], size_t n) _XCORE_NOTHROW
+inline void t_chan_in_buf_byte(transacting_chanend_t *__tc, uint8_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  __xcore_t_chan_change_to_input(tc);
-  for (size_t i = 0; i < n; i++)
+  __xcore_t_chan_change_to_input(__tc);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    buf[i] = chanend_in_byte(tc->__c);
+    __buf[__i] = chanend_in_byte(__tc->__c);
   }
 }
 

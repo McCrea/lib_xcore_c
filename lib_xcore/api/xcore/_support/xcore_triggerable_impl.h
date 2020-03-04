@@ -11,8 +11,8 @@ extern "C" {
 
 #include <xcore/_support/xcore_resource_impl.h>
 
-#define _XCORE_TRIGGERABLE_SETUP_EVENT_VECTOR(RESOURCE, LABEL) \
-  do { __xcore_resource_setup_callback((RESOURCE), (&&LABEL), __xcore_select_non_callback, 0x2); } while (0)
+#define _XCORE_TRIGGERABLE_SETUP_EVENT_VECTOR(_RESOURCE, _LABEL) \
+  do { __xcore_resource_setup_callback((_RESOURCE), (&&_LABEL), __xcore_select_non_callback, 0x2); } while (0)
 
 #define _XCORE_TRIGGERABLE_WAIT_EVENT(...) \
   do { goto* (void*)select_wait(); } while(0)
@@ -27,27 +27,27 @@ extern "C" {
 
 #else
 
-#define _XCORE_TRIGGERABLE_SETUP_EVENT_VECTOR(RESOURCE, LABEL) \
-  do { __xcore_resource_register_event_vector((RESOURCE), (&&LABEL)); } while (0)
+#define _XCORE_TRIGGERABLE_SETUP_EVENT_VECTOR(_RESOURCE, _LABEL) \
+  do { __xcore_resource_register_event_vector((_RESOURCE), (&&_LABEL)); } while (0)
 
-#define _XCORE_TRIGGERABLE_WAIT_EVENT(LABELS...) \
+#define _XCORE_TRIGGERABLE_WAIT_EVENT(_LABELS...) \
   do { \
     asm goto("waiteu" \
       : /* Can't have outputs */ \
       : /* No inputs */ \
       : /* No clobbers */ \
-      : LABELS); \
+      : _LABELS); \
     __builtin_unreachable(); \
   } while (0)
 
-#define _XCORE_TRIGGERABLE_TAKE_EVENT(LABELS...) \
+#define _XCORE_TRIGGERABLE_TAKE_EVENT(_LABELS...) \
   do { \
-    asm goto("setsr %[mask] \n" \
-             "clrsr %[mask] \n" \
+    asm goto("setsr %[__mask] \n" \
+             "clrsr %[__mask] \n" \
              : /* Can't have outputs */ \
-             : [mask] "n"(XS1_SR_EEBLE_MASK) \
+             : [__mask] "n" (XS1_SR_EEBLE_MASK) \
              : /* No clobbers */ \
-             : LABELS); \
+             : _LABELS); \
   } while (0)
 
 #endif

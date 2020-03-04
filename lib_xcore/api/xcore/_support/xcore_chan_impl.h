@@ -19,78 +19,78 @@ typedef resource_t __xcore_streaming_chanend_t;
 _XCORE_EXFUN
 inline __xcore_streaming_chanend_t __xcore_chanend_alloc(void)
 {
-  __xcore_streaming_chanend_t c;
-  _RESOURCE_ALLOC(c, XS1_RES_TYPE_CHANEND);
-  return c;
+  __xcore_streaming_chanend_t __c;
+  _RESOURCE_ALLOC(__c, XS1_RES_TYPE_CHANEND);
+  return __c;
 }
 
 _XCORE_EXFUN
-inline void __xcore_chanend_free(resource_t c)
+inline void __xcore_chanend_free(resource_t __c)
 {
-  __xcore_resource_free(c);
+  __xcore_resource_free(__c);
 }
 
 _XCORE_EXFUN
-inline void __xcore_chanend_set_dest(resource_t c, resource_t dst)
+inline void __xcore_chanend_set_dest(resource_t __c, resource_t __dst)
 {
-  asm("setd res[%0], %1" :: "r" (c), "r" (dst));
+  asm("setd res[%0], %1" :: "r" (__c), "r" (__dst));
 }
 
 _XCORE_EXFUN
-inline resource_t __xcore_chanend_get_dest(resource_t c)
+inline resource_t __xcore_chanend_get_dest(resource_t __c)
 {
-  uint32_t data;
-  asm volatile("getd %[dest], res[%[chanend]]" : [dest] "=r" (data) : [chanend] "r" (c));
-  return data;
+  uint32_t __data;
+  asm volatile("getd %[__dest], res[%[__chanend]]" : [__dest] "=r" (__data) : [__chanend] "r" (__c));
+  return __data;
 }
 
 _XCORE_EXFUN
-inline void __xcore_chanend_out_word(resource_t c, uint32_t data)
+inline void __xcore_chanend_out_word(resource_t __c, uint32_t __data)
 {
-  asm volatile("out res[%0], %1" :: "r" (c), "r" (data));
+  asm volatile("out res[%0], %1" :: "r" (__c), "r" (__data));
 }
 
 _XCORE_EXFUN
-inline void __xcore_chanend_out_byte(resource_t c, uint8_t data)
+inline void __xcore_chanend_out_byte(resource_t __c, uint8_t __data)
 {
-  asm volatile("outt res[%0], %1" :: "r" (c), "r" (data));
+  asm volatile("outt res[%0], %1" :: "r" (__c), "r" (__data));
 }
 
 _XCORE_EXFUN
-inline uint32_t __xcore_chanend_in_word(resource_t c)
+inline uint32_t __xcore_chanend_in_word(resource_t __c)
 {
-  uint32_t data;
-  asm volatile("in %0, res[%1]" : "=r" (data): "r" (c));
-  return data;
+  uint32_t __data;
+  asm volatile("in %0, res[%1]" : "=r" (__data): "r" (__c));
+  return __data;
 }
 
 _XCORE_EXFUN
-inline uint8_t __xcore_chanend_in_byte(resource_t c)
+inline uint8_t __xcore_chanend_in_byte(resource_t __c)
 {
-  uint8_t data;
-  asm volatile("int %0, res[%1]" : "=r" (data): "r" (c));
-  return data;
+  uint8_t __data;
+  asm volatile("int %0, res[%1]" : "=r" (__data): "r" (__c));
+  return __data;
 }
 
 _XCORE_EXFUN
-inline uint8_t __xcore_chanend_in_ct(resource_t c)
+inline uint8_t __xcore_chanend_in_ct(resource_t __c)
 {
-  uint8_t data;
-  asm volatile("inct %[token], res[%[chanend]]" : [token] "=r" (data) : [chanend] "r" (c));
-  return data;
+  uint8_t __data;
+  asm volatile("inct %[__token], res[%[__chanend]]" : [__token] "=r" (__data) : [__chanend] "r" (__c));
+  return __data;
 }
 
-#define _XCORE_CHANEND_OUTCTI_CASE_N_ASM(N) \
-  case N: \
-    asm volatile("outct res[%[chanend]], %[token]" :: [chanend] "r" (c), [token] "n" (N)); \
+#define _XCORE_CHANEND_OUTCTI_CASE_N_ASM(_N) \
+  case _N: \
+    asm volatile("outct res[%[__chanend]], %[__token]" :: [__chanend] "r" (__c), [__token] "n" (_N)); \
     break;
 
 _XCORE_EXFUN
-inline void __xcore_chanend_out_ct(resource_t c, uint8_t ct)
+inline void __xcore_chanend_out_ct(resource_t __c, uint8_t __ct)
 {
-  if (__builtin_constant_p(ct) && ct <= 11)
+  if (__builtin_constant_p(__ct) && __ct <= 11)
   {
-    switch (ct)
+    switch (__ct)
     {
       _XCORE_APPLY_NOSEP(_XCORE_CHANEND_OUTCTI_CASE_N_ASM, 0,1,2,3,4,5,6,7,8,9,10,11)
       default: __builtin_unreachable(); break;
@@ -98,21 +98,21 @@ inline void __xcore_chanend_out_ct(resource_t c, uint8_t ct)
   }
   else
   {
-    asm volatile("outct res[%0], %1" :: "r" (c), "r" (ct));
+    asm volatile("outct res[%0], %1" :: "r" (__c), "r" (__ct));
   }
 }
 
-#define _XCORE_CHANEND_CHKCTI_CASE_N_ASM(N) \
-  case N: \
-    asm volatile("chkct res[%[chanend]], %[token]" :: [chanend] "r" (c), [token] "n" (N)); \
+#define _XCORE_CHANEND_CHKCTI_CASE_N_ASM(_N) \
+  case _N: \
+    asm volatile("chkct res[%[__chanend]], %[__token]" :: [__chanend] "r" (__c), [__token] "n" (_N)); \
     break;
 
 _XCORE_EXFUN
-inline void __xcore_chanend_check_ct(resource_t c, const uint8_t ct)
+inline void __xcore_chanend_check_ct(resource_t __c, const uint8_t __ct)
 {
-  if (__builtin_constant_p(ct) && ct <= 11)
+  if (__builtin_constant_p(__ct) && __ct <= 11)
   {
-    switch (ct)
+    switch (__ct)
     {
       _XCORE_APPLY_NOSEP(_XCORE_CHANEND_CHKCTI_CASE_N_ASM, 0,1,2,3,4,5,6,7,8,9,10,11)
       default: __builtin_unreachable(); break;
@@ -120,47 +120,47 @@ inline void __xcore_chanend_check_ct(resource_t c, const uint8_t ct)
   }
   else
   {
-    asm volatile("chkct res[%0], %1" :: "r" (c), "r" (ct));
+    asm volatile("chkct res[%0], %1" :: "r" (__c), "r" (__ct));
   }
 }
 
 _XCORE_EXFUN
-inline int __xcore_chanend_test_control_token(resource_t c)
+inline int __xcore_chanend_test_control_token(resource_t __c)
 {
-  unsigned res;
-  asm volatile("testct %[res], res[%[chanend]]" : [res] "=r" (res) : [chanend] "r" (c));
-  return res;
+  unsigned __res;
+  asm volatile("testct %[__res], res[%[__chanend]]" : [__res] "=r" (__res) : [__chanend] "r" (__c));
+  return __res;
 }
 
 
 _XCORE_EXFUN
-inline unsigned __xcore_chanend_test_control_token_word(resource_t c)
+inline unsigned __xcore_chanend_test_control_token_word(resource_t __c)
 {
-  unsigned res;
-  asm volatile("testwct %[res], res[%[chanend]]" : [res] "=r" (res) : [chanend] "r" (c));
-  return res;
+  unsigned __res;
+  asm volatile("testwct %[__res], res[%[__chanend]]" : [__res] "=r" (__res) : [__chanend] "r" (__c));
+  return __res;
 }
 
 _XCORE_EXFUN
-inline int __xcore_chanend_test_dest_local(resource_t c)
+inline int __xcore_chanend_test_dest_local(resource_t __c)
 {
-  unsigned res;
-  asm volatile("testlcl %[res], res[%[chanend]]" : [res] "=r" (res) : [chanend] "r" (c));
-  return res;
+  unsigned __res;
+  asm volatile("testlcl %[__res], res[%[__chanend]]" : [__res] "=r" (__res) : [__chanend] "r" (__c));
+  return __res;
 }
 
 _XCORE_EXFUN
-inline void __xcore_channend_set_network(resource_t c, unsigned n)
+inline void __xcore_channend_set_network(resource_t __c, unsigned __n)
 {
-  asm volatile("setn res[%[chanend]], %[net]" :: [chanend] "r" (c), [net] "r" (n));
+  asm volatile("setn res[%[__chanend]], %[__net]" :: [__chanend] "r" (__c), [__net] "r" (__n));
 }
 
 _XCORE_EXFUN
-inline unsigned __xcore_channend_get_network(resource_t c)
+inline unsigned __xcore_channend_get_network(resource_t __c)
 {
-  unsigned net;
-  asm volatile("getn %[net], res[%[chanend]]" : [net] "=r" (net) : [chanend] "r" (c));
-  return net;
+  unsigned __net;
+  asm volatile("getn %[__net], res[%[__chanend]]" : [__net] "=r" (__net) : [__chanend] "r" (__c));
+  return __net;
 }
 
 #ifdef __cplusplus

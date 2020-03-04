@@ -11,33 +11,33 @@ extern "C" {
 
 
 _XCORE_EXFUN
-inline void __xcore_clock_set_ready_src(resource_t clk, resource_t ready_source)
+inline void __xcore_clock_set_ready_src(resource_t __clk, resource_t __ready_source)
 {
-  asm volatile("setrdy res[%0], %1" :: "r" (clk), "r" (ready_source));
+  asm volatile("setrdy res[%0], %1" :: "r" (__clk), "r" (__ready_source));
 }
 
 _XCORE_EXFUN
-inline void __xcore_clock_set_source_port(resource_t clk, resource_t p)
+inline void __xcore_clock_set_source_port(resource_t __clk, resource_t __p)
 {
-  asm volatile("setclk res[%0], %1" :: "r" (clk), "r" (p));
+  asm volatile("setclk res[%0], %1" :: "r" (__clk), "r" (__p));
 }
 
 _XCORE_EXFUN
-inline void __xcore_clock_set_source_clk_ref(resource_t clk)
+inline void __xcore_clock_set_source_clk_ref(resource_t __clk)
 {
-  asm volatile("setclk res[%0], %1" :: "r" (clk), "r" (XS1_CLK_REF));
+  asm volatile("setclk res[%0], %1" :: "r" (__clk), "r" (XS1_CLK_REF));
 }
 
 _XCORE_EXFUN
-inline void __xcore_clock_set_source_clk_xcore(resource_t clk)
+inline void __xcore_clock_set_source_clk_xcore(resource_t __clk)
 {
-  asm volatile("setclk res[%0], %1" :: "r" (clk), "r" (XS1_CLK_XCORE));
+  asm volatile("setclk res[%0], %1" :: "r" (__clk), "r" (XS1_CLK_XCORE));
 }
 
 _XCORE_EXFUN
-inline void __xcore_clock_set_divide(resource_t clk, uint8_t divide)
+inline void __xcore_clock_set_divide(resource_t __clk, uint8_t __divide)
 {
-  asm volatile("setd res[%0], %1" :: "r" (clk), "r" (divide));
+  asm volatile("setd res[%0], %1" :: "r" (__clk), "r" (__divide));
 }
 
 #ifdef __cplusplus

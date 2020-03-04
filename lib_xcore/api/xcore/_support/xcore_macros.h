@@ -11,9 +11,6 @@ extern "C" {
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
-#define _XCORE_STR1(...) #__VA_ARGS__
-#define _XCORE_STR(x) _XCORE_STR1(x)
-
 #ifdef _XCORE_HAS_DUAL_ISSUE
 #define _XCORE_CODE_ALIGNMENT   4
 #else
@@ -21,15 +18,15 @@ extern "C" {
 #endif
 
 #ifdef _XCORE_HAS_DUAL_ISSUE
-#define _XCORE_STACK_ALIGN(n)   ((n+1)/2)*2
+#define _XCORE_STACK_ALIGN(__n)   ((__n+1)/2)*2
 #else
-#define _XCORE_STACK_ALIGN(n)   n
+#define _XCORE_STACK_ALIGN(__n)   __n
 #endif
 
 #ifdef _XCORE_HAS_DUAL_ISSUE
-#define _XCORE_ENTSP(n)   nop; entsp n
+#define _XCORE_ENTSP(__n)   nop; entsp __n
 #else
-#define _XCORE_ENTSP(n)   entsp n
+#define _XCORE_ENTSP(__n)   entsp __n
 #endif
 
 #ifdef _XCORE_HAS_DUAL_ISSUE

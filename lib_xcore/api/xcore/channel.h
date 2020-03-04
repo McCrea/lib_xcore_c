@@ -39,24 +39,24 @@ inline channel_t chan_alloc() _XCORE_NOTHROW
 
 /** \brief Deallocate a channel by freeing its constituent chan-ends.
  *
- *  \param c  channel_t to free
+ *  \param __c  channel_t to free
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
  *                                    or channel handshaking corrupted.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  */
 _XCORE_EXFUN
-inline void chan_free(channel_t c) _XCORE_NOTHROW
+inline void chan_free(channel_t __c) _XCORE_NOTHROW
 {
   // Not implemented in terms of s_chan_free() as we have already hand-shook a CT_END.
-  chanend_free(c.end_a);
-  chanend_free(c.end_b);
+  chanend_free(__c.end_a);
+  chanend_free(__c.end_b);
 }
 
 /** \brief Output a word over a channel.
  *
- *  \param c    The chan-end
- *  \param data The word to be output
+ *  \param __c    The chan-end
+ *  \param __data The word to be output
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -64,19 +64,19 @@ inline void chan_free(channel_t c) _XCORE_NOTHROW
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void chan_out_word(chanend_t c, uint32_t data) _XCORE_NOTHROW
+inline void chan_out_word(chanend_t __c, uint32_t __data) _XCORE_NOTHROW
 {
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
-  chanend_out_word(c, data);
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
+  chanend_out_word(__c, __data);
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
 }
 
 /** \brief Output a byte over a channel.
  *
- *  \param c    The chan-end
- *  \param data The byte to be output
+ *  \param __c    The chan-end
+ *  \param __data The byte to be output
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -84,20 +84,20 @@ inline void chan_out_word(chanend_t c, uint32_t data) _XCORE_NOTHROW
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void chan_out_byte(chanend_t c, uint8_t data) _XCORE_NOTHROW
+inline void chan_out_byte(chanend_t __c, uint8_t __data) _XCORE_NOTHROW
 {
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
-  chanend_out_byte(c, data);
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
+  chanend_out_byte(__c, __data);
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
 }
 
 /** \brief Output a block of data over a channel.
  *
- *  \param c        The chan-end
- *  \param[in] buf  A pointer to the buffer containing the data to send
- *  \param n        The number of words to send
+ *  \param __c        The chan-end
+ *  \param[in] __buf  A pointer to the buffer containing the data to send
+ *  \param __n        The number of words to send
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -106,23 +106,23 @@ inline void chan_out_byte(chanend_t c, uint8_t data) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n) _XCORE_NOTHROW
+inline void chan_out_buf_word(chanend_t __c, const uint32_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
-  for (size_t i = 0; i < n; i++)
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    chanend_out_word(c, buf[i]);
+    chanend_out_word(__c, __buf[__i]);
   }
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
 }
 
 /** \brief Output a block of data over a channel.
  *
- *  \param c        The chan-end
- *  \param[in] buf  A pointer to the buffer containing the data to send
- *  \param n        The number of bytes to send
+ *  \param __c        The chan-end
+ *  \param[in] __buf  A pointer to the buffer containing the data to send
+ *  \param __n        The number of bytes to send
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -131,21 +131,21 @@ inline void chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n) _XCOR
  *  \exception  ET_LOAD_STORE         invalid \a buf[] argument.
  */
 _XCORE_EXFUN
-inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n) _XCORE_NOTHROW
+inline void chan_out_buf_byte(chanend_t __c, const uint8_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
-  for (size_t i = 0; i < n; i++)
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    chanend_out_byte(c, buf[i]);
+    chanend_out_byte(__c, __buf[__i]);
   }
-  chanend_out_end_token(c);
-  chanend_check_end_token(c);
+  chanend_out_end_token(__c);
+  chanend_check_end_token(__c);
 }
 
 /** \brief Input a word from a channel.
  *
- *  \param c    The chan-end
+ *  \param __c    The chan-end
  *  \return     The word which was read from the channel
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -154,19 +154,19 @@ inline void chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n) _XCORE
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
 _XCORE_EXFUN
-inline uint32_t chan_in_word(chanend_t c) _XCORE_NOTHROW
+inline uint32_t chan_in_word(chanend_t __c) _XCORE_NOTHROW
 {
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
-  uint32_t data = chanend_in_word(c);
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
-  return data;
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
+  uint32_t __data = chanend_in_word(__c);
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
+  return __data;
 }
 
 /** \brief Input a byte from a channel.
  *
- *  \param c    The chan-end
+ *  \param __c    The chan-end
  *  \return     The byte which was read from the channel
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -175,21 +175,21 @@ inline uint32_t chan_in_word(chanend_t c) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid *\*data* argument.
  */
 _XCORE_EXFUN
-inline uint8_t chan_in_byte(chanend_t c) _XCORE_NOTHROW
+inline uint8_t chan_in_byte(chanend_t __c) _XCORE_NOTHROW
 {
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
-  uint8_t data = chanend_in_byte(c);
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
-  return data;
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
+  uint8_t __data = chanend_in_byte(__c);
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
+  return __data;
 }
 
 /** \brief Input a block of data from a channel.
  *
- *  \param c    The chan-end
- *  \param[out] buf  A pointer to the memory region to fill
- *  \param n    The number of words to receive
+ *  \param __c    The chan-end
+ *  \param[out] __buf  A pointer to the memory region to fill
+ *  \param __n    The number of words to receive
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
  *                                    or channel handshaking corrupted.
@@ -197,25 +197,23 @@ inline uint8_t chan_in_byte(chanend_t c) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n) _XCORE_NOTHROW
+inline void chan_in_buf_word(chanend_t __c, uint32_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
-  for (size_t i = 0; i < n; i++)
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    buf[i] = chanend_in_word(c);
+    __buf[__i] = chanend_in_word(__c);
   }
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
 }
 
 /** \brief Input a block of data from a channel.
  *
- *  \param c         The chan-end
- *  \param[out] buf  A pointer to the memory region to fill
- *  \param n         The number of bytes to receive
- *
- *  \return     error_none (or exception type if policy is XCORE_C_NO_EXCEPTION).
+ *  \param __c         The chan-end
+ *  \param[out] __buf  A pointer to the memory region to fill
+ *  \param __n         The number of bytes to receive
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
  *                                    or channel handshaking corrupted.
@@ -223,16 +221,16 @@ inline void chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n) _XCORE_NOTHR
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n) _XCORE_NOTHROW
+inline void chan_in_buf_byte(chanend_t __c, uint8_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
-  for (size_t i = 0; i < n; i++)
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    buf[i] = chanend_in_byte(c);
+    __buf[__i] = chanend_in_byte(__c);
   }
-  chanend_check_end_token(c);
-  chanend_out_end_token(c);
+  chanend_check_end_token(__c);
+  chanend_out_end_token(__c);
 }
 
 #ifdef __cplusplus

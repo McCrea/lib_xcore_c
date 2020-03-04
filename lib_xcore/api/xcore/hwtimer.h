@@ -72,15 +72,15 @@ inline hwtimer_t hwtimer_alloc() _XCORE_NOTHROW
 
 /** \brief Deallocate a timer.
  *
- *  \param t  The timer to be freed
+ *  \param __t  The timer to be freed
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 _XCORE_EXFUN
-inline void hwtimer_free(hwtimer_t t) _XCORE_NOTHROW
+inline void hwtimer_free(hwtimer_t __t) _XCORE_NOTHROW
 {
-  __xcore_hwtimer_free(t);
+  __xcore_hwtimer_free(__t);
 }
 
 /** \brief Get the current time from the timer.
@@ -88,15 +88,16 @@ inline void hwtimer_free(hwtimer_t t) _XCORE_NOTHROW
  *  If there is a trigger time setup, the call will stall until after the trigger time.
  *  For select and interrupt event, calling hwtimer_get_time() will clear the event.
  *
- *  \return The time value (a 32-bit value)
+ *  \param __t  The timer to read
+ *  \return     The time value (a 32-bit value)
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 _XCORE_EXFUN
-inline uint32_t hwtimer_get_time(hwtimer_t t) _XCORE_NOTHROW
+inline uint32_t hwtimer_get_time(hwtimer_t __t) _XCORE_NOTHROW
 {
-  return __xcore_hwtimer_get_time(t);
+  return __xcore_hwtimer_get_time(__t);
 }
 
 /** \brief Get the trigger time value.
@@ -104,16 +105,16 @@ inline uint32_t hwtimer_get_time(hwtimer_t t) _XCORE_NOTHROW
  *  The trigger time value is set using hwtimer_set_trigger_time().
  *  The trigger may be cleared using hwtimer_clear_trigger_time().
  *
- *  \param t  The timer whose time value is requested.
- *  \return   The time value
+ *  \param __t  The timer whose time value is requested.
+ *  \return     The time value
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 _XCORE_EXFUN
-inline uint32_t hwtimer_get_trigger_time(hwtimer_t t) _XCORE_NOTHROW
+inline uint32_t hwtimer_get_trigger_time(hwtimer_t __t) _XCORE_NOTHROW
 {
-  return __xcore_hwtimer_get_trigger_time(t);
+  return __xcore_hwtimer_get_trigger_time(__t);
 }
 
 /** \brief Setup an event trigger on a timer.
@@ -125,17 +126,17 @@ inline uint32_t hwtimer_get_trigger_time(hwtimer_t t) _XCORE_NOTHROW
  *  hwtimer_setup_select_callback() and hwtimer_setup_interrupt_callback()
  *  call hwtimer_set_trigger_time()
  *
- *  \param t     The timer to setup a event trigger on.
- *  \param time  The time at which the timer will trigger an event. The default
- *               timer ticks are at a 10ns resolution.
+ *  \param __t     The timer to setup a event trigger on.
+ *  \param __time  The time at which the timer will trigger an event. The default
+ *                 timer ticks are at a 10ns resolution.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 _XCORE_EXFUN
-inline void hwtimer_set_trigger_time(hwtimer_t t, uint32_t time) _XCORE_NOTHROW
+inline void hwtimer_set_trigger_time(hwtimer_t __t, uint32_t __time) _XCORE_NOTHROW
 {
-  __xcore_hwtimer_set_trigger_time(t, time);
+  __xcore_hwtimer_set_trigger_time(__t, __time);
 }
 
 /** \brief Change the time at which a timer trigger will fire.
@@ -143,17 +144,17 @@ inline void hwtimer_set_trigger_time(hwtimer_t t, uint32_t time) _XCORE_NOTHROW
  *  This function modifies the time at which a previously setup trigger fires.
  *  It is used to set a new trigger time after a select or interrupt event has occurred.
  *
- *  \param t     The timer to change
- *  \param time  The time at which the timer will trigger an event. The default
- *               timer ticks are at a 10ns resolution.
+ *  \param __t     The timer to change
+ *  \param __time  The time at which the timer will trigger an event. The default
+ *                 timer ticks are at a 10ns resolution.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 _XCORE_EXFUN
-inline void hwtimer_change_trigger_time(hwtimer_t t, uint32_t time) _XCORE_NOTHROW
+inline void hwtimer_change_trigger_time(hwtimer_t __t, uint32_t __time) _XCORE_NOTHROW
 {
-  __xcore_hwtimer_change_trigger_time(t, time);
+  __xcore_hwtimer_change_trigger_time(__t, __time);
 }
 
 /** \brief Clear an event trigger on a timer.
@@ -162,58 +163,57 @@ inline void hwtimer_change_trigger_time(hwtimer_t t, uint32_t time) _XCORE_NOTHR
  *  Should be called when a timer is no longer being used for select and interrupt events.
  *  \note Both hwtimer_wait_until() and hwtimer_delay() call hwtimer_clear_trigger_time().
  *
- *  \param t  The timer to tear down events on
+ *  \param __t  The timer to tear down events on
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 
 _XCORE_EXFUN
-inline void hwtimer_clear_trigger_time(hwtimer_t t) _XCORE_NOTHROW
+inline void hwtimer_clear_trigger_time(hwtimer_t __t) _XCORE_NOTHROW
 {
-  __xcore_hwtimer_clear_trigger_time(t);
+  __xcore_hwtimer_clear_trigger_time(__t);
 }
 
 /** \brief Wait until after a specified time.
  *
  *  \attention This will destroy any select or interrupt event triggers set on this resource.
  *
- *  \param t      The timer to use for timing
- *  \param until  The time to wait until
- *
- *  \return The time we actually waited until
+ *  \param __t      The timer to use for timing
+ *  \param __until  The time to wait until
+ *  \return         The time we actually waited until
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  */
 _XCORE_EXFUN
-inline uint32_t hwtimer_wait_until(resource_t t, uint32_t until) _XCORE_NOTHROW
+inline uint32_t hwtimer_wait_until(resource_t __t, uint32_t __until) _XCORE_NOTHROW
 {
-  __xcore_hwtimer_set_trigger_time(t, until);
-  uint32_t now = __xcore_hwtimer_get_time(t);
-  __xcore_hwtimer_clear_trigger_time(t);
-  return now;
+  __xcore_hwtimer_set_trigger_time(__t, __until);
+  uint32_t __now = __xcore_hwtimer_get_time(__t);
+  __xcore_hwtimer_clear_trigger_time(__t);
+  return __now;
 }
 
 /** \brief Delay for a specified time using a specific timer.
  *
  *  \attention This will destroy any select or interrupt event triggers set on this resource
  *
- *  \param t       The timer resource to use
- *  \param period  The amount of time to wait (in reference time ticks, usually 10ns steps)
+ *  \param __t       The timer resource to use
+ *  \param __period  The amount of time to wait (in reference time ticks, usually 10ns steps)
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated timer.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the timer.
  *  \exception  ET_LOAD_STORE         invalid *\*now* argument.
  */
 _XCORE_EXFUN
-inline void hwtimer_delay(resource_t t, uint32_t period) _XCORE_NOTHROW
+inline void hwtimer_delay(resource_t __t, uint32_t __period) _XCORE_NOTHROW
 {
-  uint32_t start = __xcore_hwtimer_get_time(t);
-  uint32_t until = start + period;
-  __xcore_hwtimer_set_trigger_time(t, until);
-  (void)__xcore_hwtimer_get_time(t);
-  __xcore_hwtimer_clear_trigger_time(t);
+  uint32_t __start = __xcore_hwtimer_get_time(__t);
+  uint32_t __until = __start + __period;
+  __xcore_hwtimer_set_trigger_time(__t, __until);
+  (void)__xcore_hwtimer_get_time(__t);
+  __xcore_hwtimer_clear_trigger_time(__t);
 }
 
 #ifdef _XCORE_HAS_REFERENCE_CLOCK

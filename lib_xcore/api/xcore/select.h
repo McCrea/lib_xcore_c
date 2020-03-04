@@ -203,68 +203,70 @@ extern "C" {
  */
 #define SELECT_RESET _XCORE_SELECT_RESET_I
 
+#define SELECT_CONTINUE_NO_RESET _XCORE_CONTINUE_NO_RESET_I
+
 /** \brief Unconditionally wait for an event on a given resource.
  *
- *  \param RES    The resource to wait for an event on.
- *  \param LABEL  The label (within the following select block) to jump to when an event
- *                occurs on \a res. 
+ *  \param _RES    The resource to wait for an event on.
+ *  \param _LABEL  The label (within the following select block) to jump to when an event
+ *                 occurs on \a res. 
  *
  *  \hideinitializer
  */
-#define CASE_THEN(RES, LABEL) _XCORE_CASE_RES(RES, LABEL, _XCORE_GUARD_NONE)
+#define CASE_THEN(_RES, _LABEL) _XCORE_CASE_RES(_RES, _LABEL, _XCORE_GUARD_NONE)
 
 /** \brief Wait for an event on a given resource if a condition evaluates true.
  *
- *  \param RES         The resource to wait for an event on.
- *  \param GUARD_EXPR  Expression to evaluate to determine if this case should be enabled.
- *                     Must not have side effects.
- *  \param LABEL       The label (within the following select block) to jump to when an event
- *                     occurs on \a res. 
+ *  \param _RES         The resource to wait for an event on.
+ *  \param _GUARD_EXPR  Expression to evaluate to determine if this case should be enabled.
+ *                      Must not have side effects.
+ *  \param _LABEL       The label (within the following select block) to jump to when an event
+ *                      occurs on \a res. 
  *
  *  \hideinitializer
  */
-#define CASE_GUARD_THEN(RES, GUARD_EXPR, LABEL) _XCORE_CASE_RES(RES, LABEL, _XCORE_GUARD_TRUE(GUARD_EXPR))
+#define CASE_GUARD_THEN(_RES, _GUARD_EXPR, _LABEL) _XCORE_CASE_RES(_RES, _LABEL, _XCORE_GUARD_TRUE(_GUARD_EXPR))
 
 /** \brief Wait for an event on a given resource is a condition evaluates false.
  *
- *  \param RES         The resource to wait for an event on.
- *  \param GUARD_EXPR  Expression to evaluate to determine if this case should be disabled.
- *                     Must not have side effects.
- *  \param LABEL       The label (within the following select block) to jump to when an event
- *                     occurs on \a res. 
+ *  \param _RES         The resource to wait for an event on.
+ *  \param _GUARD_EXPR  Expression to evaluate to determine if this case should be disabled.
+ *                      Must not have side effects.
+ *  \param _LABEL       The label (within the following select block) to jump to when an event
+ *                      occurs on \a res. 
  *
  *  \hideinitializer
  */
-#define CASE_NGUARD_THEN(RES, GUARD_EXPR, LABEL) _XCORE_CASE_RES(RES, LABEL, _XCORE_GUARD_FALSE(GUARD_EXPR))
+#define CASE_NGUARD_THEN(_RES, _GUARD_EXPR, _LABEL) _XCORE_CASE_RES(_RES, _LABEL, _XCORE_GUARD_FALSE(_GUARD_EXPR))
 
 /** \brief Defines a label to jump to if no enabled resource events are ready.
  *
- *  \param LABEL  The label (within the following select block) to jump to if there are
- *                no events to take.                 
+ *  \param _LABEL  The label (within the following select block) to jump to if there are
+ *                 no events to take.                 
  *
  *  \hideinitializer
  */
-#define DEFAULT_THEN(LABEL) _XCORE_CASE_DEFAULT(LABEL, _XCORE_GUARD_NONE)
+#define DEFAULT_THEN(_LABEL) _XCORE_CASE_DEFAULT(_LABEL, _XCORE_GUARD_NONE)
 
 /** \brief Defines a label to jump to if no enabled resource events are ready and a condition evaluates true.
  *
- *  \param LABEL       The label (within the following select block) to jump to if there are
- *                     no events to take.
- *  \param GUARD_EXPR  Expression to determine it the default case should be enabled.
+ *  \param _LABEL       The label (within the following select block) to jump to if there are
+ *                      no events to take.
+ *  \param _GUARD_EXPR  Expression to determine it the default case should be enabled.
  *
  *  \hideinitializer
  */
-#define DEFAULT_GUARD_THEN(GUARD_EXPR, LABEL) _XCORE_CASE_DEFAULT(LABEL, _XCORE_GUARD_TRUE(GUARD_EXPR))
+#define DEFAULT_GUARD_THEN(_GUARD_EXPR, _LABEL) _XCORE_CASE_DEFAULT(_LABEL, _XCORE_GUARD_TRUE(_GUARD_EXPR))
 
 /** \brief Defines a label to jump to if no enabled resource events are ready and a condition evaluates false.
  *
- *  \param LABEL       The label (within the following select block) to jump to if there are
- *                     no events to take.
- *  \param GUARD_EXPR  Expression to determine it the default case should be disabled.
+ *  \param _LABEL       The label (within the following select block) to jump to if there are
+ *                      no events to take.
+ *  \param _GUARD_EXPR  Expression to determine it the default case should be disabled.
  * 
  *  \hideinitializer
  */
-#define DEFAULT_NGUARD_THEN(GUARD_EXPR, LABEL) _XCORE_CASE_DEFAULT(LABEL, _XCORE_GUARD_FALSE(GUARD_EXPR))
+#define DEFAULT_NGUARD_THEN(_GUARD_EXPR, _LABEL) _XCORE_CASE_DEFAULT(_LABEL, _XCORE_GUARD_FALSE(_GUARD_EXPR))
 
 #ifdef __cplusplus
 }

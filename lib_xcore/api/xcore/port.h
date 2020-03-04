@@ -33,7 +33,7 @@ typedef resource_t port_t;
  *  The port's state is set to: input, unbuffered, inout_data, no_invert,
  *  rising_edge, master, no_ready, no triggers, clocked by XS1_CLKBLK_REF.
  *
- *  \param p  The port to enable
+ *  \param __p  The port to enable
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
@@ -41,24 +41,24 @@ typedef resource_t port_t;
  * \see port_enable_buffered
  */
 _XCORE_EXFUN
-inline void port_enable(port_t p) _XCORE_NOTHROW
+inline void port_enable(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_enable(p);
+  __xcore_port_enable(__p);
 }
 
 /** \brief Reset a port.
  *
  *  Clears a ports settings back to the default state at port_enable().
  *
- *  \param p  The port to be reset
+ *  \param __p  The port to be reset
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_reset(port_t p) _XCORE_NOTHROW
+inline void port_reset(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_reset(p);
+  __xcore_port_reset(__p);
 }
 
 /** \brief Allocates a port to buffer and serialise/deserialise data.
@@ -66,10 +66,10 @@ inline void port_reset(port_t p) _XCORE_NOTHROW
  *  Either this function or port_enable() must be called once for each port_t
  *  before it is used.
  *
- *  \param p               Value that identifies which port to drive
- *  \param transfer_width  Number of bits to serialise; must be 1, 4, 8, or 32.
- *                         The number of bits must be >= to the physical port
- *                         width.
+ *  \param __p               Value that identifies which port to drive
+ *  \param __transfer_width  Number of bits to serialise; must be 1, 4, 8, or 32.
+ *                           The number of bits must be >= to the physical port
+ *                           width.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port,
  *                                    or is not legal width for the port.
@@ -78,25 +78,25 @@ inline void port_reset(port_t p) _XCORE_NOTHROW
  *  \see port_enable
  */
 _XCORE_EXFUN
-inline void port_start_buffered(port_t p, size_t transfer_width) _XCORE_NOTHROW
+inline void port_start_buffered(port_t __p, size_t __transfer_width) _XCORE_NOTHROW
 {
-  __xcore_port_enable(p);
-  __xcore_port_set_buffered(p);
-  __xcore_port_set_transfer_width(p, transfer_width);
+  __xcore_port_enable(__p);
+  __xcore_port_set_buffered(__p);
+  __xcore_port_set_transfer_width(__p, __transfer_width);
 }
 
 /** \brief Disable a port
  *
  *  Disables the port so it is no longer ready for use. It must be re-enabled if it is used again.
- *  \param p  The port to be disabled
+ *  \param __p  The port to be disabled
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_disable(port_t p) _XCORE_NOTHROW
+inline void port_disable(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_free(p);
+  __xcore_port_free(__p);
 }
 
 /** \brief Change the transfer width of a port.
@@ -106,7 +106,7 @@ inline void port_disable(port_t p) _XCORE_NOTHROW
  *  \attention A port must have been set to buffered if the width is different from the
  *             physical port width
  *
- *  \param p               The port to change the transfer width of
+ *  \param __p               The port to change the transfer width of
  *  \param transfer_width  Number of bits to serialise; must be 1, 4, 8, or 32.
  *                         The number of bits must be >= to the physical port
  *                         width.
@@ -117,9 +117,9 @@ inline void port_disable(port_t p) _XCORE_NOTHROW
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_transfer_width(port_t p, size_t transfer_width) _XCORE_NOTHROW
+inline void port_set_transfer_width(port_t __p, size_t __transfer_width) _XCORE_NOTHROW
 {
-  __xcore_port_set_transfer_width(p, transfer_width);
+  __xcore_port_set_transfer_width(__p, __transfer_width);
 }
 
 /** \brief Sets a port to be buffered.
@@ -127,15 +127,15 @@ inline void port_set_transfer_width(port_t p, size_t transfer_width) _XCORE_NOTH
  *  Configures a port into buffered mode where it can automatically serialise or
  *  deserialise data.
  *
- *  \param p  The port to set as buffered
+ *  \param __p  The port to set as buffered
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_buffered(port_t p) _XCORE_NOTHROW
+inline void port_set_buffered(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_buffered(p);
+  __xcore_port_set_buffered(__p);
 }
 
 /** \brief Sets a port to be unbuffered (default state).
@@ -144,15 +144,15 @@ inline void port_set_buffered(port_t p) _XCORE_NOTHROW
  *  a port needs to have its transfer width equal to the port width and be
  *  configured as a master port.
  *
- *  \param p  The port to set as unbuffered
+ *  \param __p  The port to set as unbuffered
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_unbuffered(port_t p) _XCORE_NOTHROW
+inline void port_set_unbuffered(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_unbuffered(p);
+  __xcore_port_set_unbuffered(__p);
 }
 
 /** \brief Set the clock clocking a port.
@@ -160,29 +160,29 @@ inline void port_set_unbuffered(port_t p) _XCORE_NOTHROW
  *  Changes the clock used for a port's control functions.
  *  The default clock is XS1_CLKBLK_REF.
  *
- *  \param p    Port whose clock is being changed.
- *  \param clk  Clock to attach to the port.
+ *  \param __p    Port whose clock is being changed.
+ *  \param __clk  Clock to attach to the port.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port/clock, or clock is running.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_clock(port_t p, xclock_t clk) _XCORE_NOTHROW
+inline void port_set_clock(port_t __p, xclock_t __clk) _XCORE_NOTHROW
 {
-  __xcore_port_set_clock(p, clk);
+  __xcore_port_set_clock(__p, __clk);
 }
 
 /** \brief Set a port drive out the data value (default state).
  *
- *  \param p  Port to change the mode of.
+ *  \param __p  Port to change the mode of.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_inout_data(port_t p) _XCORE_NOTHROW
+inline void port_set_inout_data(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_inout_data(p);
+  __xcore_port_set_inout_data(__p);
 }
 
 /** \brief Set a port to drive out its clocking signal.
@@ -191,15 +191,15 @@ inline void port_set_inout_data(port_t p) _XCORE_NOTHROW
  *  own data values. The clock signal that is driven out is configured using the
  *  port_set_clock() function.
  *
- *  \param p  Port to change the mode of.
+ *  \param __p  Port to change the mode of.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_out_clock(port_t p) _XCORE_NOTHROW
+inline void port_set_out_clock(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_out_clock(p);
+  __xcore_port_set_out_clock(__p);
 }
 
 /** \brief Set a port to drive out the ready signal of another port.
@@ -207,17 +207,17 @@ inline void port_set_out_clock(port_t p) _XCORE_NOTHROW
  *  Configures the port to drive the ready signal of another port
  *  instead of its own data values.
  *
- *  \param p             Port to change the mode of. This must be a 1-bit
- *                       port or this function will trap.
- *  \param ready_source  The port whose ready signal will be output.
+ *  \param __p             Port to change the mode of. This must be a 1-bit
+ *                         port or this function will trap.
+ *  \param __ready_source  The port whose ready signal will be output.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   \li not a valid port \li \a p not a one bit port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_out_ready(port_t p, port_t ready_source) _XCORE_NOTHROW
+inline void port_set_out_ready(port_t __p, port_t __ready_source) _XCORE_NOTHROW
 {
-  __xcore_port_set_out_ready(p, ready_source);
+  __xcore_port_set_out_ready(__p, __ready_source);
 }
 
 /** \brief Set the port to invert its data.
@@ -225,31 +225,31 @@ inline void port_set_out_ready(port_t p, port_t ready_source) _XCORE_NOTHROW
  *  Configures a port to invert the data on the pin. This can be
  *  reverted by calling port_set_no_invert().
  *
- *  \param p  Port to set its data to be inverted. This must be a 1-bit port
- *            or a trap will be raised.
+ *  \param __p  Port to set its data to be inverted. This must be a 1-bit port
+ *              or a trap will be raised.
  *
  *  \exception  ET_ILLEGAL_RESOURCE  \li not a valid port \li p not a one bit port.
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_invert(port_t p) _XCORE_NOTHROW
+inline void port_set_invert(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_invert(p);
+  __xcore_port_set_invert(__p);
 }
 
 /** \brief Set the port to not invert its data (default state).
  *
  *  Configures a port to not invert the data on the pin.
  *
- *  \param p  Port to set the data to not be inverted.
+ *  \param __p  Port to set the data to not be inverted.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_no_invert(port_t p) _XCORE_NOTHROW
+inline void port_set_no_invert(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_no_invert(p);
+  __xcore_port_set_no_invert(__p);
 }
 
 /** \brief Set the port to sample on the falling edge.
@@ -258,30 +258,30 @@ inline void port_set_no_invert(port_t p) _XCORE_NOTHROW
  *  This function changes the port to sample on the falling edge instead.
  *  This change can be reverted by calling port_set_sample_rising_edge().
  *
- *  \param p  Port to change its sampling edge.
+ *  \param __p  Port to change its sampling edge.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_sample_falling_edge(port_t p) _XCORE_NOTHROW
+inline void port_set_sample_falling_edge(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_sample_falling_edge(p);
+  __xcore_port_set_sample_falling_edge(__p);
 }
 
 /** \brief Set the port to sample on the rising edge (default state).
  *
  *  Restores a port to sampling data on the rising edge of the clock.
  *
- *  \param p  Port to change its sampling edge.
+ *  \param __p  Port to change its sampling edge.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_sample_rising_edge(port_t p) _XCORE_NOTHROW
+inline void port_set_sample_rising_edge(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_sample_rising_edge(p);
+  __xcore_port_set_sample_rising_edge(__p);
 }
 
 /** \brief Set the port to master mode (default state).
@@ -289,7 +289,7 @@ inline void port_set_sample_rising_edge(port_t p) _XCORE_NOTHROW
  *  Configures a port to be a master. This is only relevant when
  *  using ready signals (port_set_ready_strobed() / port_set_ready_handshake()).
  *
- *  \param p  Port to set as a master
+ *  \param __p  Port to set as a master
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
@@ -299,9 +299,9 @@ inline void port_set_sample_rising_edge(port_t p) _XCORE_NOTHROW
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_master(port_t p) _XCORE_NOTHROW
+inline void port_set_master(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_master(p);
+  __xcore_port_set_master(__p);
 }
 
 /** \brief Set the port to slave mode.
@@ -312,7 +312,7 @@ inline void port_set_master(port_t p) _XCORE_NOTHROW
  *  \attention the port must be set to use a ready strobe, otherwise this function
  *             will raise an exception.
  *
- *  \param p  Port to set as a slave
+ *  \param __p  Port to set as a slave
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
@@ -322,9 +322,9 @@ inline void port_set_master(port_t p) _XCORE_NOTHROW
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_slave(port_t p) _XCORE_NOTHROW
+inline void port_set_slave(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_slave(p);
+  __xcore_port_set_slave(__p);
 }
 
 /** \brief Set the port to use no ready signals (default state).
@@ -336,7 +336,7 @@ inline void port_set_slave(port_t p) _XCORE_NOTHROW
  *  \attention the port must be a \c master port otherwise this function will raise
  *             an exception.
  *
- *  \param p  Port to change to not use ready signals
+ *  \param __p  Port to change to not use ready signals
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
@@ -346,9 +346,9 @@ inline void port_set_slave(port_t p) _XCORE_NOTHROW
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_no_ready(port_t p) _XCORE_NOTHROW
+inline void port_set_no_ready(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_no_ready(p);
+  __xcore_port_set_no_ready(__p);
 }
 
 /** \brief Set the port to use a single strobe.
@@ -360,7 +360,7 @@ inline void port_set_no_ready(port_t p) _XCORE_NOTHROW
  *  \attention the port must be a buffered port otherwise this function will raise
  *             an exception.
  *
- *  \param p  Port to change to not use ready signals
+ *  \param __p  Port to change to not use ready signals
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
@@ -370,9 +370,9 @@ inline void port_set_no_ready(port_t p) _XCORE_NOTHROW
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_ready_strobed(port_t p) _XCORE_NOTHROW
+inline void port_set_ready_strobed(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_ready_strobed(p);
+  __xcore_port_set_ready_strobed(__p);
 }
 
 /** \brief Set the port to be fully handshaken.
@@ -383,7 +383,7 @@ inline void port_set_ready_strobed(port_t p) _XCORE_NOTHROW
  *  \attention the port must be a master buffered port otherwise this function will
  *             raise an exception.
  *
- *  \param p  Port to change to not use ready signals
+ *  \param __p  Port to change to not use ready signals
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
@@ -393,23 +393,23 @@ inline void port_set_ready_strobed(port_t p) _XCORE_NOTHROW
  *  \see xcore/port_protocol.h
  */
 _XCORE_EXFUN
-inline void port_set_ready_handshake(port_t p) _XCORE_NOTHROW
+inline void port_set_ready_handshake(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_set_ready_handshake(p);
+  __xcore_port_set_ready_handshake(__p);
 }
 
 /** \brief Gets the timestamp of the last input or output operation on a port.
  *
- *  \param p  The port to get the timestamp from  
- *  \return   The timestamp of the last operation
+ *  \param __p  The port to get the timestamp from  
+ *  \return     The timestamp of the last operation
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline int16_t port_get_trigger_time(port_t p) _XCORE_NOTHROW
+inline int16_t port_get_trigger_time(port_t __p) _XCORE_NOTHROW
 {
-  return __xcore_port_get_trigger_time(p);
+  return __xcore_port_get_trigger_time(__p);
 }
 
 /** \brief Set the timestamp at which the port will input/output data.
@@ -420,16 +420,16 @@ inline int16_t port_get_trigger_time(port_t p) _XCORE_NOTHROW
  *  or port_out() will pause until the specified time.
  *  The trigger is cleared by a input/output or by calling port_clear_trigger_time().
  *
- *  \param p  The port to set the condition on
- *  \param t  The port timestamp to match
+ *  \param __p  The port to set the condition on
+ *  \param __t  The port timestamp to match
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_time(port_t p, int16_t t) _XCORE_NOTHROW
+inline void port_set_trigger_time(port_t __p, int16_t __t) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_time(p, t);
+  __xcore_port_set_trigger_time(__p, __t);
 }
 
 /** \brief Clear the timestamp trigger on a port.
@@ -438,15 +438,15 @@ inline void port_set_trigger_time(port_t p, int16_t t) _XCORE_NOTHROW
  *  output will happen unconditionally in respect to the timestamp.
  *  This function does not clear the trigger_in condition on the port.
  *
- *  \param p  The port to clear the trigger_time on
+ *  \param __p  The port to clear the trigger_time on
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_clear_trigger_time(port_t p) _XCORE_NOTHROW
+inline void port_clear_trigger_time(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_clear_trigger_time(p);
+  __xcore_port_clear_trigger_time(__p);
 }
 
 /** \brief Setup an event to trigger on a port when its input value matches.
@@ -456,16 +456,16 @@ inline void port_clear_trigger_time(port_t p) _XCORE_NOTHROW
  *  On an buffered port the trigger will only hold for the next input
  *  after which the trigger_in_equal will be cleared.
  *
- *  \param p  The port to set the trigger on
- *  \param v  The value to match
+ *  \param __p  The port to set the trigger on
+ *  \param __v  The value to match
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_in_equal(port_t p, uint32_t v) _XCORE_NOTHROW
+inline void port_set_trigger_in_equal(port_t __p, uint32_t __v) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_in_equal(p, v);
+  __xcore_port_set_trigger_in_equal(__p, __v);
 }
 
 /** \brief Setup an event to trigger on a port when its input value does not matches.
@@ -475,16 +475,16 @@ inline void port_set_trigger_in_equal(port_t p, uint32_t v) _XCORE_NOTHROW
  *  On an buffered port the trigger will only hold for the next input
  *  after which the trigger_in_not_equal will be cleared.
  *
- *  \param p    The port to set the trigger on
- *  \param v    The value to not match
+ *  \param __p    The port to set the trigger on
+ *  \param __v    The value to not match
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_in_not_equal(port_t p, uint32_t v) _XCORE_NOTHROW
+inline void port_set_trigger_in_not_equal(port_t __p, uint32_t __v) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_in_not_equal(p, v);
+  __xcore_port_set_trigger_in_not_equal(__p, __v);
 }
 
 /** \brief Clear the in trigger on a port.
@@ -493,15 +493,15 @@ inline void port_set_trigger_in_not_equal(port_t p, uint32_t v) _XCORE_NOTHROW
  *  will happen unconditionally in respect to the input value.
  *  This function does not clear the trigger_time condition on the port.
  *
- *  \param p    The port to clear the trigger_in on
+ *  \param __p    The port to clear the trigger_in on
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_clear_trigger_in(port_t p) _XCORE_NOTHROW
+inline void port_clear_trigger_in(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_clear_trigger_in(p);
+  __xcore_port_clear_trigger_in(__p);
 }
 
 /** \brief Peek at the value on a port.
@@ -510,15 +510,15 @@ inline void port_clear_trigger_in(port_t p) _XCORE_NOTHROW
  *  of whether the port is an output or input and without affecting its direciton.
  *  Peek will not pause, regardless of any triggers that have been set.
  *
- *  \param p     Port to be peeked
+ *  \param __p     Port to be peeked
  *  \return      The current value on the pins
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  */
 _XCORE_EXFUN
-inline uint32_t port_peek(port_t p) _XCORE_NOTHROW
+inline uint32_t port_peek(port_t __p) _XCORE_NOTHROW
 {
-  return __xcore_port_peek(p);
+  return __xcore_port_peek(__p);
 }
 
 /** \brief Outputs a value onto a port.
@@ -530,16 +530,16 @@ inline uint32_t port_peek(port_t p) _XCORE_NOTHROW
  *  If there is a time trigger setup and the port is unbuffered or the buffer is full
  *  the call will pause until the specified time.
  *
- *  \param p     Port to output to
- *  \param data  Value to output
+ *  \param __p     Port to output to
+ *  \param __data  Value to output
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_out(port_t p, uint32_t data) _XCORE_NOTHROW
+inline void port_out(port_t __p, uint32_t __data) _XCORE_NOTHROW
 {
-  __xcore_port_out(p, data);
+  __xcore_port_out(__p, __data);
 }
 
 /** \brief Input a value from a port.
@@ -550,16 +550,16 @@ inline void port_out(port_t p, uint32_t data) _XCORE_NOTHROW
  *  For buffered port, this function will pause until the buffer is filled up with
  *  deserialised data.
  *
- *  \param p  Port to input from
- *  \return   The inputted data
+ *  \param __p  Port to input from
+ *  \return     The inputted data
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in(port_t p) _XCORE_NOTHROW
+inline uint32_t port_in(port_t __p) _XCORE_NOTHROW
 {
-  return __xcore_port_in(p);
+  return __xcore_port_in(__p);
 }
 
 /** \brief Outputs a value onto a port and shift the output data.
@@ -571,18 +571,18 @@ inline uint32_t port_in(port_t p) _XCORE_NOTHROW
  *  If there is a time trigger setup and the port is unbuffered or the buffer is full
  *  the call will pause until the specified time.
  *
- *  \param p     Port to output to
- *  \param data  \a data is shifted right by the transfer width of the port,
- *               with the bits shifting out onto the port.
- *  \return      The remaining shifted bits of \a data
+ *  \param __p     Port to output to
+ *  \param __data  \a data is shifted right by the transfer width of the port,
+ *                 with the bits shifting out onto the port.
+ *  \return        The remaining shifted bits of \a data
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_out_shift_right(port_t p, uint32_t data) _XCORE_NOTHROW
+inline uint32_t port_out_shift_right(port_t __p, uint32_t __data) _XCORE_NOTHROW
 {
-  return __xcore_port_out_shift_right(p, data);
+  return __xcore_port_out_shift_right(__p, __data);
 }
 
 /** \brief Input a value from a port and shift the data.
@@ -593,18 +593,18 @@ inline uint32_t port_out_shift_right(port_t p, uint32_t data) _XCORE_NOTHROW
  *  For buffered port, this function will pause until the buffer is filled up with
  *  deserialised data.
  *
- *  \param p     Port to input from
- *  \param data  Initial value to shift input data into
- *  \return      Result of shifting \a data right by the port width and storing the
- *               input data in the most significant bits
+ *  \param __p     Port to input from
+ *  \param __data  Initial value to shift input data into
+ *  \return        Result of shifting \a data right by the port width and storing the
+ *                 input data in the most significant bits
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right(port_t p, uint32_t data) _XCORE_NOTHROW
+inline uint32_t port_in_shift_right(port_t __p, uint32_t __data) _XCORE_NOTHROW
 {
-  return __xcore_port_in_shift_right(p, data);
+  return __xcore_port_in_shift_right(__p, __data);
 }
 
 /** \brief Outputs a value onto a port at a specified port timestamp.
@@ -614,18 +614,18 @@ inline uint32_t port_in_shift_right(port_t p, uint32_t data) _XCORE_NOTHROW
  *  the case of a buffered port, the data will be stored in the buffer, and
  *  be serialised onto the output pins at the point that the time is reached.
  *
- *  \param p     Port to output to
- *  \param t     The timestamp to do the output on
- *  \param data  Value to output
+ *  \param __p     Port to output to
+ *  \param __t     The timestamp to do the output on
+ *  \param __data  Value to output
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_out_at_time(port_t p, int16_t t, uint32_t data) _XCORE_NOTHROW
+inline void port_out_at_time(port_t __p, int16_t __t, uint32_t __data) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_time(p, t);
-  __xcore_port_out(p, data);
+  __xcore_port_set_trigger_time(__p, __t);
+  __xcore_port_out(__p, __data);
 }
 
 /** \brief Input data from a port when its counter is at a specific time.
@@ -635,18 +635,18 @@ inline void port_out_at_time(port_t p, int16_t t, uint32_t data) _XCORE_NOTHROW
  *  will wait until the given time and then will start capturing data,
  *  returning a value when the buffer is full.
  *
- *  \param p  Port to input from
- *  \param t  The timestamp to do input on
- *  \return   The inputted data
+ *  \param __p  Port to input from
+ *  \param __t  The timestamp to do input on
+ *  \return     The inputted data
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_at_time(port_t p, int16_t t) _XCORE_NOTHROW
+inline uint32_t port_in_at_time(port_t __p, int16_t __t) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_time(p, t);
-  return __xcore_port_in(p);
+  __xcore_port_set_trigger_time(__p, __t);
+  return __xcore_port_in(__p);
 }
 
 /** \brief Outputs a value onto a port at a specified time and shifts the output data.
@@ -656,20 +656,20 @@ inline uint32_t port_in_at_time(port_t p, int16_t t) _XCORE_NOTHROW
  *  the case of a buffered port, the data will be stored in the buffer, and
  *  be serialised onto the output pins at the point that the time is reached.
  *
- *  \param p     Port to output to
- *  \param t     The timestamp of the output
- *  \param data  data is shifted right by the transfer width of the port,
- *               with the bits shifting out onto the port.
- *  \return      The remaining shifted bits
+ *  \param __p     Port to output to
+ *  \param __t     The timestamp of the output
+ *  \param __data  data is shifted right by the transfer width of the port,
+ *                 with the bits shifting out onto the port.
+ *  \return        The remaining shifted bits
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_out_shift_right_at_time(port_t p, int16_t t, uint32_t data) _XCORE_NOTHROW
+inline uint32_t port_out_shift_right_at_time(port_t __p, int16_t __t, uint32_t __data) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_time(p, t);
-  return __xcore_port_out_shift_right(p, data);
+  __xcore_port_set_trigger_time(__p, __t);
+  return __xcore_port_out_shift_right(__p, __data);
 }
 
 /** \brief Input data from a port at a specific time and shift the data.
@@ -679,20 +679,20 @@ inline uint32_t port_out_shift_right_at_time(port_t p, int16_t t, uint32_t data)
  *  will wait until the given time and then will start capturing data,
  *  returning a value when the buffer is full.
  *
- *  \param p     Port to input from
- *  \param t     The timestamp to do input on
- *  \param data  Initial value to shift input data into
- *  \return      Result of shifting \a data right by the port width and storing the
- *               input data in the most significant bits
+ *  \param __p     Port to input from
+ *  \param __t     The timestamp to do input on
+ *  \param __data  Initial value to shift input data into
+ *  \return        Result of shifting \a data right by the port width and storing the
+ *                 input data in the most significant bits
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right_at_time(port_t p, int16_t t, uint32_t data) _XCORE_NOTHROW
+inline uint32_t port_in_shift_right_at_time(port_t __p, int16_t __t, uint32_t __data) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_time(p, t);
-  return __xcore_port_in_shift_right(p, data);
+  __xcore_port_set_trigger_time(__p, __t);
+  return __xcore_port_in_shift_right(__p, __data);
 }
 
 
@@ -703,24 +703,24 @@ inline uint32_t port_in_shift_right_at_time(port_t p, int16_t t, uint32_t data) 
  *  will wait until the value appears on the pins and then return that
  *  value and some previous values that have been deserialised.
  *
- *  \param p      Port to input from
- *  \param pt     If port is buffered or unbuffered.
- *  \param value  The value to match against the pins
- *  \return       The inputted data
+ *  \param __p      Port to input from
+ *  \param __pt     If port is buffered or unbuffered.
+ *  \param __value  The value to match against the pins
+ *  \return         The inputted data
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_when_pinseq(port_t p, port_type_t pt, uint32_t value) _XCORE_NOTHROW
+inline uint32_t port_in_when_pinseq(port_t __p, port_type_t __pt, uint32_t __value) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_in_equal(p , value);
-  uint32_t data = __xcore_port_in(p);
-  if (pt==PORT_UNBUFFERED)
+  __xcore_port_set_trigger_in_equal(__p, __value);
+  uint32_t __data = __xcore_port_in(__p);
+  if (__pt==PORT_UNBUFFERED)
   {
-    __xcore_port_clear_trigger_in(p);
+    __xcore_port_clear_trigger_in(__p);
   }
-  return data;
+  return __data;
 }
 
 /** \brief Input data from a port when its pins do not match a specific value.
@@ -730,24 +730,24 @@ inline uint32_t port_in_when_pinseq(port_t p, port_type_t pt, uint32_t value) _X
  *  this function will wait until a non matching value appears on the pins, and
  *  then return that value and previous values that have been deserialised.
  *
- *  \param p      Port to input from
- *  \param pt     If port is buffered or unbuffered.
- *  \param value  The value to match against the pins
- *  \return       The inputted data
+ *  \param __p      Port to input from
+ *  \param __pt     If port is buffered or unbuffered.
+ *  \param __value  The value to match against the pins
+ *  \return         The inputted data
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_when_pinsneq(port_t p, port_type_t pt, uint32_t value) _XCORE_NOTHROW
+inline uint32_t port_in_when_pinsneq(port_t __p, port_type_t __pt, uint32_t __value) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_in_not_equal(p , value);
-  uint32_t data = __xcore_port_in(p);
-  if (pt==PORT_UNBUFFERED)
+  __xcore_port_set_trigger_in_not_equal(__p, __value);
+  uint32_t __data = __xcore_port_in(__p);
+  if (__pt==PORT_UNBUFFERED)
   {
-    __xcore_port_clear_trigger_in(p);
+    __xcore_port_clear_trigger_in(__p);
   }
-  return data;
+  return __data;
 }
 
 
@@ -758,26 +758,26 @@ inline uint32_t port_in_when_pinsneq(port_t p, port_type_t pt, uint32_t value) _
  *  will wait until the value appears on the pins and then return that
  *  value and some previous values that have been deserialised.
  *
- *  \param p      Port to input from
- *  \param pt     If port is buffered or unbuffered.
- *  \param value  The value to match against the pins
- *  \param data   Initial value to shift input data into
- *  \return       Result of shifting \a data right by the port width and storing the
- *                input data in the most significant bits
+ *  \param __p      Port to input from
+ *  \param __pt     If port is buffered or unbuffered.
+ *  \param __value  The value to match against the pins
+ *  \param __data   Initial value to shift input data into
+ *  \return         Result of shifting \a data right by the port width and storing the
+ *                  input data in the most significant bits
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right_when_pinseq(port_t p, port_type_t pt, uint32_t value, uint32_t data) _XCORE_NOTHROW
+inline uint32_t port_in_shift_right_when_pinseq(port_t __p, port_type_t __pt, uint32_t __value, uint32_t __data) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_in_equal(p , value);
-  uint32_t new_data = __xcore_port_in_shift_right(p, data);
-  if (pt==PORT_UNBUFFERED)
+  __xcore_port_set_trigger_in_equal(__p, __value);
+  uint32_t __new_data = __xcore_port_in_shift_right(__p, __data);
+  if (__pt==PORT_UNBUFFERED)
   {
-    __xcore_port_clear_trigger_in(p);
+    __xcore_port_clear_trigger_in(__p);
   }
-  return new_data;
+  return __new_data;
 }
 
 /** \brief Input data from a port when its pins do not match a specific value  and shift the data.
@@ -787,26 +787,26 @@ inline uint32_t port_in_shift_right_when_pinseq(port_t p, port_type_t pt, uint32
  *  this macro will wait until a non matching value appears on the pins, and
  *  then return that value and previous values that have been deserialised.
  *
- *  \param p      Port to input from
- *  \param pt     If port is buffered or unbuffered.
- *  \param value  The value to match against the pins
- *  \param data   Initial value to shift input data into
- *  \return       Result of shifting \a data right by the port width and storing the
- *                input data in the most significant bits
+ *  \param __p      Port to input from
+ *  \param __pt     If port is buffered or unbuffered.
+ *  \param __value  The value to match against the pins
+ *  \param __data   Initial value to shift input data into
+ *  \return         Result of shifting \a data right by the port width and storing the
+ *                  input data in the most significant bits
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline uint32_t port_in_shift_right_when_pinsneq(port_t p, port_type_t pt, uint32_t value, uint32_t data) _XCORE_NOTHROW
+inline uint32_t port_in_shift_right_when_pinsneq(port_t __p, port_type_t __pt, uint32_t __value, uint32_t __data) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_in_not_equal(p, value);
-  uint32_t new_data = __xcore_port_in_shift_right(p, data);
-  if (pt==PORT_UNBUFFERED)
+  __xcore_port_set_trigger_in_not_equal(__p, __value);
+  uint32_t __new_data = __xcore_port_in_shift_right(__p, __data);
+  if (__pt==PORT_UNBUFFERED)
   {
-    __xcore_port_clear_trigger_in(p);
+    __xcore_port_clear_trigger_in(__p);
   }
-  return new_data;
+  return __new_data;
 }
 
 /** \brief Clears the buffer used by a port.
@@ -820,15 +820,15 @@ inline uint32_t port_in_shift_right_when_pinsneq(port_t p, port_type_t pt, uint3
  *  it continues to drive the value until an output statement changes the value
  *  driven.
  *
- *  \param p  The port whose buffer is to be cleared
+ *  \param __p  The port whose buffer is to be cleared
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline void port_clear_buffer(port_t p) _XCORE_NOTHROW
+inline void port_clear_buffer(port_t __p) _XCORE_NOTHROW
 {
-  __xcore_port_clear_buffer(p);
+  __xcore_port_clear_buffer(__p);
 }
 
 /** \brief Ends the current input on a buffered port.
@@ -842,24 +842,24 @@ inline void port_clear_buffer(port_t p) _XCORE_NOTHROW
  *  returns transfer-width bits of data with the remaining buffered data
  *  in the most significant bits of this value.
  *
- *  \param p  The port to end the current input on
- *  \return   The number of bits of data remaining
+ *  \param __p  The port to end the current input on
+ *  \return     The number of bits of data remaining
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the port.
  */
 _XCORE_EXFUN
-inline size_t port_endin(port_t p) _XCORE_NOTHROW
+inline size_t port_endin(port_t __p) _XCORE_NOTHROW
 {
-  return __xcore_port_endin(p);
+  return __xcore_port_endin(__p);
 }
 
 /** \brief Force an input on a buffered port.
  *
  *  Perform an input on a buffered port even if the buffer is only partially full.
  *
- *  \param p          The port to do the input on
- *  \param[out] data  The inputted data
+ *  \param __p          The port to do the input on
+ *  \param[out] __data  The inputted data
 
  *  \return The number of bits input
  *
@@ -868,21 +868,21 @@ inline size_t port_endin(port_t p) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid \a data argument.
  */
 _XCORE_EXFUN
-inline size_t port_force_input(port_t p, uint32_t *data) _XCORE_NOTHROW
+inline size_t port_force_input(port_t __p, uint32_t *__data) _XCORE_NOTHROW
 {
-  size_t num = __xcore_port_endin(p);
-  *data = __xcore_port_in(p);
-  return num;
+  size_t __num = __xcore_port_endin(__p);
+  *__data = __xcore_port_in(__p);
+  return __num;
 }
 
 /** \brief Setup interrupt event on a port.
  *
  *  Once the event is setup you need to call port_enable_trigger() to enable it.
  *
- *  \param p         The port to setup the interrupt event on
- *  \param[in] data  The value to be passed to the interrupt_callback_t function
- *                   On XS1 bit 16 must be set (see ENUM_ID_BASE)
- *  \param func      The interrupt_callback_t function to handle events
+ *  \param __p         The port to setup the interrupt event on
+ *  \param[in] __data  The value to be passed to the interrupt_callback_t function
+ *                     On XS1 bit 16 must be set (see ENUM_ID_BASE)
+ *  \param __func      The interrupt_callback_t function to handle events
  *
  *  \see ENUM_ID_BASE
  *
@@ -891,10 +891,10 @@ inline size_t port_force_input(port_t p, uint32_t *data) _XCORE_NOTHROW
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in data.
  */
 _XCORE_EXFUN
-inline void port_setup_interrupt_callback(port_t p, void *data, interrupt_callback_t func) _XCORE_NOTHROW
+inline void port_setup_interrupt_callback(port_t __p, void *__data, interrupt_callback_t __func) _XCORE_NOTHROW
 {
-  __xcore_resource_setup_interrupt_callback(p, data, func);
-  __xcore_port_clear_trigger_in(p);
+  __xcore_resource_setup_interrupt_callback(__p, __data, __func);
+  __xcore_port_clear_trigger_in(__p);
 }
 
 /** \brief Sets the trigger value for a port with a configured trigger.
@@ -902,16 +902,16 @@ inline void port_setup_interrupt_callback(port_t p, void *data, interrupt_callba
  *  Changes only the trigger value of a port which has already been configured
  *  to trigger on a value using port_set_trigger_in_equal() or port_set_trigger_in_not_equal().
  *
- *  \param p      The port to change the trigger value of
- *  \param value  The new trigger value to set
+ *  \param __p      The port to change the trigger value of
+ *  \param __value  The new trigger value to set
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the port.
  */
 _XCORE_EXFUN
-inline void port_set_trigger_value(port_t p, uint32_t value) _XCORE_NOTHROW
+inline void port_set_trigger_value(port_t __p, uint32_t __value) _XCORE_NOTHROW
 {
-  __xcore_port_set_trigger_value(p, value);
+  __xcore_port_set_trigger_value(__p, __value);
 }
 
 #ifdef __cplusplus

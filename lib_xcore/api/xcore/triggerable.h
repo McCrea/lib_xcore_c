@@ -28,20 +28,20 @@ extern "C" {
  *
  *  Once the interrupts is setup you need to call port_enable_trigger() to enable it.
  *
- *  \param res       The resource to setup the interrupt event on.
+ *  \param __res       The resource to setup the interrupt event on.
  *
- *  \param[in] data  The value to be passed to the interrupt_callback_t function
- *                    On XS1 bit 16 must be set (see ENUM_ID_BASE)
- *  \param func       The interrupt_callback_t function to handle events
+ *  \param[in] __data  The value to be passed to the interrupt_callback_t function
+ *                     On XS1 bit 16 must be set (see ENUM_ID_BASE)
+ *  \param __func      The interrupt_callback_t function to handle events
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in data.
  */
 _XCORE_EXFUN
-inline void triggerable_setup_interrupt_callback(resource_t res, void *data, interrupt_callback_t func)
+inline void triggerable_setup_interrupt_callback(resource_t __res, void *__data, interrupt_callback_t __func)
 {
-  __xcore_resource_setup_interrupt_callback(res, data, func);
+  __xcore_resource_setup_interrupt_callback(__res, __data, __func);
 }
 
 /** \brief Configure the vector which handles events on a given resource
@@ -52,14 +52,14 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  *
  *  \note This will overwrite any interrupt vector which has been set on the resource.
  * 
- *  \param resource  The resource to configure
- *  \param label     The label to jump to when an event is handled on \a resource
+ *  \param __resource  The resource to configure
+ *  \param __label     The label to jump to when an event is handled on \a resource
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
-#define TRIGGERABLE_SETUP_EVENT_VECTOR(resource, label) \
-  _XCORE_TRIGGERABLE_SETUP_EVENT_VECTOR(resource, label)
+#define TRIGGERABLE_SETUP_EVENT_VECTOR(__resource, __label) \
+  _XCORE_TRIGGERABLE_SETUP_EVENT_VECTOR(__resource, __label)
 
 /** \brief Wait for a configured and enabled event to occur
  *
@@ -80,49 +80,49 @@ inline void triggerable_setup_interrupt_callback(resource_t res, void *data, int
  *  \attention  The expansion of this macro will block until the trigger occurs on a resource
  *              where events are enabled. If no events are enabled then this can never complete.
  *
- *  \param labels  The labels configured as event vectors for all events which may occur.
+ *  \param __labels  The labels configured as event vectors for all events which may occur.
  */
-#define TRIGGERABLE_WAIT_EVENT(labels...) \
-  _XCORE_TRIGGERABLE_WAIT_EVENT(labels)
+#define TRIGGERABLE_WAIT_EVENT(__labels...) \
+  _XCORE_TRIGGERABLE_WAIT_EVENT(__labels)
 
 /** \brief Jump to an event vector if an event is ready
  *
  *  Has the same effect as TRIGGERABLE_WAIT_EVENT() except that if no event is waiting then
  *  this expansion does not block.
  *
- *  \param labels Labels which may be jumped to if an event is ready
+ *  \param __labels Labels which may be jumped to if an event is ready
  */
-#define TRIGGERABLE_TAKE_EVENT(labels...) \
-  _XCORE_TRIGGERABLE_TAKE_EVENT(labels)
+#define TRIGGERABLE_TAKE_EVENT(__labels...) \
+  _XCORE_TRIGGERABLE_TAKE_EVENT(__labels)
 
 /** \brief  Enable the trigger for a given resource
  *
  *  This will allow the resource the generate events or interrupts when its trigger occurs.
  *
- *  \param res  Resource to enable the trigger of
+ *  \param __res  Resource to enable the trigger of
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
-inline void triggerable_enable_trigger(resource_t res) _XCORE_NOTHROW
+inline void triggerable_enable_trigger(resource_t __res) _XCORE_NOTHROW
 {
-  __xcore_resource_event_enable_unconditional(res);
+  __xcore_resource_event_enable_unconditional(__res);
 }
 
 /** \brief  Disable the trigger for a given resource
  *
  *  This prevents the resource generating events or interrupts.
  *
- *  \param res  Resource to disable the trigger of
+ *  \param __res  Resource to disable the trigger of
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
-inline void triggerable_disable_trigger(resource_t res) _XCORE_NOTHROW
+inline void triggerable_disable_trigger(resource_t __res) _XCORE_NOTHROW
 {
-  __xcore_resource_event_disable_unconditional(res);
+  __xcore_resource_event_disable_unconditional(__res);
 }
 
 /** \brief Set the trigger enabled or disabled on a given resource
@@ -131,16 +131,16 @@ inline void triggerable_disable_trigger(resource_t res) _XCORE_NOTHROW
  *   depending on the value of \a enabled. However, this may perform better when the value of
  *   enabled is not statically known.
  *
- *  \param res     The resource to enaable or disable the trigger of
- *  \param enabled State to set on the trigger - if true it is enabled, otherwise it is disabled
+ *  \param __res     The resource to enaable or disable the trigger of
+ *  \param __enabled State to set on the trigger - if true it is enabled, otherwise it is disabled
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
  *  \exception  ET_RESOURCE_DEP       another core is actively using the resource.
  */
 _XCORE_EXFUN
-inline void triggerable_set_trigger_enabled(resource_t res, _Bool enabled) _XCORE_NOTHROW
+inline void triggerable_set_trigger_enabled(resource_t __res, int __enabled) _XCORE_NOTHROW
 {
-  __xcore_resource_event_enable_if_true(res, enabled);
+  __xcore_resource_event_enable_if_true(__res, __enabled);
 }
 
 /** \brief Disables all triggers in the current thread and masks interrupts

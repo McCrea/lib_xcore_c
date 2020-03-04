@@ -10,21 +10,17 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 _XCORE_EXFUN
 inline void __xcore_hwtimer_realloc_xc_timer(void)
 {
   // __init_threadlocal_timer has resource ID in r2 and it may be zero.
   // Implement a checked version here instead.
-  unsigned tmr, addr;
-  _RESOURCE_ALLOC(tmr, XS1_RES_TYPE_TIMER);
-  asm volatile( "ecallf %0" :: "r" (tmr));
-  asm volatile( "ldaw %0, dp[__timers]" : "=r" (addr));
+  unsigned __tmr, __addr;
+  _RESOURCE_ALLOC(__tmr, XS1_RES_TYPE_TIMER);
+  asm volatile( "ecallf %0" :: "r" (__tmr));
+  asm volatile( "ldaw %0, dp[__timers]" : "=r" (__addr));
   asm volatile( "get r11, id" ::: /* clobbers */ "r11");
-  asm volatile( "stw  %0, %1[r11]" : : "r" (tmr), "r" (addr));
+  asm volatile( "stw  %0, %1[r11]" : : "r" (__tmr), "r" (__addr));
 }
 
 extern void __free_threadlocal_timer(void);
@@ -37,54 +33,49 @@ inline void __xcore_hwtimer_free_xc_timer(void)
 _XCORE_EXFUN
 inline resource_t __xcore_hwtimer_alloc(void)
 {
-  resource_t t;
-  _RESOURCE_ALLOC(t, XS1_RES_TYPE_TIMER);
-  return t;
+  resource_t __t;
+  _RESOURCE_ALLOC(__t, XS1_RES_TYPE_TIMER);
+  return __t;
 }
 
 _XCORE_EXFUN
-inline void __xcore_hwtimer_free(resource_t t)
+inline void __xcore_hwtimer_free(resource_t __t)
 {
-  __xcore_resource_free(t);
+  __xcore_resource_free(__t);
 }
 
 _XCORE_EXFUN
-inline uint32_t __xcore_hwtimer_get_time(resource_t t)
+inline uint32_t __xcore_hwtimer_get_time(resource_t __t)
 {
-  register uint32_t now;
-  asm volatile("in %0, res[%1]" : "=r" (now): "r" (t));
-  return now;
+  register uint32_t __now;
+  asm volatile("in %0, res[%1]" : "=r" (__now): "r" (__t));
+  return __now;
 }
 
 _XCORE_EXFUN
-inline uint32_t __xcore_hwtimer_get_trigger_time(resource_t t)
+inline uint32_t __xcore_hwtimer_get_trigger_time(resource_t __t)
 {
-  uint32_t tval;
-  asm volatile ("getd %0, res[%1]" : "=r" (tval) : "r" (t));
-  return tval;
+  uint32_t __tval;
+  asm volatile ("getd %0, res[%1]" : "=r" (__tval) : "r" (__t));
+  return __tval;
 }
 
 _XCORE_EXFUN
-inline void __xcore_hwtimer_change_trigger_time(resource_t t, uint32_t time)
+inline void __xcore_hwtimer_change_trigger_time(resource_t __t, uint32_t __time)
 {
-  asm volatile("setd res[%0], %1" :: "r" (t), "r" (time));
+  asm volatile("setd res[%0], %1" :: "r" (__t), "r" (__time));
 }
 
 _XCORE_EXFUN
-inline void __xcore_hwtimer_set_trigger_time(resource_t t, uint32_t time)
+inline void __xcore_hwtimer_set_trigger_time(resource_t __t, uint32_t __time)
 {
-  _RESOURCE_SETCI(t, XS1_SETC_COND_AFTER);
-  __xcore_hwtimer_change_trigger_time(t, time);
+  _RESOURCE_SETCI(__t, XS1_SETC_COND_AFTER);
+  __xcore_hwtimer_change_trigger_time(__t, __time);
 }
 
 _XCORE_EXFUN
-inline void __xcore_hwtimer_clear_trigger_time(resource_t t)
+inline void __xcore_hwtimer_clear_trigger_time(resource_t __t)
 {
-  _RESOURCE_SETCI(t, XS1_SETC_COND_NONE);
+  _RESOURCE_SETCI(__t, XS1_SETC_COND_NONE);
   // hwtimer_get_time() will respond immediately
 }
-
-#ifdef __cplusplus
-}
-#endif
-

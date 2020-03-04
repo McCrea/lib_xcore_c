@@ -12,131 +12,131 @@ extern "C" {
 
 
 _XCORE_EXFUN
-inline void __xcore_select_setup_int(resource_t r, uint32_t value)  _XCORE_NOTHROW
+inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_NOTHROW
 {
-  __xcore_resource_setup_callback(r, (void*)value, __xcore_select_non_callback, 0x2);
+  __xcore_resource_setup_callback(__r, (void*)__value, __xcore_select_non_callback, 0x2);
 }
 
 
-#define _XCORE_SELECT_RES_HANDLER_SETUP_I(RES, LABEL, ...) \
+#define _XCORE_SELECT_RES_HANDLER_SETUP_I(_RES, _LABEL, ...) \
   do { \
-    __xcore_select_setup_int(RES, __xcore_htable_idx); \
-    __xcore_resource_event_enable_unconditional(RES); \
+    __xcore_select_setup_int(_RES, __xcore_htable_idx); \
+    __xcore_resource_event_enable_unconditional(_RES); \
     __xcore_htable_idx += 1; \
   } while(0);
 
-#define _XCORE_SELECT_RES_HANDLER_SETUP(PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_HANDLER_SETUP_I, PACK)
+#define _XCORE_SELECT_RES_HANDLER_SETUP(_PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_HANDLER_SETUP_I, _PACK)
 
 
-#define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_NONE(RES, EXPR_) __xcore_resource_event_enable_unconditional(RES);
+#define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_NONE(_RES, _EXPR_) __xcore_resource_event_enable_unconditional(_RES);
 
 #define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_TRUE(...) /* None */
 #define _XCORE_SELECT_RES_ENABLER_ONEOFF__XCORE_GTYPE_FALSE(...) /* None */
 
 #define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_NONE(...) /* None */
 
-#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_TRUE(RES, COND) __xcore_resource_event_enable_if_true(RES, COND);
-#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_FALSE(RES, COND) __xcore_resource_event_enable_if_false(RES, COND);
+#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_TRUE(_RES, _COND) __xcore_resource_event_enable_if_true(_RES, _COND);
+#define _XCORE_SELECT_RES_ENABLER_REPEAT__XCORE_GTYPE_FALSE(_RES, _COND) __xcore_resource_event_enable_if_false(_RES, _COND);
 
-#define _XCORE_SELECT_RES_ENABLER_ONEOFF_NAME(GTYPE)  _XCORE_SELECT_RES_ENABLER_ONEOFF_ ## GTYPE
-#define _XCORE_SELECT_RES_ENABLER_ONEOFF_I(RES, LABEL_, GTYPE, EXPR) _XCORE_SELECT_RES_ENABLER_ONEOFF_NAME(GTYPE)(RES, EXPR)
-#define _XCORE_SELECT_RES_ENABLER_ONEOFF(PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_ENABLER_ONEOFF_I, PACK)
+#define _XCORE_SELECT_RES_ENABLER_ONEOFF_NAME(_GTYPE)  _XCORE_SELECT_RES_ENABLER_ONEOFF_ ## _GTYPE
+#define _XCORE_SELECT_RES_ENABLER_ONEOFF_I(_RES, _LABEL_, _GTYPE, _EXPR) _XCORE_SELECT_RES_ENABLER_ONEOFF_NAME(_GTYPE)(_RES, _EXPR)
+#define _XCORE_SELECT_RES_ENABLER_ONEOFF(_PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_ENABLER_ONEOFF_I, _PACK)
 
-#define _XCORE_SELECT_RES_ENABLER_REPEAT_NAME(GTYPE)  _XCORE_SELECT_RES_ENABLER_REPEAT_ ## GTYPE
-#define _XCORE_SELECT_RES_ENABLER_REPEAT_I(RES, LABEL_, GTYPE, EXPR) _XCORE_SELECT_RES_ENABLER_REPEAT_NAME(GTYPE)(RES, EXPR)
-#define _XCORE_SELECT_RES_ENABLER_REPEAT(PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_ENABLER_REPEAT_I, PACK)
+#define _XCORE_SELECT_RES_ENABLER_REPEAT_NAME(_GTYPE)  _XCORE_SELECT_RES_ENABLER_REPEAT_ ## _GTYPE
+#define _XCORE_SELECT_RES_ENABLER_REPEAT_I(_RES, _LABEL_, _GTYPE, _EXPR) _XCORE_SELECT_RES_ENABLER_REPEAT_NAME(_GTYPE)(_RES, _EXPR)
+#define _XCORE_SELECT_RES_ENABLER_REPEAT(_PACK) _XCORE_PSHIM(_XCORE_SELECT_RES_ENABLER_REPEAT_I, _PACK)
 
-#define _XCORE_FILTER_SEL_DEFAULT__XCORE_SEL_RES(PACK_)
-#define _XCORE_FILTER_SEL_DEFAULT__XCORE_SEL_DEFAULT(PACK) PACK,
-#define _XCORE_FILTER_SEL_RES__XCORE_SEL_RES(PACK) , PACK
-#define _XCORE_FILTER_SEL_RES__XCORE_SEL_DEFAULT(PACK)
+#define _XCORE_FILTER_SEL_DEFAULT__XCORE_SEL_RES(_PACK_)
+#define _XCORE_FILTER_SEL_DEFAULT__XCORE_SEL_DEFAULT(_PACK) _PACK,
+#define _XCORE_FILTER_SEL_RES__XCORE_SEL_RES(_PACK) , _PACK
+#define _XCORE_FILTER_SEL_RES__XCORE_SEL_DEFAULT(_PACK)
 
 
-#define _XCORE_FILTER_SEL_DEFAULT_NAME(SUFF) _XCORE_FILTER_SEL_DEFAULT_ ## SUFF
-#define _XCORE_FILTER_SEL_DEFAULT_I(SUFF, PACK) _XCORE_FILTER_SEL_DEFAULT_NAME(SUFF)(PACK)
-#define _XCORE_SELECT_RES_FILTER_DEFAULT_I(PACK) _XCORE_PSHIM(_XCORE_FILTER_SEL_DEFAULT_I, PACK)
+#define _XCORE_FILTER_SEL_DEFAULT_NAME(_SUFF) _XCORE_FILTER_SEL_DEFAULT_ ## _SUFF
+#define _XCORE_FILTER_SEL_DEFAULT_I(_SUFF, _PACK) _XCORE_FILTER_SEL_DEFAULT_NAME(_SUFF)(_PACK)
+#define _XCORE_SELECT_RES_FILTER_DEFAULT_I(_PACK) _XCORE_PSHIM(_XCORE_FILTER_SEL_DEFAULT_I, _PACK)
 
-#define _XCORE_FILTER_SEL_RES_NAME(SUFF) _XCORE_FILTER_SEL_RES_ ## SUFF 
-#define _XCORE_FILTER_SEL_RES_I(SUFF, PACK) _XCORE_FILTER_SEL_RES_NAME(SUFF)(PACK)
-#define _XCORE_SELECT_RES_FILTER_RES_I(PACK) _XCORE_PSHIM(_XCORE_FILTER_SEL_RES_I, PACK)
+#define _XCORE_FILTER_SEL_RES_NAME(_SUFF) _XCORE_FILTER_SEL_RES_ ## _SUFF 
+#define _XCORE_FILTER_SEL_RES_I(_SUFF, _PACK) _XCORE_FILTER_SEL_RES_NAME(_SUFF)(_PACK)
+#define _XCORE_SELECT_RES_FILTER_RES_I(_PACK) _XCORE_PSHIM(_XCORE_FILTER_SEL_RES_I, _PACK)
 
 #define _XCORE_SELECT_DEFAULT_DEFAULT (, _XCORE_NO_DEFAULT_CASE, )
 #define _XCORE_SELECT_RES_FILTER_DEFAULT(...) _XCORE_SHIM(_XCORE_HEAD, _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_FILTER_DEFAULT_I, __VA_ARGS__) _XCORE_SELECT_DEFAULT_DEFAULT)
 #define _XCORE_SELECT_RES_FILTER_RES(...) _XCORE_SHIM(_XCORE_TAIL, _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_FILTER_RES_I, __VA_ARGS__))
 
 
-#define _XCORE_LABEL_I(VAL_, LABEL, ...) LABEL
-#define _XCORE_LABEL(PACK) _XCORE_PSHIM(_XCORE_LABEL_I, PACK)
+#define _XCORE_LABEL_I(_VAL_, _LABEL, ...) _LABEL
+#define _XCORE_LABEL(_PACK) _XCORE_PSHIM(_XCORE_LABEL_I, _PACK)
 
 #if defined(__XS1B__) || defined(__XS1C__)
-#define RES_EV_FORCE_MASK 0x10000
+#define _RES_EV_FORCE_MASK 0x10000
 #else
-#define RES_EV_FORCE_MASK 0x0
+#define _RES_EV_FORCE_MASK 0x0
 #endif
 
-#define _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, ...) \
+#define _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, ...) \
   do { \
     const int __xcore_wait_id  = select_no_wait(UINT_MAX); \
     if (__xcore_wait_id != UINT_MAX) \
     { \
-      goto* TNAME[__xcore_wait_id - RES_EV_FORCE_MASK]; \
+      goto* _TNAME[__xcore_wait_id - _RES_EV_FORCE_MASK]; \
     } \
   } while (0)
 
-#define _XCORE_SELECT_WAIT_HANDLER__XCORE_GTYPE_NONE(COND_, LABEL, TNAME, ...) \
-  _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__); \
-  goto LABEL;
+#define _XCORE_SELECT_WAIT_HANDLER__XCORE_GTYPE_NONE(_COND_, _LABEL, _TNAME, ...) \
+  _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, __VA_ARGS__); \
+  goto _LABEL;
 
-#define _XCORE_SELECT_WAIT_HANDLER__XCORE_NO_DEFAULT_CASE(COND_, LABEL_, TNAME, ...) \
-  goto* TNAME[select_wait() - RES_EV_FORCE_MASK];
+#define _XCORE_SELECT_WAIT_HANDLER__XCORE_NO_DEFAULT_CASE(_COND_, _LABEL_, _TNAME, ...) \
+  goto* _TNAME[select_wait() - _RES_EV_FORCE_MASK];
 
-#define _XCORE_SELECT_WAIT_HANDLER__XCORE_GTYPE_TRUE(COND, LABEL, TNAME, ...) \
+#define _XCORE_SELECT_WAIT_HANDLER__XCORE_GTYPE_TRUE(_COND, _LABEL, _TNAME, ...) \
   do { \
-    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__); \
-    const int __xcore_wait_cond = COND; \
+    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, __VA_ARGS__); \
+    const int __xcore_wait_cond = _COND; \
     if (__xcore_wait_cond) \
     { \
-      goto LABEL; \
+      goto _LABEL; \
     } \
     else \
     { \
-      goto* TNAME[select_wait() - RES_EV_FORCE_MASK]; \
+      goto* _TNAME[select_wait() - _RES_EV_FORCE_MASK]; \
     } \
   } while (0);
 
-#define _XCORE_SELECT_WAIT_HANDLER__XCORE_GTYPE_FALSE(COND, LABEL, TNAME, ...) \
+#define _XCORE_SELECT_WAIT_HANDLER__XCORE_GTYPE_FALSE(_COND, _LABEL, _TNAME, ...) \
   do { \
-    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__); \
-    const int __xcore_wait_cond = COND; \
+    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, __VA_ARGS__); \
+    const int __xcore_wait_cond = _COND; \
     if (__xcore_wait_cond) \
     { \
-      goto* TNAME[select_wait() - RES_EV_FORCE_MASK]; \
+      goto* _TNAME[select_wait() - _RES_EV_FORCE_MASK]; \
     } \
     else \
     { \
-      goto LABEL; \
+      goto _LABEL; \
     } \
   } while (0);
 
-#define _XCORE_SELECT_WAIT_HANDLER_NAME(SUFF) _XCORE_SELECT_WAIT_HANDLER_ ## SUFF
-#define _XCORE_SELECT_WAIT_HANDLER_I(LABEL, TYPE, COND, TNAME, ...) _XCORE_SELECT_WAIT_HANDLER_NAME(TYPE)(COND, LABEL, TNAME, __VA_ARGS__)
-#define _XCORE_SELECT_WAIT_HANDLER(DEFAULT_PACK, TNAME, ...) _XCORE_PSHIM(_XCORE_SELECT_WAIT_HANDLER_I, DEFAULT_PACK, TNAME, __VA_ARGS__)
+#define _XCORE_SELECT_WAIT_HANDLER_NAME(_SUFF) _XCORE_SELECT_WAIT_HANDLER_ ## _SUFF
+#define _XCORE_SELECT_WAIT_HANDLER_I(_LABEL, _TYPE, _COND, _TNAME, ...) _XCORE_SELECT_WAIT_HANDLER_NAME(_TYPE)(_COND, _LABEL, _TNAME, __VA_ARGS__)
+#define _XCORE_SELECT_WAIT_HANDLER(_DEFAULT_PACK, _TNAME, ...) _XCORE_PSHIM(_XCORE_SELECT_WAIT_HANDLER_I, _DEFAULT_PACK, _TNAME, __VA_ARGS__)
 
-#define _XCORE_SELECT_RES_I(TNAME, LNAME, DEFAULT_PACK, ...) \
+#define _XCORE_SELECT_RES_I(_TNAME, _LNAME, _DEFAULT_PACK, ...) \
   switch (0) for (const void *__xcore_select_reset;;) if (1) \
   { \
-    static void *TNAME[] = { _XCORE_SHIM(_XCORE_APPLY, _XCORE_LABELADDR, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) };\
+    static void *_TNAME[] = { _XCORE_SHIM(_XCORE_APPLY, _XCORE_LABELADDR, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) };\
     _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_ENABLER_REPEAT, __VA_ARGS__) \
-    _XCORE_SELECT_WAIT_HANDLER(DEFAULT_PACK, TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
+    _XCORE_SELECT_WAIT_HANDLER(_DEFAULT_PACK, _TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
   } \
   else if (0) \
   { \
   case 0: \
   default: \
-    __xcore_select_reset = &&LNAME; \
-  LNAME: \
+    __xcore_select_reset = &&_LNAME; \
+  _LNAME: \
     __xcore_select_disable_trigger_all(); \
-    unsigned __xcore_htable_idx = RES_EV_FORCE_MASK; \
+    unsigned __xcore_htable_idx = _RES_EV_FORCE_MASK; \
     _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
     _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_ENABLER_ONEOFF, __VA_ARGS__) \
   } \
@@ -144,55 +144,55 @@ inline void __xcore_select_setup_int(resource_t r, uint32_t value)  _XCORE_NOTHR
 
 #define _XCORE_SELECT_RES(...) _XCORE_SELECT_RES_I(_XCORE_UNIQUE_LABEL(__xcore_htable), _XCORE_UNIQUE_LABEL(__xcore_sel_reset), _XCORE_SELECT_RES_FILTER_DEFAULT(__VA_ARGS__), _XCORE_SELECT_RES_FILTER_RES(__VA_ARGS__))
 
-#define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_TRUE(RES, EXPR, TNAME, ...) \
+#define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_TRUE(_RES, _EXPR, _TNAME, ...) \
   do { \
-    register const int __xcore_enable_cond = EXPR; \
-    __xcore_resource_event_enable_if_true(RES, __xcore_enable_cond); \
+    register const int __xcore_enable_cond = _EXPR; \
+    __xcore_resource_event_enable_if_true(_RES, __xcore_enable_cond); \
     /*if (__xcore_enable_cond) { _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(__VA_ARGS__); } */\
-    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__); \
+    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, __VA_ARGS__); \
   } while (0);
 
-#define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_FALSE(RES, EXPR, TNAME, ...) \
+#define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_FALSE(_RES, _EXPR, _TNAME, ...) \
   do { \
-    register const int __xcore_enable_cond = EXPR; \
-    __xcore_resource_event_enable_if_false(RES, __xcore_enable_cond); \
+    register const int __xcore_enable_cond = _EXPR; \
+    __xcore_resource_event_enable_if_false(_RES, __xcore_enable_cond); \
     /* if (!__xcore_enable_cond) { _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(__VA_ARGS__); } */\
-    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__); \
+    _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, __VA_ARGS__); \
   } while (0);
 
-#define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_NONE(RES, EXPR_, TNAME, ...) \
-  __xcore_resource_event_enable_unconditional(RES); \
-  _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(TNAME, __VA_ARGS__);
+#define _XCORE_SELECT_RES_ENABLER_ORDERED__XCORE_GTYPE_NONE(_RES, _EXPR_, _TNAME, ...) \
+  __xcore_resource_event_enable_unconditional(_RES); \
+  _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, __VA_ARGS__);
 
 
-#define _XCORE_SELECT_RES_ENABLER_ORDERED_NAME(GTYPE)  _XCORE_SELECT_RES_ENABLER_ORDERED_ ## GTYPE
-#define _XCORE_SELECT_RES_ENABLER_ORDERED_III(RES, LABEL_, GTYPE, EXPR, TNAME, ...) _XCORE_SELECT_RES_ENABLER_ORDERED_NAME(GTYPE)(RES, EXPR, TNAME, __VA_ARGS__)
+#define _XCORE_SELECT_RES_ENABLER_ORDERED_NAME(_GTYPE)  _XCORE_SELECT_RES_ENABLER_ORDERED_ ## _GTYPE
+#define _XCORE_SELECT_RES_ENABLER_ORDERED_III(_RES, _LABEL_, _GTYPE, _EXPR, _TNAME, ...) _XCORE_SELECT_RES_ENABLER_ORDERED_NAME(_GTYPE)(_RES, _EXPR, _TNAME, __VA_ARGS__)
 #define _XCORE_SELECT_RES_ENABLER_ORDERED_II(...) _XCORE_SELECT_RES_ENABLER_ORDERED_III(__VA_ARGS__)
-#define _XCORE_SELECT_RES_ENABLER_ORDERED_I(LABELS, PACK) _XCORE_SELECT_RES_ENABLER_ORDERED_II(_XCORE_UNPACK(_XCORE_PACK_JOIN(PACK , LABELS)))
-#define _XCORE_SELECT_RES_ENABLER_ORDERED(PACK) _XCORE_SELECT_RES_ENABLER_ORDERED_I PACK
+#define _XCORE_SELECT_RES_ENABLER_ORDERED_I(_LABELS, _PACK) _XCORE_SELECT_RES_ENABLER_ORDERED_II(_XCORE_UNPACK(_XCORE_PACK_JOIN(_PACK , _LABELS)))
+#define _XCORE_SELECT_RES_ENABLER_ORDERED(_PACK) _XCORE_SELECT_RES_ENABLER_ORDERED_I _PACK
 
-#define _XCORE_SELECT_RES_ORDERED_II(TNAME, LNAME, DEFAULT_PACK, LABELS, ...) \
+#define _XCORE_SELECT_RES_ORDERED_II(_TNAME, _LNAME, _DEFAULT_PACK, _LABELS, ...) \
   switch (0) for (const void *__xcore_select_reset;;) if (1) \
   { \
-    static void *TNAME[] = { _XCORE_SHIM(_XCORE_APPLY, _XCORE_LABELADDR, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) }; \
+    static void *_TNAME[] = { _XCORE_SHIM(_XCORE_APPLY, _XCORE_LABELADDR, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) }; \
     __xcore_select_disable_trigger_all(); \
-    _XCORE_SHIM(_XCORE_APPLY_NOSEP, _XCORE_SELECT_RES_ENABLER_ORDERED, _XCORE_I(_XCORE_TAG(LABELS, __VA_ARGS__))) \
-    _XCORE_SELECT_WAIT_HANDLER(DEFAULT_PACK, TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
+    _XCORE_SHIM(_XCORE_APPLY_NOSEP, _XCORE_SELECT_RES_ENABLER_ORDERED, _XCORE_I(_XCORE_TAG(_LABELS, __VA_ARGS__))) \
+    _XCORE_SELECT_WAIT_HANDLER(_DEFAULT_PACK, _TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
   } \
   else if (0) \
   { \
   case 0: \
   default: \
-    __xcore_select_reset = &&LNAME; \
-  LNAME: \
+    __xcore_select_reset = &&_LNAME; \
+  _LNAME: \
     __xcore_select_disable_trigger_all(); \
-    unsigned __xcore_htable_idx = RES_EV_FORCE_MASK; \
+    unsigned __xcore_htable_idx = _RES_EV_FORCE_MASK; \
     _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
   } \
   else
 
 // Note: TNAME gets passed as first label name for convenience
-#define _XCORE_SELECT_RES_ORDERED_I(TNAME, LNAME, DEFAULT_PACK, ...) _XCORE_SELECT_RES_ORDERED_II(TNAME, LNAME, DEFAULT_PACK, (TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)), __VA_ARGS__)
+#define _XCORE_SELECT_RES_ORDERED_I(_TNAME, _LNAME, _DEFAULT_PACK, ...) _XCORE_SELECT_RES_ORDERED_II(_TNAME, _LNAME, _DEFAULT_PACK, (_TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)), __VA_ARGS__)
 
 #define _XCORE_SELECT_RES_ORDERED(...) \
   _XCORE_SELECT_RES_ORDERED_I( \
@@ -202,7 +202,9 @@ inline void __xcore_select_setup_int(resource_t r, uint32_t value)  _XCORE_NOTHR
     _XCORE_SELECT_RES_FILTER_RES(__VA_ARGS__))
 
 
-#define _XCORE_SELECT_RESET_I do { goto* __xcore_select_reset; } while (0)
+#define _XCORE_SELECT_RESET_I continue
+
+#define _XCORE_CONTINUE_NO_RESET_I do { goto* __xcore_select_reset; } while (0)
 
 #define _XCORE_CASE_RES(...) (_XCORE_SEL_RES, (__VA_ARGS__))
 #define _XCORE_CASE_DEFAULT(...) (_XCORE_SEL_DEFAULT, (__VA_ARGS__))

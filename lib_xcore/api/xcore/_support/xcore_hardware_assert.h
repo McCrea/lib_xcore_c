@@ -12,41 +12,41 @@ extern "C" {
 
 
 _XCORE_EXFUN
-inline void __xcore_ecallt(int value)
+inline void __xcore_ecallt(int __value)
 {
-  if (!(__builtin_constant_p(value) && !value))
+  if (!(__builtin_constant_p(__value) && !__value))
   {
-    asm volatile("ecallt %[value]" : : [value] "r" (value));
+    asm volatile("ecallt %[__value]" : : [__value] "r" (__value));
   }
-  __builtin_assume(value == 0);
+  __builtin_assume(__value == 0);
 }
 
 _XCORE_EXFUN
-inline void __xcore_ecallf(int value)
+inline void __xcore_ecallf(int __value)
 {
-  if (!(__builtin_constant_p(value) && value))
+  if (!(__builtin_constant_p(__value) && __value))
   {
-    asm volatile("ecallf %[value]" : : [value] "r" (value));
+    asm volatile("ecallf %[__value]" : : [__value] "r" (__value));
   }
-  __builtin_assume(value != 0);
+  __builtin_assume(__value != 0);
 }
 
 #ifdef _XCORE_HAS_REFERENCE_CLOCK
 
 _XCORE_EXFUN
-inline _Bool __xcore_not_after_reference_time(uint32_t v)
+inline _Bool __xcore_not_after_reference_time(uint32_t __v)
 {
-    const uint32_t r = __xcore_get_reference_time();
-    const unsigned tolerance = 1 << ((sizeof(int)*CHAR_BIT)-1);
-    return v >= tolerance
-      ? (r <= v || r > v+tolerance)
-      : (r <= v && r > v-tolerance); 
+    const uint32_t __r = __xcore_get_reference_time();
+    const unsigned __tolerance = 1 << ((sizeof(int)*CHAR_BIT)-1);
+    return __v >= __tolerance
+      ? (__r <= __v || __r > __v+__tolerance)
+      : (__r <= __v && __r > __v-__tolerance); 
 }
 
 _XCORE_EXFUN
-inline void __xcore_elate(uint32_t value)
+inline void __xcore_elate(uint32_t __value)
 {
-  asm volatile("elate %[value]" : : [value] "r" (value));
+  asm volatile("elate %[__value]" : : [__value] "r" (__value));
 }
 
 #endif

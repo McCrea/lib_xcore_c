@@ -7,6 +7,7 @@
 
 #include <xs1.h>
 #include <xcore/_support/xcore_common.h>
+#include <xcore/_support/xcore_meta_macro.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,7 +23,7 @@ extern "C" {
 _XCORE_EXFUN
 inline void interrupt_mask_all(void) _XCORE_NOTHROW
 {
-  asm volatile("clrsr" _XCORE_STR(XS1_SR_IEBLE_MASK));
+  asm volatile("clrsr" _XCORE_STRINGIFY(XS1_SR_IEBLE_MASK));
 }
 
 /** \brief Unmask all interrupts on this logical core.
@@ -34,7 +35,7 @@ inline void interrupt_mask_all(void) _XCORE_NOTHROW
 _XCORE_EXFUN
 inline void interrupt_unmask_all(void) _XCORE_NOTHROW
 {
-  asm volatile("setsr" _XCORE_STR(XS1_SR_IEBLE_MASK));
+  asm volatile("setsr" _XCORE_STRINGIFY(XS1_SR_IEBLE_MASK));
 }
 
 #ifdef __cplusplus

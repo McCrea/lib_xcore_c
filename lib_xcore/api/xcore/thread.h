@@ -48,25 +48,25 @@ inline threadgroup_t thread_group_alloc(void) _XCORE_NOTHROW
  *  That is, for a stack requirement of \c s words, <tt>[stack_base-s*word_size, stack_base]</tt> 
  *  will be  used as the thread's stack and will be clobbered.
  *  
- *  \param group           Thread group handle as returned by thread_group_alloc().
- *  \param func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
- *  \param[in] argument    Parameter to pass to \a func.
- *  \param[in] stack_base  Word aligned pointer to the last word of the region to use as a stack 
- *                         when calling \a func. Note that this can be calculated with stack_base().
+ *  \param __group           Thread group handle as returned by thread_group_alloc().
+ *  \param __func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
+ *  \param[in] __argument    Parameter to pass to \a func.
+ *  \param[in] __stack_base  Word aligned pointer to the last word of the region to use as a stack 
+ *                           when calling \a func. Note that this can be calculated with stack_base().
  *
  * \note Execution of \a func will not begin until the group is started using thread_group_start().
  */
 _XCORE_EXFUN
-inline void thread_group_add(const threadgroup_t group, 
-                             const thread_function_t func, 
-                             void * const argument, 
-                             void * const stack_base) _XCORE_NOTHROW
+inline void thread_group_add(const threadgroup_t __group, 
+                             const thread_function_t __func, 
+                             void * const __argument, 
+                             void * const __stack_base) _XCORE_NOTHROW
 {
-  const __xcore_thread_t thread = __xcore_create_synchronised_thread(group);
-  __xcore_set_thread_worker(thread, func);
-  __xcore_set_thread_stack(thread, stack_base);
-  __xcore_set_thread_parameter0(thread, argument);
-  __xcore_set_thread_terminator(thread, __xcore_synchronised_thread_end);
+  const __xcore_thread_t __xthread = __xcore_create_synchronised_thread(__group);
+  __xcore_set_thread_worker(__xthread, __func);
+  __xcore_set_thread_stack(__xthread, __stack_base);
+  __xcore_set_thread_parameter0(__xthread, __argument);
+  __xcore_set_thread_terminator(__xthread, __xcore_synchronised_thread_end);
 }
 
 /** \brief Starts all threads in a group running.
@@ -75,12 +75,12 @@ inline void thread_group_add(const threadgroup_t group,
  *  This function will return immediately regardless of the state of the threads.
  *  \note Use thread_group_wait() or thread_group_wait_and_free() to wait for the thread group to finish.
  *
- *  \param group  The thread group to start.
+ *  \param __group  The thread group to start.
  */
 _XCORE_EXFUN
-inline void thread_group_start(const threadgroup_t group) _XCORE_NOTHROW
+inline void thread_group_start(const threadgroup_t __group) _XCORE_NOTHROW
 {
-  __xcore_thread_group_sync(group);
+  __xcore_thread_group_sync(__group);
 }
 
 /** \brief Frees a thread group.
@@ -90,12 +90,12 @@ inline void thread_group_start(const threadgroup_t group) _XCORE_NOTHROW
  *  \attention This function must not be called on a thread group which has been started
  *             but not waited upon, even if its constituent threads have finished executing.
  *
- *  \param group  The group to free. 
+ *  \param __group  The group to free. 
  */
 _XCORE_EXFUN
-inline void thread_group_free(const threadgroup_t group) _XCORE_NOTHROW
+inline void thread_group_free(const threadgroup_t __group) _XCORE_NOTHROW
 {
-  __xcore_resource_free(group);
+  __xcore_resource_free(__group);
 }
 
 /** \brief Wait for all threads in a thread group to finish.
@@ -107,12 +107,12 @@ inline void thread_group_free(const threadgroup_t group) _XCORE_NOTHROW
  *
  *  \note Since the group remains valid, it should be freed with thread_group_free() if no longer required.
  *
- *  \param group  The group to wait for completion.
+ *  \param __group  The group to wait for completion.
  */
 _XCORE_EXFUN
-inline void thread_group_wait(const threadgroup_t group) _XCORE_NOTHROW
+inline void thread_group_wait(const threadgroup_t __group) _XCORE_NOTHROW
 {
-  __xcore_thread_group_join(group);
+  __xcore_thread_group_join(__group);
 }
 
 /** \brief Waits for a thread group to finish then frees it.
@@ -123,10 +123,10 @@ inline void thread_group_wait(const threadgroup_t group) _XCORE_NOTHROW
  * \b Calls \li thread_group_wait() \li thread_group_free()
  */
 _XCORE_EXFUN
-inline void thread_group_wait_and_free(const threadgroup_t group) _XCORE_NOTHROW
+inline void thread_group_wait_and_free(const threadgroup_t __group) _XCORE_NOTHROW
 {
-  thread_group_wait(group);
-  thread_group_free(group);
+  thread_group_wait(__group);
+  thread_group_free(__group);
 }
 
 /** \brief Runs a function in another thread and returns a waitable handle.
@@ -142,21 +142,21 @@ inline void thread_group_wait_and_free(const threadgroup_t group) _XCORE_NOTHROW
  *        The thread will not be returned to the pool upon completion - it is necessary to call 
  *        xthread_wait_and_free() to free the thread so that it may be reused.
  *
- *  \param func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
- *  \param[in] argument    Parameter to pass to \a func.
- *  \param[in] stack_base  Word aligned pointer to the last word of the region to use as a stack 
- *                         when calling \a func. Note that this can be calculated with stack_base().
+ *  \param __func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
+ *  \param[in] __argument    Parameter to pass to \a func.
+ *  \param[in] __stack_base  Word aligned pointer to the last word of the region to use as a stack 
+ *                           when calling \a func. Note that this can be calculated with stack_base().
  *  \return A waitable handle for the hardware thread.
  */
 _XCORE_EXFUN
-inline xthread_t xthread_alloc_and_start(const thread_function_t func, 
-                                         void * const argument,
-                                         void * const stack_base) _XCORE_NOTHROW
+inline xthread_t xthread_alloc_and_start(const thread_function_t __func, 
+                                         void * const __argument,
+                                         void * const __stack_base) _XCORE_NOTHROW
 {
-  const __xcore_thread_t group = thread_group_alloc();
-  thread_group_add(group, func, argument, stack_base);
-  thread_group_start(group);
-  return group;
+  const __xcore_thread_t __group = thread_group_alloc();
+  thread_group_add(__group, __func, __argument, __stack_base);
+  thread_group_start(__group);
+  return __group;
 }
 
 /** \brief Wait for a thread to finish and then free it.
@@ -166,12 +166,12 @@ inline xthread_t xthread_alloc_and_start(const thread_function_t func,
  *  and upon completion it will free the associated hardware thread. \a thread must not be re-used
  *  after it has been freed.
  *
- *  \param thread  The thread to wait on, as returned by xthread_alloc_and_start().
+ *  \param __xthread  The thread to wait on, as returned by xthread_alloc_and_start().
  */
 _XCORE_EXFUN
-inline void xthread_wait_and_free(const xthread_t thread) _XCORE_NOTHROW
+inline void xthread_wait_and_free(const xthread_t __xthread) _XCORE_NOTHROW
 {
-  thread_group_wait_and_free(thread);
+  thread_group_wait_and_free(__xthread);
 }
 
 
@@ -189,22 +189,22 @@ inline void xthread_wait_and_free(const xthread_t thread) _XCORE_NOTHROW
  *        If it necessary to wait for the completion of \a func then xthread_alloc_and_start() and
  *        xthread_wait_and_free() should be used instead.
  *
- *  \param func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
- *  \param[in] argument    Parameter to pass to \a func.
- *  \param[in] stack_base  Word aligned pointer to the last word of the region to use as a stack 
- *                         when calling \a func. Note that this can be calculated with stack_base().
+ *  \param __func            Function to call in separate thread with siganture <tt>void(void*)</tt>.
+ *  \param[in] __argument    Parameter to pass to \a func.
+ *  \param[in] __stack_base  Word aligned pointer to the last word of the region to use as a stack 
+ *                           when calling \a func. Note that this can be calculated with stack_base().
  */
 _XCORE_EXFUN
-inline void run_async(const thread_function_t func,
-                      void * const argument,
-                      void * const stack_base) _XCORE_NOTHROW
+inline void run_async(const thread_function_t __func,
+                      void * const __argument,
+                      void * const __stack_base) _XCORE_NOTHROW
 {
-  const __xcore_thread_t thread = __xcore_allocate_unsynchronised_thread();
-  __xcore_set_thread_worker(thread, func);
-  __xcore_set_thread_stack(thread, stack_base);
-  __xcore_set_thread_parameter0(thread, argument);
-  __xcore_set_thread_terminator(thread, __xcore_unsynchronised_thread_end);
-  __xcore_unsynronised_thread_start(thread);
+  const __xcore_thread_t __xthread = __xcore_allocate_unsynchronised_thread();
+  __xcore_set_thread_worker(__xthread, __func);
+  __xcore_set_thread_stack(__xthread, __stack_base);
+  __xcore_set_thread_parameter0(__xthread, __argument);
+  __xcore_set_thread_terminator(__xthread, __xcore_unsynchronised_thread_end);
+  __xcore_unsynronised_thread_start(__xthread);
 }
 
 
@@ -221,15 +221,15 @@ inline void run_async(const thread_function_t func,
  *   words then the memory region used as a stack by that function will not be beyond
  *   <tt>[mem_base, (char *)mem_base + words*WORD_SIZE)</tt> in either direction.
  *
- *   \param[in] mem_base  The base (lowest) address of the object/region to use as a stack.
- *                        Must be word aligned.
- *   \param words         Size of the stack the returned pointed will return to in words
- *   \return              The stack pointer.
+ *   \param[in] __mem_base  The base (lowest) address of the object/region to use as a stack.
+ *                          Must be word aligned.
+ *   \param __words         Size of the stack the returned pointed will return to in words
+ *   \return                The stack pointer.
  */
 _XCORE_EXFUN
-inline void *stack_base(void * const mem_base, size_t const words) _XCORE_NOTHROW
+inline void *stack_base(void * const __mem_base, size_t const __words) _XCORE_NOTHROW
 {
-  return (void *)((char *)mem_base + (sizeof(int)*words) - _XCORE_STACK_ALIGN_REQUIREMENT);
+  return (void *)((char *)__mem_base + (sizeof(int)*__words) - _XCORE_STACK_ALIGN_REQUIREMENT);
 }
 
 #ifdef __cplusplus

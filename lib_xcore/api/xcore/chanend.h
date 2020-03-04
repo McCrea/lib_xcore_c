@@ -3,6 +3,7 @@
 
 /** \file
  *  \brief Low level channel end API
+ *  \attention It is strongly recommended that higher-level 'channel' protocols are used e.g. \ref xcore/channel.h or \ref xcore/channel_streaming.h
  */
 
 #include <stdint.h>
@@ -40,7 +41,7 @@ inline chanend_t chanend_alloc() _XCORE_NOTHROW
  * 
  *  \attention The last transfer on the chanend must have been a CT_END token.
  *
- *  \param c    chanend to free.
+ *  \param __c    chanend to free.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chanend,
  *                                    an input/output is pending,
@@ -48,114 +49,113 @@ inline chanend_t chanend_alloc() _XCORE_NOTHROW
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
  */
 _XCORE_EXFUN
-inline void chanend_free(chanend_t c) _XCORE_NOTHROW
+inline void chanend_free(chanend_t __c) _XCORE_NOTHROW
 {
-  __xcore_chanend_free(c);
+  __xcore_chanend_free(__c);
 }
 
 /** \brief Set the destination of a chanend
  *
- *  \param c    chanend to set.
- *  \param dst  Destination chanend.
+ *  \param __c    chanend to set.
+ *  \param __dst  Destination chanend.
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chanend.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chanend.
 */
 _XCORE_EXFUN
-inline void chanend_set_dest(chanend_t c, chanend_t dst) _XCORE_NOTHROW
+inline void chanend_set_dest(chanend_t __c, chanend_t __dst) _XCORE_NOTHROW
 {
-  __xcore_chanend_set_dest(c, dst);
-}
-
-// New
-_XCORE_EXFUN
-inline chanend_t chanend_get_dest(chanend_t c) _XCORE_NOTHROW
-{
-  return __xcore_chanend_get_dest(c);
+  __xcore_chanend_set_dest(__c, __dst);
 }
 
 _XCORE_EXFUN
-inline void chanend_out_byte(chanend_t c, char b) _XCORE_NOTHROW
+inline chanend_t chanend_get_dest(chanend_t __c) _XCORE_NOTHROW
 {
-  __xcore_chanend_out_byte(c, b);
+  return __xcore_chanend_get_dest(__c);
 }
 
 _XCORE_EXFUN
-inline void chanend_out_word(chanend_t c, uint32_t w) _XCORE_NOTHROW
+inline void chanend_out_byte(chanend_t __c, char __b) _XCORE_NOTHROW
 {
-  __xcore_chanend_out_word(c, w);
+  __xcore_chanend_out_byte(__c, __b);
 }
 
 _XCORE_EXFUN
-inline void chanend_out_control_token(chanend_t c, char ct) _XCORE_NOTHROW
+inline void chanend_out_word(chanend_t __c, uint32_t __w) _XCORE_NOTHROW
 {
-  __xcore_chanend_out_ct(c, ct);
+  __xcore_chanend_out_word(__c, __w);
 }
 
 _XCORE_EXFUN
-inline char chanend_in_byte(chanend_t c) _XCORE_NOTHROW
+inline void chanend_out_control_token(chanend_t __c, char __ct) _XCORE_NOTHROW
 {
-  return __xcore_chanend_in_byte(c);
+  __xcore_chanend_out_ct(__c, __ct);
 }
 
 _XCORE_EXFUN
-inline uint32_t chanend_in_word(chanend_t c) _XCORE_NOTHROW
+inline char chanend_in_byte(chanend_t __c) _XCORE_NOTHROW
 {
-  return __xcore_chanend_in_word(c);
+  return __xcore_chanend_in_byte(__c);
 }
 
 _XCORE_EXFUN
-inline char chanend_in_control_token(chanend_t c) _XCORE_NOTHROW
+inline uint32_t chanend_in_word(chanend_t __c) _XCORE_NOTHROW
 {
-  return __xcore_chanend_in_ct(c);
+  return __xcore_chanend_in_word(__c);
 }
 
 _XCORE_EXFUN
-inline void chanend_check_control_token(chanend_t c, const char ct) _XCORE_NOTHROW
+inline char chanend_in_control_token(chanend_t __c) _XCORE_NOTHROW
 {
-  __xcore_chanend_check_ct(c, ct);
+  return __xcore_chanend_in_ct(__c);
 }
 
 _XCORE_EXFUN
-inline int chanend_test_control_token_next_byte(chanend_t c) _XCORE_NOTHROW
+inline void chanend_check_control_token(chanend_t __c, const char __ct) _XCORE_NOTHROW
 {
-  return __xcore_chanend_test_control_token(c);
+  __xcore_chanend_check_ct(__c, __ct);
 }
 
 _XCORE_EXFUN
-inline int chanend_test_control_token_next_word(chanend_t c) _XCORE_NOTHROW
+inline int chanend_test_control_token_next_byte(chanend_t __c) _XCORE_NOTHROW
 {
-  return __xcore_chanend_test_control_token_word(c);
+  return __xcore_chanend_test_control_token(__c);
 }
 
 _XCORE_EXFUN
-inline int chanend_test_dest_local(chanend_t c) _XCORE_NOTHROW
+inline int chanend_test_control_token_next_word(chanend_t __c) _XCORE_NOTHROW
 {
-  return __xcore_chanend_test_dest_local(c);
+  return __xcore_chanend_test_control_token_word(__c);
 }
 
 _XCORE_EXFUN
-inline void chanend_set_network(chanend_t c, uint32_t net) _XCORE_NOTHROW
+inline int chanend_test_dest_local(chanend_t __c) _XCORE_NOTHROW
 {
-  __xcore_channend_set_network(c, net);
+  return __xcore_chanend_test_dest_local(__c);
 }
 
 _XCORE_EXFUN
-inline unsigned chanend_get_network(chanend_t c) _XCORE_NOTHROW
+inline void chanend_set_network(chanend_t __c, uint32_t __net) _XCORE_NOTHROW
 {
-  return __xcore_channend_get_network(c);
+  __xcore_channend_set_network(__c, __net);
 }
 
 _XCORE_EXFUN
-inline void chanend_out_end_token(resource_t c) _XCORE_NOTHROW
+inline unsigned chanend_get_network(chanend_t __c) _XCORE_NOTHROW
 {
-  __xcore_chanend_out_ct(c, XS1_CT_END);
+  return __xcore_channend_get_network(__c);
+}
+
+_XCORE_EXFUN
+inline void chanend_out_end_token(resource_t __c) _XCORE_NOTHROW
+{
+  __xcore_chanend_out_ct(__c, XS1_CT_END);
 }
 
 _XCORE_EXFUN 
-inline void chanend_check_end_token(resource_t c) _XCORE_NOTHROW
+inline void chanend_check_end_token(resource_t __c) _XCORE_NOTHROW
 {
-  __xcore_chanend_check_ct(c, XS1_CT_END);
+  __xcore_chanend_check_ct(__c, XS1_CT_END);
 }
 
 #ifdef __cplusplus

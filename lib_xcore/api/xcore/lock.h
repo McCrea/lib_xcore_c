@@ -34,7 +34,7 @@ inline lock_t lock_alloc() _XCORE_NOTHROW
  *
  *  The lock must be released prior to calling this function.
  *
- *  \param l  The lock_t to be freed
+ *  \param __l  The lock_t to be freed
  *
  *  \exception  ET_ILLEGAL_RESOURCE  not an allocated lock,
  *                                   or the lock has not been released.
@@ -42,9 +42,9 @@ inline lock_t lock_alloc() _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE        invalid \a l argument.
  */
 _XCORE_EXFUN
-inline void lock_free(lock_t l) _XCORE_NOTHROW
+inline void lock_free(lock_t __l) _XCORE_NOTHROW
 {
-  __xcore_resource_free((resource_t)l);
+  __xcore_resource_free((resource_t)__l);
 }
 
 /** \brief Acquire a lock.
@@ -54,15 +54,15 @@ inline void lock_free(lock_t l) _XCORE_NOTHROW
  *  lock then this function will pause until the lock is released and this core
  *  becomes the owner.
  *
- *  \param l  The lock_t to acquire
+ *  \param __l  The lock_t to acquire
  *
  *  \exception  ET_ILLEGAL_RESOURCE  not an allocated lock.
  *  \exception  ET_RESOURCE_DEP      another core is actively changing the lock.
  */
 _XCORE_EXFUN
-inline void lock_acquire(lock_t l) _XCORE_NOTHROW
+inline void lock_acquire(lock_t __l) _XCORE_NOTHROW
 {
-  __xcore_lock_acquire(l);
+  __xcore_lock_acquire(__l);
 }
 
 /** \brief Release a lock.
@@ -72,15 +72,15 @@ inline void lock_acquire(lock_t l) _XCORE_NOTHROW
  *  \note There are no checks that the core releasing the lock is the current
  *        owner.
  *
- *  \param l  The lock_t to use release
+ *  \param __l  The lock_t to use release
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated lock.
  *  \exception  ET_RESOURCE_DEP       another core is actively changing the lock.
  */
 _XCORE_EXFUN
-inline void lock_release(lock_t l) _XCORE_NOTHROW
+inline void lock_release(lock_t __l) _XCORE_NOTHROW
 {
-  __xcore_lock_release(l);
+  __xcore_lock_release(__l);
 }
 
 #ifdef __cplusplus

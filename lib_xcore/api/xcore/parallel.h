@@ -35,12 +35,12 @@ extern "C" {
 /** \brief Specifies a parallelised function call
  *
  * Expands to a function call desciption which can be used as an argument to PAR_FUNCS.
- *  \param FUNCTION    a function with siganture <tt>void (void *)</tt>
- *  \param ARGUMENT    the argument to pass to \a FUNCTION - must be implicitly convertible to <tt>void *</tt>
+ *  \param _FUNCTION    a function with siganture <tt>void (void *)</tt>
+ *  \param _ARGUMENT    the argument to pass to \a FUNCTION - must be implicitly convertible to <tt>void *</tt>
  * \see PAR_FUNCS
  * \hideinitializer
  */
-#define PFUNC(FUNCTION, ARGUMENT) (FUNCTION, ARGUMENT)
+#define PFUNC(_FUNCTION, _ARGUMENT) (_FUNCTION, _ARGUMENT)
 
 /** \brief Declare a \c void function with arbitrary functions which can be dispatched in another thread
  *
@@ -61,11 +61,11 @@ extern "C" {
  * \see \li PJOB \li PAR_JOBS
  * \hideinitializer
  */
-#define DECLARE_JOB(NAME, ARG_TYPES_PACK) \
-  DECLARE_JOB_I(NAME, \
-                _XCORE_PAR_ARG_STRUCT_NAME(NAME), \
-                _XCORE_PAR_ARG_PACK_PREPARE(ARG_TYPES_PACK), \
-                ARG_TYPES_PACK)
+#define DECLARE_JOB(_NAME, _ARG_TYPES_PACK) \
+  DECLARE_JOB_I(_NAME, \
+                _XCORE_PAR_ARG_STRUCT_NAME(_NAME), \
+                _XCORE_PAR_ARG_PACK_PREPARE(_ARG_TYPES_PACK), \
+                _ARG_TYPES_PACK)
 
 /** \brief Calls a list of functions declared using DECLARE_JOB in parallel
  *
@@ -94,14 +94,14 @@ extern "C" {
 /** \brief Specifies a parallelised call of a function declared with DECLARE_JOB
  *
  * Expands to a function call desciption which can be used as an argument to PAR_JOBS.
- *  \param FUNCTION  a function which was declared using DECLARE_JOB
- *  \param ARGPACK   pack of the arguments to pass to \a FUNCTION - each must be implicitly
- *                   convertible to its respective parameter type.
- *                   E.g. <tt>(5, NULL)</tt> for <tt>void(int, int *)</tt>
+ *  \param _FUNCTION  a function which was declared using DECLARE_JOB
+ *  \param _ARGPACK   pack of the arguments to pass to \a FUNCTION - each must be implicitly
+ *                    convertible to its respective parameter type.
+ *                    E.g. <tt>(5, NULL)</tt> for <tt>void(int, int *)</tt>
  * \see \li PAR_JOBS \li DECLARE_JOB
  * \hideinitializer
  */
-#define PJOB(FUNCTION, ARGPACK) (FUNCTION, ARGPACK)
+#define PJOB(_FUNCTION, _ARGPACK) (_FUNCTION, _ARGPACK)
 
 #ifdef __cplusplus
 }

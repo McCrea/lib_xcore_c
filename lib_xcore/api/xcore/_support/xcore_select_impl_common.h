@@ -14,6 +14,8 @@
 extern "C" {
 #endif
 
+__thread
+extern int __xcore_select_clobbered;
 
 _XCORE_EXFUN
 inline void __xcore_select_disable_trigger_all(void) _XCORE_NOTHROW
@@ -23,8 +25,8 @@ inline void __xcore_select_disable_trigger_all(void) _XCORE_NOTHROW
 
 
 #define _XCORE_GUARD_NONE _XCORE_GTYPE_NONE, /* Guard expression should never be used */
-#define _XCORE_GUARD_TRUE(EXPR) _XCORE_GTYPE_TRUE, EXPR
-#define _XCORE_GUARD_FALSE(EXPR) _XCORE_GTYPE_FALSE, EXPR
+#define _XCORE_GUARD_TRUE(_EXPR) _XCORE_GTYPE_TRUE, _EXPR
+#define _XCORE_GUARD_FALSE(_EXPR) _XCORE_GTYPE_FALSE, _EXPR
 
 #ifdef __cplusplus
 }

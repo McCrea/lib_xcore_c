@@ -7,33 +7,25 @@
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 _XCORE_EXFUN
 inline resource_t __xcore_lock_alloc(void)
 {
-  resource_t l;
-  _RESOURCE_ALLOC(l, XS1_RES_TYPE_LOCK);
-  return l;
+  resource_t __l;
+  _RESOURCE_ALLOC(__l, XS1_RES_TYPE_LOCK);
+  return __l;
 }
 
 _XCORE_EXFUN
-inline void __xcore_lock_acquire(resource_t l)
+inline void __xcore_lock_acquire(resource_t __l)
 {
-  unsigned dummy;
-  asm volatile("in %0, res[%1]" : "=r" (dummy): "r" (l) : "memory");
+  asm volatile("in %[__lock], res[%[__lock]]"
+               : /* 'in' on a Lock is guaranteed input the handle, so we pretend this has no output */
+               : [__lock] "r" (__l)
+               : "memory");
 }
 
 _XCORE_EXFUN
-inline void __xcore_lock_release(resource_t l)
+inline void __xcore_lock_release(resource_t __l)
 {
-  asm volatile("out res[%0], %0" :: "r" (l) : "memory");
+  asm volatile("out res[%[__lock]], %[__lock]" :: [__lock] "r" (__l) : "memory");
 }
-
-#ifdef __cplusplus
-}
-#endif
-

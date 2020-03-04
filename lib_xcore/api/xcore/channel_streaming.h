@@ -38,35 +38,35 @@ typedef struct streaming_channel_t {
 _XCORE_EXFUN
 inline streaming_channel_t s_chan_alloc() _XCORE_NOTHROW
 {
-  streaming_channel_t c;
+  streaming_channel_t __c;
 
-  if ((c.end_a = chanend_alloc()))
+  if ((__c.end_a = chanend_alloc()))
   {
-    if ((c.end_b = chanend_alloc()))
+    if ((__c.end_b = chanend_alloc()))
     {
       // exception safe calls to __xcore_s_chanend_set_dest()
-      chanend_set_dest(c.end_a, c.end_b);
-      chanend_set_dest(c.end_b, c.end_a);
+      chanend_set_dest(__c.end_a, __c.end_b);
+      chanend_set_dest(__c.end_b, __c.end_a);
     }
     else
     {
-      chanend_free(c.end_a);
-      c.end_a = 0;
-      c.end_b = 0;
+      chanend_free(__c.end_a);
+      __c.end_a = 0;
+      __c.end_b = 0;
     }
   }
   else
   {
-    c.end_a = 0;
-    c.end_b = 0;
+    __c.end_a = 0;
+    __c.end_b = 0;
   }
 
-  return c;
+  return __c;
 }
 
 /** \brief Deallocate a streaming_channel_t by freeing its two hardware chan-ends.
  *
- *  \param c    streaming_channel_t to free.
+ *  \param __c    streaming_channel_t to free.
  *
  *  \exception  ET_LINK_ERROR         a chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated channel,
@@ -74,51 +74,51 @@ inline streaming_channel_t s_chan_alloc() _XCORE_NOTHROW
  *  \exception  ET_RESOURCE_DEP       another core is actively using the channel.
  */
 _XCORE_EXFUN
-inline void s_chan_free(streaming_channel_t c) _XCORE_NOTHROW
+inline void s_chan_free(streaming_channel_t __c) _XCORE_NOTHROW
 {
-  chanend_out_end_token(c.end_a);
-  chanend_out_end_token(c.end_b);
-  chanend_check_end_token(c.end_a);
-  chanend_check_end_token(c.end_b);
-  chanend_free(c.end_a);
-  chanend_free(c.end_b);
+  chanend_out_end_token(__c.end_a);
+  chanend_out_end_token(__c.end_b);
+  chanend_check_end_token(__c.end_a);
+  chanend_check_end_token(__c.end_b);
+  chanend_free(__c.end_a);
+  chanend_free(__c.end_b);
 }
 
 /** \brief Output a word over a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
- *  \param data The word to be output
+ *  \param __c    The streaming chan-end
+ *  \param __data The word to be output
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void s_chan_out_word(chanend_t c, uint32_t data) _XCORE_NOTHROW
+inline void s_chan_out_word(chanend_t __c, uint32_t __data) _XCORE_NOTHROW
 {
-  chanend_out_word(c, data);
+  chanend_out_word(__c, __data);
 }
 
 /** \brief Output an byte over a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
- *  \param data The byte to be output
+ *  \param __c    The streaming chan-end
+ *  \param __data The byte to be output
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline void s_chan_out_byte(chanend_t c, uint8_t data) _XCORE_NOTHROW
+inline void s_chan_out_byte(chanend_t __c, uint8_t __data) _XCORE_NOTHROW
 {
-  chanend_out_byte(c, data);
+  chanend_out_byte(__c, __data);
 }
 
 /** \brief Output a block of data over a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
- *  \param buf  A pointer to the buffer containing the data to send
- *  \param n    The number of words to send
+ *  \param __c    The streaming chan-end
+ *  \param __buf  A pointer to the buffer containing the data to send
+ *  \param __n    The number of words to send
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
@@ -126,19 +126,19 @@ inline void s_chan_out_byte(chanend_t c, uint8_t data) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n) _XCORE_NOTHROW
+inline void s_chan_out_buf_word(chanend_t __c, const uint32_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  for (size_t i = 0; i < n; i++)
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    chanend_out_word(c, buf[i]);
+    chanend_out_word(__c, __buf[__i]);
   }
 }
 
 /** \brief Output a block of data over a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
- *  \param buf  A pointer to the buffer containing the data to send
- *  \param n    The number of bytes to send
+ *  \param __c    The streaming chan-end
+ *  \param __buf  A pointer to the buffer containing the data to send
+ *  \param __n    The number of bytes to send
  *
  *  \exception  ET_LINK_ERROR         chan-end destination is not set.
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end.
@@ -146,17 +146,17 @@ inline void s_chan_out_buf_word(chanend_t c, const uint32_t buf[], size_t n) _XC
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n) _XCORE_NOTHROW
+inline void s_chan_out_buf_byte(chanend_t __c, const uint8_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  for (size_t i = 0; i < n; i++)
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    chanend_out_byte(c, buf[i]);
+    chanend_out_byte(__c, __buf[__i]);
   }
 }
 
 /** \brief Input a word from a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
+ *  \param __c    The streaming chan-end
  *  \return     The word read from the channel
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -164,14 +164,14 @@ inline void s_chan_out_buf_byte(chanend_t c, const uint8_t buf[], size_t n) _XCO
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline uint32_t s_chan_in_word(chanend_t c) _XCORE_NOTHROW
+inline uint32_t s_chan_in_word(chanend_t __c) _XCORE_NOTHROW
 {
-  return chanend_in_word(c);
+  return chanend_in_word(__c);
 }
 
 /** \brief Input a byte from a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
+ *  \param __c    The streaming chan-end
  *  \return     The byte read from the channel
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
@@ -179,16 +179,16 @@ inline uint32_t s_chan_in_word(chanend_t c) _XCORE_NOTHROW
  *  \exception  ET_RESOURCE_DEP       another core is actively using the chan-end.
  */
 _XCORE_EXFUN
-inline uint8_t s_chan_in_byte(chanend_t c) _XCORE_NOTHROW
+inline uint8_t s_chan_in_byte(chanend_t __c) _XCORE_NOTHROW
 {
-  return chanend_in_byte(c);
+  return chanend_in_byte(__c);
 }
 
 /** \brief Input a block of data from a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
- *  \param buf  A pointer to the memory region to fill
- *  \param n    The number of words to receive
+ *  \param __c    The streaming chan-end
+ *  \param __buf  A pointer to the memory region to fill
+ *  \param __n    The number of words to receive
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
  *                                    or has pending control token.
@@ -196,19 +196,19 @@ inline uint8_t s_chan_in_byte(chanend_t c) _XCORE_NOTHROW
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n) _XCORE_NOTHROW
+inline void s_chan_in_buf_word(chanend_t __c, uint32_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  for (size_t i = 0; i < n; i++)
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    buf[i] = chanend_in_word(c);
+    __buf[__i] = chanend_in_word(__c);
   }
 }
 
 /** \brief Input a block of data from a streaming_channel_t.
  *
- *  \param c    The streaming chan-end
- *  \param buf  A pointer to the memory region to fill
- *  \param n    The number of bytes to receive
+ *  \param __c    The streaming chan-end
+ *  \param __buf  A pointer to the memory region to fill
+ *  \param __n    The number of bytes to receive
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not an allocated chan-end,
  *                                    or has pending control token.
@@ -216,11 +216,11 @@ inline void s_chan_in_buf_word(chanend_t c, uint32_t buf[], size_t n) _XCORE_NOT
  *  \exception  ET_LOAD_STORE         invalid *buf[]* argument.
  */
 _XCORE_EXFUN
-inline void s_chan_in_buf_byte(chanend_t c, uint8_t buf[], size_t n) _XCORE_NOTHROW
+inline void s_chan_in_buf_byte(chanend_t __c, uint8_t __buf[], size_t __n) _XCORE_NOTHROW
 {
-  for (size_t i = 0; i < n; i++)
+  for (size_t __i = 0; __i < __n; __i++)
   {
-    buf[i] = chanend_in_byte(c);
+    __buf[__i] = chanend_in_byte(__c);
   }
 }
 

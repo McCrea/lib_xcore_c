@@ -15,9 +15,9 @@ extern "C" {
 _XCORE_EXFUN
 inline uint32_t __xcore_get_reference_time(void)
 {
-  uint32_t time;
-  asm volatile ("gettime %[reftime]" : [reftime] "=r" (time));
-  return time;
+  uint32_t __time;
+  asm volatile ("gettime %[__reftime]" : [__reftime] "=r" (__time));
+  return __time;
 }
 
 #endif
