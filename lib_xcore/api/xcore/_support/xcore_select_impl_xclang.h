@@ -59,7 +59,7 @@ extern "C" {
   asm goto("setsr %[__mask] \n" \
            "clrsr %[__mask] \n" \
            : /* Can't have outputs */ \
-           : [__mask] "n"(XS1_SR_EEBLE_MASK) \
+           : [__mask] "n" (XS1_SR_EEBLE_MASK) \
            : /* No clobbers */ \
            : __VA_ARGS__)
 
@@ -118,14 +118,15 @@ extern "C" {
 #define _XCORE_SELECT_RES_II(_LNAME, _DEFAULT_PACK, ...) \
   switch (0) \
     for(; 0; __xcore_select_clobbered = 1) \
-      for (const void *__xcore_select_reset;;) \
+      for (const void *__xcore_select_reset, *__xcore_select_noreset;;) \
         if (1) \
   { \
     if (__builtin_expect(__xcore_select_clobbered, 0)) \
     { \
     case 0: \
     default: \
-      __xcore_select_reset = &&_LNAME ## __noreset; \
+      __xcore_select_reset = &&_LNAME ## __reset; \
+      __xcore_select_noreset = &&_LNAME ## __noreset; \
     _LNAME ## __reset: \
       __xcore_select_clobbered = 0; \
       __xcore_select_disable_trigger_all(); \
@@ -133,7 +134,7 @@ extern "C" {
       _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_ENABLER_ONEOFF, __VA_ARGS__) \
     } \
   _LNAME ## __noreset: \
-    __builtin_assume(!__xcore_select_clobbered); \
+    __builtin_assume(__xcore_select_clobbered == 0); \
     _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_ENABLER_REPEAT, __VA_ARGS__) \
     _XCORE_SELECT_WAIT_HANDLER(_DEFAULT_PACK, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
   } \
@@ -170,23 +171,31 @@ extern "C" {
 #define _XCORE_SELECT_RES_ENABLER_ORDERED(_PACK) _XCORE_SELECT_RES_ENABLER_ORDERED_I _PACK
 
 #define _XCORE_SELECT_RES_ORDERED_II(_LNAME, _DEFAULT_PACK, _LABELS, ...) \
-  switch (0) for (const void *__xcore_select_reset;;) if (1) \
+  switch (0) \
+    for(; 0; __xcore_select_clobbered = 1) \
+      for (const void *__xcore_select_reset, *__xcore_select_noreset;;) \
+        if (1) \
   { \
+    if (__builtin_expect(__xcore_select_clobbered, 0)) \
+    { \
+    case 0: \
+    default: \
+      __xcore_select_reset = &&_LNAME ## __reset; \
+      __xcore_select_noreset = &&_LNAME ## __noreset; \
+    _LNAME ## __reset: \
+      __xcore_select_clobbered = 0; \
+      _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
+    } \
+  _LNAME ## __noreset: \
+    __builtin_assume(__xcore_select_clobbered == 0); \
     __xcore_select_disable_trigger_all(); \
     _XCORE_SHIM(_XCORE_APPLY_NOSEP, _XCORE_SELECT_RES_ENABLER_ORDERED, _XCORE_I(_XCORE_TAG(_LABELS, __VA_ARGS__))) \
     _XCORE_SELECT_WAIT_HANDLER(_DEFAULT_PACK, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
   } \
-  else if (0) \
-  { \
-  case 0: \
-  default: \
-    __xcore_select_reset = &&_LNAME; \
-  _LNAME: \
-    _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
-  } \
   else
 
-#define _XCORE_SELECT_RES_ORDERED_I(_LNAME, _DEFAULT_PACK, ...) _XCORE_SELECT_RES_ORDERED_II(_LNAME, _DEFAULT_PACK, (_XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)), __VA_ARGS__)
+#define _XCORE_SELECT_RES_ORDERED_I(_LNAME, _DEFAULT_PACK, ...) \
+    _XCORE_SELECT_RES_ORDERED_II(_LNAME, _DEFAULT_PACK, (_XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)), __VA_ARGS__)
 
 #define _XCORE_SELECT_RES_ORDERED(...) \
   _XCORE_SELECT_RES_ORDERED_I( \
@@ -195,9 +204,8 @@ extern "C" {
     _XCORE_SELECT_RES_FILTER_RES(__VA_ARGS__))
 
 
-#define _XCORE_SELECT_RESET_I continue
-
-#define _XCORE_CONTINUE_NO_RESET_I do { goto* __xcore_select_reset; } while (0)
+#define _XCORE_SELECT_RESET_I do { goto* __xcore_select_reset; } while (0)
+#define _XCORE_CONTINUE_NO_RESET_I do { goto* __xcore_select_noreset; } while (0)
 
 #define _XCORE_CASE_RES(...) (_XCORE_SEL_RES, (__VA_ARGS__))
 #define _XCORE_CASE_DEFAULT(...) (_XCORE_SEL_DEFAULT, (__VA_ARGS__))

@@ -37,6 +37,7 @@ examples := \
 	interrupt \
 	chanend_ct \
 	nested_pjobs \
+	nested_selects \
 	\
 	internal_stack_size_pfunc \
 	internal_stack_size \

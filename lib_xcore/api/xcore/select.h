@@ -42,7 +42,8 @@
  *  and is one of:
  *    \li \c break - Exits the select block
  *    \li \c continue - Waits for/handles another event or default
- *    \li \ref SELECT_RESET - \copybrief SELECT_RESET
+ *    \li \ref SELECT_CONTINUE_RESET - \copybrief SELECT_CONTINUE_RESET
+ *    \li \ref SELECT_CONTINUE_NO_RESET - \copybrief SELECT_CONTINUE_NO_RESET
  *
  *  The default case is a case with no associated resource which is passed using one of the
  *  \c DEFAULT_* macros. There may only be one default case; if more than one expansion of
@@ -50,7 +51,7 @@
  *  effective, even if a condition means only one can ever be enabled.
  *  If the effective default case is expanded from DEFAULT_GUARD_THEN() and its condition is false
  *  \b or it is expanded from DEFAULT_NGUARD_THEN() and its condition is true, then the effect
- *  is as if there was no default case.
+ *  is as if there were no default case.
  *
  *  When the code expanded from a \c SELECT_MACRO is executed, qualifying resources are checked
  *  for events. Qualifying resources are those which were passed to the immediately enclosing 
@@ -71,19 +72,27 @@
  *  At that point the behaviour depends on the terminator:
  *    \li If control reaches a \c break then control will exit the immediately enclosing
  *        select block.
- *    \li If control reaches a \c continue then the effect is as if control were transferred
- *        back to the beginning of the expansion of the \c SELECT_MACRO, except that some
- *        setup may be skipped. If an inner (i.e. nested) \c SELECT_MACRO expansion has been
- *        executed (even as a result of calling a function), since control was transferred into
- *        the immediately enclosing select block by the immediately preceding \c SELECT_MACRO
- *        expansion, then the use of \c continue to terminate the outer select construct has
- *        undefined behaviour. In this case, \ref SELECT_RESET should be used instead of
- *        \c continue.
- *    \li If control reaches the expansion of \ref SELECT_RESET then the effect is as if
- *        control were transferred to the beginning of the expansion of the \c SELECT_MACRO
+ *    \li If control reaches the expansion of \c SELECT_CONTINUE_NO_RESET then the effect is as
+ *        if control were transferred back to the beginning of the expansion of the \c SELECT_MACRO,
+ *        except that some setup is skipped. If an inner (i.e. nested) \c SELECT_MACRO expansion
+ *        has been executed (even as a result of calling a function), since control was transferred
+ *        into the immediately enclosing select block by the immediately preceding \c SELECT_MACRO
+ *        expansion, then the use of \c SELECT_CONTINUE_NO_RESET to terminate the outer select
+ *        construct has undefined behaviour.
+ *    \li If control reaches the expansion of \ref SELECT_CONTINUE_RESET then the effect is
+ *        as if control were transferred to the beginning of the expansion of the \c SELECT_MACRO
  *        for the immediately enclosing select block. This effectively resets the select
  *        construct and makes ineffective any setup performed by any nested \c SELECT_MACRO
  *        which would affect the execution of the immediately enclosing one.
+ *    \li If control reaches a \c continue then the effect is as if control had reached the
+ *        expansion of SELECT_CONTINUE_RESET if a SELECT_MACRO expansion has been executed
+ *        since since control was transferred into the immediately enclosing select block by the
+ *        immediately preceding \c SELECT_MACRO. Otherwise the effect is as if the expansion of
+ *        \c SELECT_CONTINUE_RESET were executed.
+ *        \note This is intended to provide a safe means of handling further events if arbitrary
+ *              code has been executed which may have used a select construct. Its use is likely
+ *              to incur a runtime performance penalty compared to using the most appropriate of
+ *              \c SELECT_CONTINUE_RESET and \c SELECT_CONTINUE_NO_RESET.
  *    \li If control reaches the end of a select block without reaching a CASE_TERMINATOR
  *        then the behaviour will be as if a \c CASE_TERMINATOR had been reached but it is
  *        unspecified which one. (Thus this may result in undefined behaviour if a nested
@@ -91,13 +100,17 @@
  * 
  *  \note Normal language rules apply - \c break and \c continue affect the relevant enclosing
  *        construct - so if they are nested within e.g. a loop then they will not terminate
- *        the select block. Thus it is impossible to exit a select block from a function.
+ *        the select block. This also applies to other case terminators which must only appear
+ *        within a select block. Thus it is impossible to exit a select block from a function.
+ *        
  *
  *  The behaviour is undefined if control is transferred into a select block by any other
  *  means than by:
  *    \li Executing the immediately preceding \c SELECT_MACRO expansion;
  *    \li Returning from a function call;
  *    \li Executing a \c CASE_TERMINATOR.
+ *  Additionally, transferring control out of a select block by any means other than calling a
+ *  function or executing \c break as a \c CASE_TERMINATOR has undefined behaviour.
  *
  *  If the expansion of a \c SELECT_MACRO or a \c CASE_TERMINATOR is executed and:
  *    \li There are no qualifying resources, and
@@ -195,14 +208,25 @@ extern "C" {
 
 /** \brief Restores the configuration of the immediately enclosing select block and continues.
  *
- *  This must be used instead of \c continue as a select terminator if a different (to the immediately
+ *  This may be used instead of \c continue as a select terminator if a different (to the immediately
  *  enclosing one) select construct has been executed. The effect is that the resource setup which happens
  *  at the start of the select construct is guaranteed to re-run so that the correct events will be enabled.
+ *  Using this instead of \c continue (when required) is likely to result in a slight performance boost as 
+ *  it eliminates the need to check global state.
  *
  *  \hideinitializer
  */
-#define SELECT_RESET _XCORE_SELECT_RESET_I
+#define SELECT_CONTINUE_RESET _XCORE_SELECT_RESET_I
 
+/** \brief Continues to handle another event in the immediately inclosing select block without applying global resource setup.
+ *
+ *  This may be used in stead of \continue as a select terminator if different select block has not been executed during handling
+ *  of the previous event (or default). In the event that another select construct has executed this will have undefined behaviour.
+ *
+ *  Using this instead of \continue (when safe to do so) is likely to result in a slight performance improvement.
+ *
+ * \hideinitializer
+ */
 #define SELECT_CONTINUE_NO_RESET _XCORE_CONTINUE_NO_RESET_I
 
 /** \brief Unconditionally wait for an event on a given resource.
