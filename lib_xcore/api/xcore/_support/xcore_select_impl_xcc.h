@@ -124,18 +124,14 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
 
 #define _XCORE_SELECT_RES_II(_TNAME, _LNAME, _DEFAULT_PACK, ...) \
   switch (0) \
-    for(; 0; __xcore_select_clobbered = 1) \
+    for(int __xcore_select_local_clobber_level; 0;) \
       for (const void *__xcore_select_reset, *__xcore_select_noreset;;) \
         if (1) \
   { \
-    if (__builtin_expect(__xcore_select_clobbered, 0)) \
+    if (__builtin_expect(__xcore_select_clobbered != __xcore_select_local_clobber_level, 0)) \
     { \
-    case 0: \
-    default: \
-      __xcore_select_reset = &&_LNAME ## __reset; \
-      __xcore_select_noreset = &&_LNAME ## __noreset; \
     _LNAME ## __reset: \
-      __xcore_select_clobbered = 0; \
+      __xcore_select_clobbered = __xcore_select_local_clobber_level; \
       __xcore_select_disable_trigger_all(); \
       unsigned __xcore_htable_idx = _RES_EV_FORCE_MASK; \
       _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
@@ -143,9 +139,18 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
     } \
     static void *_TNAME[] = { _XCORE_SHIM(_XCORE_APPLY, _XCORE_LABELADDR, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) };\
   _LNAME ## __noreset: \
-    __builtin_assume(__xcore_select_clobbered == 0); \
+    __builtin_assume(__xcore_select_clobbered == __xcore_select_local_clobber_level); \
     _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_ENABLER_REPEAT, __VA_ARGS__) \
     _XCORE_SELECT_WAIT_HANDLER(_DEFAULT_PACK, _TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
+  } \
+  else if (0) \
+  { \
+  case 0: \
+  default: \
+    __xcore_select_reset = &&_LNAME ## __reset; \
+    __xcore_select_noreset = &&_LNAME ## __noreset; \
+    __xcore_select_local_clobber_level = __xcore_select_clobbered + 1; \
+    goto _LNAME ## __reset; \
   } \
   else
 
@@ -183,28 +188,33 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
 
 #define _XCORE_SELECT_RES_ORDERED_II(_TNAME, _LNAME, _DEFAULT_PACK, _LABELS, ...) \
   switch (0) \
-    for(; 0; __xcore_select_clobbered = 1) \
+    for(int __xcore_select_local_clobber_level; 0;) \
       for (const void *__xcore_select_reset, *__xcore_select_noreset;;) \
         if (1) \
   { \
-    if (__builtin_expect(__xcore_select_clobbered, 0)) \
+    if (__builtin_expect(__xcore_select_clobbered != __xcore_select_local_clobber_level, 0)) \
     { \
-    case 0: \
-    default: \
-      __xcore_select_reset = &&_LNAME ## __reset; \
-      __xcore_select_noreset = &&_LNAME ## __noreset; \
     _LNAME ## __reset: \
-      __xcore_select_clobbered = 0; \
+      __xcore_select_clobbered = __xcore_select_local_clobber_level; \
       __xcore_select_disable_trigger_all(); \
       unsigned __xcore_htable_idx = _RES_EV_FORCE_MASK; \
       _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
     } \
     static void *_TNAME[] = { _XCORE_SHIM(_XCORE_APPLY, _XCORE_LABELADDR, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) }; \
   _LNAME ## __noreset: \
-    __builtin_assume(__xcore_select_clobbered == 0); \
+    __builtin_assume(__xcore_select_clobbered == __xcore_select_local_clobber_level); \
     __xcore_select_disable_trigger_all(); \
     _XCORE_SHIM(_XCORE_APPLY_NOSEP, _XCORE_SELECT_RES_ENABLER_ORDERED, _XCORE_I(_XCORE_TAG(_LABELS, __VA_ARGS__))) \
     _XCORE_SELECT_WAIT_HANDLER(_DEFAULT_PACK, _TNAME, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) \
+  } \
+  else if (0) \
+  { \
+  case 0: \
+  default: \
+    __xcore_select_reset = &&_LNAME ## __reset; \
+    __xcore_select_noreset = &&_LNAME ## __noreset; \
+    __xcore_select_local_clobber_level = __xcore_select_clobbered + 1; \
+    goto _LNAME ## __reset; \
   } \
   else
 
