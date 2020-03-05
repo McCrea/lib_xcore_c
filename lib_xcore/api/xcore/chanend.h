@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 #include <xcore/_support/xcore_common.h>
-#include <xcore/_support/xcore_chan_impl.h>
+#include <xcore/_support/xcore_chanend_impl.h>
 #include <xcore/_support/xcore_resource_impl.h>
 
 #ifdef __cplusplus

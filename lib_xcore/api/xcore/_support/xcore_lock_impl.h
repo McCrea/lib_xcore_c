@@ -11,7 +11,7 @@ _XCORE_EXFUN
 inline resource_t __xcore_lock_alloc(void)
 {
   resource_t __l;
-  _RESOURCE_ALLOC(__l, XS1_RES_TYPE_LOCK);
+  _XCORE_RESOURCE_ALLOC(__l, XS1_RES_TYPE_LOCK);
   return __l;
 }
 

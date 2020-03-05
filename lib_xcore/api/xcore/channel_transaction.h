@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <xcore/_support/xcore_common.h>
-#include <xcore/_support/xcore_chan_impl.h>
+#include <xcore/chanend.h>
 
 #ifdef __cplusplus
 extern "C" {

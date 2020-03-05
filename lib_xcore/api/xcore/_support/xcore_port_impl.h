@@ -25,31 +25,31 @@ inline void __xcore_port_set_transfer_width(resource_t __p, size_t __width)
 _XCORE_EXFUN
 inline void __xcore_port_enable(unsigned __id)
 {
-  _RESOURCE_SETCI((resource_t)__id, XS1_SETC_INUSE_ON);
+  _XCORE_RESOURCE_SETCI((resource_t)__id, XS1_SETC_INUSE_ON);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_reset(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_INUSE_ON);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_INUSE_ON);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_free(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_INUSE_OFF);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_INUSE_OFF);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_buffered(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_BUF_BUFFERS);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_BUF_BUFFERS);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_unbuffered(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_BUF_NOBUFFERS);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_BUF_NOBUFFERS);
 }
 
 _XCORE_EXFUN
@@ -61,74 +61,74 @@ inline void __xcore_port_set_clock(resource_t __p, resource_t __clk)
 _XCORE_EXFUN
 inline void __xcore_port_set_inout_data(resource_t p)
 {
-  _RESOURCE_SETCI(p, XS1_SETC_PORT_DATAPORT);
+  _XCORE_RESOURCE_SETCI(p, XS1_SETC_PORT_DATAPORT);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_out_clock(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_PORT_CLOCKPORT);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_PORT_CLOCKPORT);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_out_ready(resource_t __p, resource_t __ready_source)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_PORT_READYPORT);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_PORT_READYPORT);
   asm volatile("setrdy res[%0], %1" :: "r" (__p), "r" (__ready_source));
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_invert(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_INV_INVERT);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_INV_INVERT);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_no_invert(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_INV_NOINVERT);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_INV_NOINVERT);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_sample_falling_edge(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_SDELAY_SDELAY);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_SDELAY_SDELAY);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_sample_rising_edge(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_SDELAY_NOSDELAY);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_SDELAY_NOSDELAY);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_master(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_MS_MASTER);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_MS_MASTER);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_slave(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_MS_SLAVE);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_MS_SLAVE);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_no_ready(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_RDY_NOREADY);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_RDY_NOREADY);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_ready_strobed(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_RDY_STROBED);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_RDY_STROBED);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_ready_handshake(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_RDY_HANDSHAKE);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_RDY_HANDSHAKE);
 }
 
 _XCORE_EXFUN
@@ -160,21 +160,21 @@ inline void __xcore_port_set_trigger_value(resource_t __p, uint32_t __d)
 _XCORE_EXFUN
 inline void __xcore_port_set_trigger_in_equal(resource_t __p, uint32_t __d)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_COND_EQ);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_COND_EQ);
   __xcore_port_set_trigger_value(__p, __d);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_set_trigger_in_not_equal(resource_t __p, uint32_t __d)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_COND_NEQ);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_COND_NEQ);
   __xcore_port_set_trigger_value(__p, __d);
 }
 
 _XCORE_EXFUN
 inline void __xcore_port_clear_trigger_in(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_COND_NONE);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_COND_NONE);
 }
 
 _XCORE_EXFUN
@@ -226,7 +226,7 @@ inline size_t __xcore_port_endin(resource_t __p)
 _XCORE_EXFUN
 inline void __xcore_port_clear_buffer(resource_t __p)
 {
-  _RESOURCE_SETCI(__p, XS1_SETC_RUN_CLRBUF);
+  _XCORE_RESOURCE_SETCI(__p, XS1_SETC_RUN_CLRBUF);
 }
 
 #ifdef __cplusplus

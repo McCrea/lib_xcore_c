@@ -20,7 +20,7 @@ _XCORE_EXFUN
 inline __xcore_streaming_chanend_t __xcore_chanend_alloc(void)
 {
   __xcore_streaming_chanend_t __c;
-  _RESOURCE_ALLOC(__c, XS1_RES_TYPE_CHANEND);
+  _XCORE_RESOURCE_ALLOC(__c, XS1_RES_TYPE_CHANEND);
   return __c;
 }
 
@@ -142,7 +142,7 @@ inline unsigned __xcore_chanend_test_control_token_word(resource_t __c)
 }
 
 _XCORE_EXFUN
-inline int __xcore_chanend_test_dest_local(resource_t __c)
+inline __xcore_bool_t __xcore_chanend_test_dest_local(resource_t __c)
 {
   unsigned __res;
   asm volatile("testlcl %[__res], res[%[__chanend]]" : [__res] "=r" (__res) : [__chanend] "r" (__c));

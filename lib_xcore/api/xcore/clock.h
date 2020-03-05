@@ -31,7 +31,7 @@ typedef resource_t xclock_t;
 _XCORE_EXFUN
 inline void clock_enable(xclock_t __id) _XCORE_NOTHROW
 {
-  _RESOURCE_SETCI(__id, XS1_SETC_INUSE_ON);
+  _XCORE_RESOURCE_SETCI(__id, XS1_SETC_INUSE_ON);
 }
 
 /** \brief Disable a clock
@@ -47,7 +47,7 @@ inline void clock_enable(xclock_t __id) _XCORE_NOTHROW
 _XCORE_EXFUN
 inline void clock_disable(xclock_t __clk) _XCORE_NOTHROW
 {
-  _RESOURCE_SETCI(__clk, XS1_SETC_INUSE_OFF);
+  _XCORE_RESOURCE_SETCI(__clk, XS1_SETC_INUSE_OFF);
 }
 
 /** \brief Start a clock
@@ -60,7 +60,7 @@ inline void clock_disable(xclock_t __clk) _XCORE_NOTHROW
 _XCORE_EXFUN
 inline void clock_start(xclock_t __clk) _XCORE_NOTHROW
 {
-  _RESOURCE_SETCI(__clk, XS1_SETC_RUN_STARTR);
+  _XCORE_RESOURCE_SETCI(__clk, XS1_SETC_RUN_STARTR);
 }
 
 /** \brief Stop a clock
@@ -75,7 +75,7 @@ inline void clock_start(xclock_t __clk) _XCORE_NOTHROW
 _XCORE_EXFUN
 inline void clock_stop(xclock_t __clk) _XCORE_NOTHROW
 {
-  _RESOURCE_SETCI(__clk, XS1_SETC_RUN_STOPR);
+  _XCORE_RESOURCE_SETCI(__clk, XS1_SETC_RUN_STOPR);
 }
 
 /** \brief Configure a clock's source to a 1-bit port

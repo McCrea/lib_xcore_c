@@ -3,6 +3,7 @@
 // This file contains private implementation details and is not part of the API.
 // The contents may vary between releases.
 
+#include <stdint.h>
 #include <xcore/_support/xcore_common.h>
 
 #ifdef __cplusplus

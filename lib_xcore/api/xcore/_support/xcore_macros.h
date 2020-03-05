@@ -43,6 +43,12 @@ extern "C" {
 #define _XCORE_SINGLE_ISSUE
 #endif
 
+#if defined(__XS2A__)
+#define _XCORE_ENUM_ID_BASE 0
+#else
+#define _XCORE_ENUM_ID_BASE 0x10000
+#endif
+
 #ifdef __cplusplus
 }
 #endif

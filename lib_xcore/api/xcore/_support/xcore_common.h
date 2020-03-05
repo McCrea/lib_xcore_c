@@ -19,6 +19,7 @@ extern "C" {
 #define _XCORE_NOTHROW _XCORE_CFUNC_EXCEPT_SPEC
 
 typedef unsigned resource_t;
+typedef int __xcore_bool_t;
 
 #ifdef __cplusplus
 }

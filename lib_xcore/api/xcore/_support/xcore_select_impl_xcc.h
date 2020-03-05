@@ -3,6 +3,7 @@
 
 #include <limits.h>
 #include <xcore/_support/xcore_common.h>
+#include <xcore/_support/xcore_macros.h>
 #include <xcore/_support/xcore_select_impl_common.h>
 
 
@@ -68,18 +69,12 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
 #define _XCORE_LABEL_I(_VAL_, _LABEL, ...) _LABEL
 #define _XCORE_LABEL(_PACK) _XCORE_PSHIM(_XCORE_LABEL_I, _PACK)
 
-#if defined(__XS1B__) || defined(__XS1C__)
-#define _RES_EV_FORCE_MASK 0x10000
-#else
-#define _RES_EV_FORCE_MASK 0x0
-#endif
-
 #define _XCORE_SELECT_TAKE_EVENT_NONBLOCKING(_TNAME, ...) \
   do { \
     const int __xcore_wait_id  = select_no_wait(UINT_MAX); \
     if (__xcore_wait_id != UINT_MAX) \
     { \
-      goto* _TNAME[__xcore_wait_id - _RES_EV_FORCE_MASK]; \
+      goto* _TNAME[__xcore_wait_id - _XCORE_ENUM_ID_BASE]; \
     } \
   } while (0)
 
@@ -88,7 +83,7 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
   goto _LABEL;
 
 #define _XCORE_SELECT_WAIT_HANDLER__XCORE_NO_DEFAULT_CASE(_COND_, _LABEL_, _TNAME, ...) \
-  goto* _TNAME[select_wait() - _RES_EV_FORCE_MASK];
+  goto* _TNAME[select_wait() - _XCORE_ENUM_ID_BASE];
 
 #define _XCORE_SELECT_WAIT_HANDLER__XCORE_GTYPE_TRUE(_COND, _LABEL, _TNAME, ...) \
   do { \
@@ -100,7 +95,7 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
     } \
     else \
     { \
-      goto* _TNAME[select_wait() - _RES_EV_FORCE_MASK]; \
+      goto* _TNAME[select_wait() - _XCORE_ENUM_ID_BASE]; \
     } \
   } while (0);
 
@@ -110,7 +105,7 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
     const int __xcore_wait_cond = _COND; \
     if (__xcore_wait_cond) \
     { \
-      goto* _TNAME[select_wait() - _RES_EV_FORCE_MASK]; \
+      goto* _TNAME[select_wait() - _XCORE_ENUM_ID_BASE]; \
     } \
     else \
     { \
@@ -133,7 +128,7 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
     _LNAME ## __reset: \
       __xcore_select_clobbered = __xcore_select_local_clobber_level; \
       __xcore_select_disable_trigger_all(); \
-      unsigned __xcore_htable_idx = _RES_EV_FORCE_MASK; \
+      unsigned __xcore_htable_idx = _XCORE_ENUM_ID_BASE; \
       _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
       _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_ENABLER_ONEOFF, __VA_ARGS__) \
     } \
@@ -197,7 +192,7 @@ inline void __xcore_select_setup_int(resource_t __r, uint32_t __value)  _XCORE_N
     _LNAME ## __reset: \
       __xcore_select_clobbered = __xcore_select_local_clobber_level; \
       __xcore_select_disable_trigger_all(); \
-      unsigned __xcore_htable_idx = _RES_EV_FORCE_MASK; \
+      unsigned __xcore_htable_idx = _XCORE_ENUM_ID_BASE; \
       _XCORE_APPLY_NOSEP(_XCORE_SELECT_RES_HANDLER_SETUP, __VA_ARGS__) \
     } \
     static void *_TNAME[] = { _XCORE_SHIM(_XCORE_APPLY, _XCORE_LABELADDR, _XCORE_APPLY(_XCORE_LABEL, __VA_ARGS__)) }; \

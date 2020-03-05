@@ -48,7 +48,10 @@ extern "C" {
  * execute that function in a different thread.
  * \param NAME            Name of function to declare
  * \param ARG_TYPES_PACK  A pack of types which form the parameter part of the function 
-                          signature (must not include names)
+ *                        signature (must not include names)
+ *
+ * \note If the job has a void argument pack then \c void (\b not an alias of \c void) must be the
+ *       sole type in the argument type pack.
  * 
  * Example: \code
  * DECLARE_JOB(thread_sum, (const unsigned *, size_t, unsigned long *));

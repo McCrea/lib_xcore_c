@@ -16,7 +16,7 @@ inline void __xcore_hwtimer_realloc_xc_timer(void)
   // __init_threadlocal_timer has resource ID in r2 and it may be zero.
   // Implement a checked version here instead.
   unsigned __tmr, __addr;
-  _RESOURCE_ALLOC(__tmr, XS1_RES_TYPE_TIMER);
+  _XCORE_RESOURCE_ALLOC(__tmr, XS1_RES_TYPE_TIMER);
   asm volatile( "ecallf %0" :: "r" (__tmr));
   asm volatile( "ldaw %0, dp[__timers]" : "=r" (__addr));
   asm volatile( "get r11, id" ::: /* clobbers */ "r11");
@@ -34,7 +34,7 @@ _XCORE_EXFUN
 inline resource_t __xcore_hwtimer_alloc(void)
 {
   resource_t __t;
-  _RESOURCE_ALLOC(__t, XS1_RES_TYPE_TIMER);
+  _XCORE_RESOURCE_ALLOC(__t, XS1_RES_TYPE_TIMER);
   return __t;
 }
 
@@ -69,13 +69,13 @@ inline void __xcore_hwtimer_change_trigger_time(resource_t __t, uint32_t __time)
 _XCORE_EXFUN
 inline void __xcore_hwtimer_set_trigger_time(resource_t __t, uint32_t __time)
 {
-  _RESOURCE_SETCI(__t, XS1_SETC_COND_AFTER);
+  _XCORE_RESOURCE_SETCI(__t, XS1_SETC_COND_AFTER);
   __xcore_hwtimer_change_trigger_time(__t, __time);
 }
 
 _XCORE_EXFUN
 inline void __xcore_hwtimer_clear_trigger_time(resource_t __t)
 {
-  _RESOURCE_SETCI(__t, XS1_SETC_COND_NONE);
+  _XCORE_RESOURCE_SETCI(__t, XS1_SETC_COND_NONE);
   // hwtimer_get_time() will respond immediately
 }

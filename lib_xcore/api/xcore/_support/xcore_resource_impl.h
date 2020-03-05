@@ -19,8 +19,8 @@ extern "C" {
  *
  *  Users must not access its raw underlying type.
  */
-typedef void(*interrupt_callback_t)(void);
-typedef void(*select_callback_t)(void);
+typedef void(*__xcore_interrupt_callback_t)(void);
+typedef void(*__xcore_select_callback_t)(void);
 
 extern void __xcore_select_non_callback(void);  // Implemented in xcore_c_select.S
 
@@ -51,12 +51,12 @@ inline void __xcore_resource_setup_callback(resource_t __r, void *__data, void(*
 }
 
 _XCORE_EXFUN
-inline void __xcore_resource_setup_interrupt_callback(resource_t __r, void *__data, interrupt_callback_t __intrpt) _XCORE_NOTHROW
+inline void __xcore_resource_setup_interrupt_callback(resource_t __r, void *__data, __xcore_interrupt_callback_t __intrpt) _XCORE_NOTHROW
 {
   __xcore_resource_setup_callback(__r, __data, __intrpt, 0xA);  // Raise interrupts instead of events
 }
 
-#define _RESOURCE_ALLOC(__res, __id) asm volatile( "getr %0, %1" : "=r" (__res) : "n" (__id))
+#define _XCORE_RESOURCE_ALLOC(__res, __id) asm volatile( "getr %0, %1" : "=r" (__res) : "n" (__id))
 
 _XCORE_EXFUN
 inline void __xcore_resource_free(resource_t __r) _XCORE_NOTHROW
@@ -64,24 +64,7 @@ inline void __xcore_resource_free(resource_t __r) _XCORE_NOTHROW
   asm volatile("freer res[%0]" :: "r" (__r));
 }
 
-#define _RESOURCE_SETCI(__res, __c) asm volatile( "setc res[%0], %1" :: "r" (__res), "n" (__c))
-
-
-// These old functions support the XCC implementation of the new select interface.
-
-/** Starting value to use for the enum_id
- *
- *  The enum_id is passed to the *res*_setup_select() and returned by
- *  select_wait() et al
- *
- *  On XS1 the environment vectors (EVs) are only 16-bit and bit 16 will be set
- *  to 1 as it is expected to be used as a memory address.
-*/
-#if defined(__XS2A__)
-#define ENUM_ID_BASE 0
-#else
-#define ENUM_ID_BASE 0x10000
-#endif
+#define _XCORE_RESOURCE_SETCI(__res, __c) asm volatile( "setc res[%0], %1" :: "r" (__res), "n" (__c))
 
 /** Wait for a select event to trigger.
  *

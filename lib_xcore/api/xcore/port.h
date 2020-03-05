@@ -875,28 +875,6 @@ inline size_t port_force_input(port_t __p, uint32_t *__data) _XCORE_NOTHROW
   return __num;
 }
 
-/** \brief Setup interrupt event on a port.
- *
- *  Once the event is setup you need to call port_enable_trigger() to enable it.
- *
- *  \param __p         The port to setup the interrupt event on
- *  \param[in] __data  The value to be passed to the interrupt_callback_t function
- *                     On XS1 bit 16 must be set (see ENUM_ID_BASE)
- *  \param __func      The interrupt_callback_t function to handle events
- *
- *  \see ENUM_ID_BASE
- *
- *  \exception  ET_ILLEGAL_RESOURCE   not a valid port.
- *  \exception  ET_RESOURCE_DEP       another core is actively using the port.
- *  \exception  ET_ECALL              when xassert enabled, on XS1 bit 16 not set in data.
- */
-_XCORE_EXFUN
-inline void port_setup_interrupt_callback(port_t __p, void *__data, interrupt_callback_t __func) _XCORE_NOTHROW
-{
-  __xcore_resource_setup_interrupt_callback(__p, __data, __func);
-  __xcore_port_clear_trigger_in(__p);
-}
-
 /** \brief Sets the trigger value for a port with a configured trigger.
  *
  *  Changes only the trigger value of a port which has already been configured

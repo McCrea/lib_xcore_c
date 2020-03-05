@@ -24,6 +24,15 @@
 extern "C" {
 #endif
 
+/** \brief Interrupt handler type */
+typedef __xcore_interrupt_callback_t interrupt_callback_t;
+
+/** \brief Minimum event vector value
+ *  Interrupt values passed as iunterrupt data must be no less than this value.
+ *  \hideinitializer
+ */
+#define TRIGGERABLE_EV_BASE _XCORE_ENUM_ID_BASE
+
 /** \brief Setup interrupt event on a resource.
  *
  *  Once the interrupts is setup you need to call port_enable_trigger() to enable it.
@@ -31,7 +40,7 @@ extern "C" {
  *  \param __res       The resource to setup the interrupt event on.
  *
  *  \param[in] __data  The value to be passed to the interrupt_callback_t function
- *                     On XS1 bit 16 must be set (see ENUM_ID_BASE)
+ *                     On XS1 bit 16 must be set (see TRIGGERABLE_EV_BASE)
  *  \param __func      The interrupt_callback_t function to handle events
  *
  *  \exception  ET_ILLEGAL_RESOURCE   not a valid chanend, port or timer
@@ -152,7 +161,7 @@ _XCORE_EXFUN
 inline void triggerable_disable_all(void) _XCORE_NOTHROW
 {
   __triggerable_disable_all();
-} 
+}
 
 #ifdef __cplusplus
 }

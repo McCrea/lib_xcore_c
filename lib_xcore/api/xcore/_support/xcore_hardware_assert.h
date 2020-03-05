@@ -34,11 +34,11 @@ inline void __xcore_ecallf(int __value)
 #ifdef _XCORE_HAS_REFERENCE_CLOCK
 
 _XCORE_EXFUN
-inline _Bool __xcore_not_after_reference_time(uint32_t __v)
+inline int __xcore_not_after_reference_time(uint32_t __v)
 {
     const uint32_t __r = __xcore_get_reference_time();
     const unsigned __tolerance = 1 << ((sizeof(int)*CHAR_BIT)-1);
-    return __v >= __tolerance
+    return __v < __tolerance
       ? (__r <= __v || __r > __v+__tolerance)
       : (__r <= __v && __r > __v-__tolerance); 
 }

@@ -199,7 +199,7 @@ inline void *__xcore_substack_advance(void * const __base, const unsigned __head
 }
 
 _XCORE_EXFUN
-inline int __xcore_dynamically_false(void)
+inline __xcore_bool_t __xcore_dynamically_false(void)
 {
   register int __df;
   asm("ldc %[__dest], 0"
