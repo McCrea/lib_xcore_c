@@ -5,7 +5,6 @@
 // The contents may vary between releases.
 #include <xcore/_support/xcore_common.h>
 #include <xcore/_support/xcore_macros.h>
-#include <xcore/_support/xcore_resource_impl.h>
 
 
 #ifdef __cplusplus
